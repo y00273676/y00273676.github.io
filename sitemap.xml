@@ -3,6 +3,21 @@
   
   <url>
     <loc>http://example.org/</loc>
+    <lastmod>2022-02-18T15:02:27+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.org/post/ksitigarbha/</loc>
+    <lastmod>2022-02-18T15:02:27+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.org/post/</loc>
+    <lastmod>2022-02-18T15:02:27+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>

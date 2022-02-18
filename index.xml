@@ -6,9 +6,21 @@
     <description>Recent content on bazaar</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
+    <lastBuildDate>Fri, 18 Feb 2022 15:02:27 +0800</lastBuildDate>
     
         <atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Ksitigarbha</title>
+      <link>http://example.org/post/ksitigarbha/</link>
+      <pubDate>Fri, 18 Feb 2022 15:02:27 +0800</pubDate>
+      
+      <guid>http://example.org/post/ksitigarbha/</guid>
+      
+        <description>ksitigarbha  go web assist tools  Supported Features  cmd expvars freeport identifier meta pprof signals timezone xcast xcycle xerrors xfile xgo xhttp xip xjsonpb xmap xmath xset xslice xstrings xtime xtoml  Usage the usage is in the test file</description>
+      
+    </item>
     
   </channel>
 </rss>
