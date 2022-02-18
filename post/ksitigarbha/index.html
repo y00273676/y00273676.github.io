@@ -23,7 +23,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 
 <meta name="author" content="ks" />
-  <meta name="description" content="ksitigarbha  go web assist tools  Supported Features  cmd expvars freeport identifier meta pprof signals timezone xcast xcycle xerrors xfile xgo xhttp xip xjsonpb xmap xmath xset xslice xstrings xtime xtoml  Usage the usage is in the test file" />
+  <meta name="description" content="ksitigarbha  go web assist tools  Supported Features  cmd  exec shell command   expvars  parse cli params   freeport  get free port   identifier  object uuid in int64   meta  meta in context   pprof  go pprof   signals  handle signals in go   timezone  timezone in go   xcast  cast provides easy and safe casting in Go   xcycle  cycle job   xerrors  errors group   xfile  file handler   xgo  go and goroutine with try and exception   xhttp  http request and response handler   xip  ip address conversion   xjsonpb  json marshaler   xmap  map editor   xmath  mathematical operations   xset  set and hash set   xslice  slice editor   xstrings  string editor   xtime  parse and format time   xtoml  parse toml file to struct    Usage the usage is in the test file" />
 
 
 
@@ -59,19 +59,19 @@
 
 
 <meta property="og:title" content="Ksitigarbha" />
-<meta property="og:description" content="ksitigarbha  go web assist tools  Supported Features  cmd expvars freeport identifier meta pprof signals timezone xcast xcycle xerrors xfile xgo xhttp xip xjsonpb xmap xmath xset xslice xstrings xtime xtoml  Usage the usage is in the test file" />
+<meta property="og:description" content="ksitigarbha  go web assist tools  Supported Features  cmd  exec shell command   expvars  parse cli params   freeport  get free port   identifier  object uuid in int64   meta  meta in context   pprof  go pprof   signals  handle signals in go   timezone  timezone in go   xcast  cast provides easy and safe casting in Go   xcycle  cycle job   xerrors  errors group   xfile  file handler   xgo  go and goroutine with try and exception   xhttp  http request and response handler   xip  ip address conversion   xjsonpb  json marshaler   xmap  map editor   xmath  mathematical operations   xset  set and hash set   xslice  slice editor   xstrings  string editor   xtime  parse and format time   xtoml  parse toml file to struct    Usage the usage is in the test file" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://example.org/post/ksitigarbha/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2022-02-18T15:02:27+08:00" />
 <meta property="article:modified_time" content="2022-02-18T15:02:27+08:00" />
 
 <meta itemprop="name" content="Ksitigarbha">
-<meta itemprop="description" content="ksitigarbha  go web assist tools  Supported Features  cmd expvars freeport identifier meta pprof signals timezone xcast xcycle xerrors xfile xgo xhttp xip xjsonpb xmap xmath xset xslice xstrings xtime xtoml  Usage the usage is in the test file"><meta itemprop="datePublished" content="2022-02-18T15:02:27+08:00" />
+<meta itemprop="description" content="ksitigarbha  go web assist tools  Supported Features  cmd  exec shell command   expvars  parse cli params   freeport  get free port   identifier  object uuid in int64   meta  meta in context   pprof  go pprof   signals  handle signals in go   timezone  timezone in go   xcast  cast provides easy and safe casting in Go   xcycle  cycle job   xerrors  errors group   xfile  file handler   xgo  go and goroutine with try and exception   xhttp  http request and response handler   xip  ip address conversion   xjsonpb  json marshaler   xmap  map editor   xmath  mathematical operations   xset  set and hash set   xslice  slice editor   xstrings  string editor   xtime  parse and format time   xtoml  parse toml file to struct    Usage the usage is in the test file"><meta itemprop="datePublished" content="2022-02-18T15:02:27+08:00" />
 <meta itemprop="dateModified" content="2022-02-18T15:02:27+08:00" />
-<meta itemprop="wordCount" content="38">
+<meta itemprop="wordCount" content="115">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Ksitigarbha"/>
-<meta name="twitter:description" content="ksitigarbha  go web assist tools  Supported Features  cmd expvars freeport identifier meta pprof signals timezone xcast xcycle xerrors xfile xgo xhttp xip xjsonpb xmap xmath xset xslice xstrings xtime xtoml  Usage the usage is in the test file"/>
+<meta name="twitter:description" content="ksitigarbha  go web assist tools  Supported Features  cmd  exec shell command   expvars  parse cli params   freeport  get free port   identifier  object uuid in int64   meta  meta in context   pprof  go pprof   signals  handle signals in go   timezone  timezone in go   xcast  cast provides easy and safe casting in Go   xcycle  cycle job   xerrors  errors group   xfile  file handler   xgo  go and goroutine with try and exception   xhttp  http request and response handler   xip  ip address conversion   xjsonpb  json marshaler   xmap  map editor   xmath  mathematical operations   xset  set and hash set   xslice  slice editor   xstrings  string editor   xtime  parse and format time   xtoml  parse toml file to struct    Usage the usage is in the test file"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -285,29 +285,121 @@
 </ul>
 <h2 id="supported-features">Supported Features</h2>
 <ul>
-<li>cmd</li>
-<li>expvars</li>
-<li>freeport</li>
-<li>identifier</li>
-<li>meta</li>
-<li>pprof</li>
-<li>signals</li>
-<li>timezone</li>
-<li>xcast</li>
-<li>xcycle</li>
-<li>xerrors</li>
-<li>xfile</li>
-<li>xgo</li>
-<li>xhttp</li>
-<li>xip</li>
-<li>xjsonpb</li>
-<li>xmap</li>
-<li>xmath</li>
-<li>xset</li>
-<li>xslice</li>
-<li>xstrings</li>
-<li>xtime</li>
-<li>xtoml</li>
+<li>cmd
+<ul>
+<li>exec shell command</li>
+</ul>
+</li>
+<li>expvars
+<ul>
+<li>parse cli params</li>
+</ul>
+</li>
+<li>freeport
+<ul>
+<li>get free port</li>
+</ul>
+</li>
+<li>identifier
+<ul>
+<li>object uuid in int64</li>
+</ul>
+</li>
+<li>meta
+<ul>
+<li>meta in context</li>
+</ul>
+</li>
+<li>pprof
+<ul>
+<li>go pprof</li>
+</ul>
+</li>
+<li>signals
+<ul>
+<li>handle signals in go</li>
+</ul>
+</li>
+<li>timezone
+<ul>
+<li>timezone in go</li>
+</ul>
+</li>
+<li>xcast
+<ul>
+<li>cast provides easy and safe casting in Go</li>
+</ul>
+</li>
+<li>xcycle
+<ul>
+<li>cycle job</li>
+</ul>
+</li>
+<li>xerrors
+<ul>
+<li>errors group</li>
+</ul>
+</li>
+<li>xfile
+<ul>
+<li>file handler</li>
+</ul>
+</li>
+<li>xgo
+<ul>
+<li>go and goroutine with try and exception</li>
+</ul>
+</li>
+<li>xhttp
+<ul>
+<li>http request and response handler</li>
+</ul>
+</li>
+<li>xip
+<ul>
+<li>ip address conversion</li>
+</ul>
+</li>
+<li>xjsonpb
+<ul>
+<li>json marshaler</li>
+</ul>
+</li>
+<li>xmap
+<ul>
+<li>map editor</li>
+</ul>
+</li>
+<li>xmath
+<ul>
+<li>mathematical operations</li>
+</ul>
+</li>
+<li>xset
+<ul>
+<li>set and hash set</li>
+</ul>
+</li>
+<li>xslice
+<ul>
+<li>slice editor</li>
+</ul>
+</li>
+<li>xstrings
+<ul>
+<li>string editor</li>
+</ul>
+</li>
+<li>xtime
+<ul>
+<li>parse and format time</li>
+</ul>
+</li>
+<li>xtoml
+<ul>
+<li>parse toml file to struct</li>
+</ul>
+</li>
 </ul>
 <h2 id="usage">Usage</h2>
 <p>the usage is in the test file</p>
