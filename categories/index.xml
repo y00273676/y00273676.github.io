@@ -1,10 +1,1 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Categories on bazaar</title>
-    <link>http://example.org/categories/</link>
-    <description>Recent content in Categories on bazaar</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language><atom:link href="http://example.org/categories/index.xml" rel="self" type="application/rss+xml" />
-  </channel>
-</rss>
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Categories — bazaar</title><link>https://y00273676.github.io/categories/</link><description>A personal collection of code, ideas, and things worth keeping.</description><language>en</language><atom:link href="https://y00273676.github.io/categories/index.xml" rel="self" type="application/rss+xml"/><item><title>Helloworld</title><link>https://y00273676.github.io/post/helloworld/</link><guid>https://y00273676.github.io/post/helloworld/</guid><pubDate>Fri, 18 Feb 2022 13:11:35 GMT</pubDate><description>hello world — this is my first html</description></item><item><title>Ksitigarbha</title><link>https://y00273676.github.io/post/ksitigarbha/</link><guid>https://y00273676.github.io/post/ksitigarbha/</guid><pubDate>Fri, 18 Feb 2022 07:02:27 GMT</pubDate><description>A collection of practical Go utilities. Small tools for the everyday work of building for the web.</description></item></channel></rss>

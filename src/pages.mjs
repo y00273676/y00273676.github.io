@@ -1,0 +1,57 @@
+import { site, posts } from './content.mjs';
+import { icon, label, tags, button, header, footer, dialogs, emptyState, escapeHtml } from './components.mjs';
+
+export const routes = ['/', '/post/', '/tags/', '/categories/', ...posts.map(p => `/post/${p.slug}/`), '/404.html'];
+
+export function layout({ title, description = site.description, path = '/', active = '', content }) {
+  return `<!doctype html>
+<html lang="en" id="top"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f7f8f5"><title>${escapeHtml(title)} — bazaar</title><meta name="description" content="${escapeHtml(description)}"><meta name="author" content="ks"><link rel="canonical" href="${site.url}${path}"><meta property="og:title" content="${escapeHtml(title)} — bazaar"><meta property="og:description" content="${escapeHtml(description)}"><meta property="og:type" content="${path.startsWith('/post/') && path !== '/post/' ? 'article' : 'website'}"><meta property="og:url" content="${site.url}${path}"><link rel="icon" type="image/svg+xml" href="/assets/favicon.svg"><link rel="alternate" type="application/rss+xml" title="bazaar" href="/index.xml"><script>try{document.documentElement.dataset.theme=localStorage.getItem('bazaar-theme')||'light'}catch{document.documentElement.dataset.theme='light'}</script><link rel="stylesheet" href="/assets/site.css"><script type="module" src="/assets/main.js"></script></head><body>${header(active)}<main id="main" class="shell" tabindex="-1">${content}</main>${footer()}${dialogs()}</body></html>`;
+}
+
+function postRow(post, i) {
+  return `<article class="writing-row" data-post data-category="${post.category}" data-tags="${escapeHtml(post.tags.join('|'))}"><span class="row-number">0${i + 1}</span><div class="writing-row-content"><a class="writing-title" href="/post/${post.slug}/">${post.title}${icon('diagonal')}</a><p>${post.description}</p><div class="post-meta"><time datetime="${post.date}">Feb 18, 2022</time><span>·</span><span>${post.readingTime}</span></div></div><span class="category-label">${post.category}</span></article>`;
+}
+
+function home() {
+  return layout({ title: 'A place for ideas', active: 'Home', content: `
+    <section class="hero relative grid items-center gap-8 md:grid-cols-12" aria-labelledby="hero-title">
+      <div class="hero-copy md:col-span-8"><div class="eyebrow hero-eyebrow"><span class="status-dot"></span>A PERSONAL SPACE BY KS</div><h1 id="hero-title" data-intro>A place for ideas.<br><span>A space to build.</span></h1><p class="hero-description" data-intro>Notes on code, tools for the everyday,<br class="hidden sm:block"> and a few things discovered along the way.</p><div class="hero-actions flex flex-wrap items-center gap-5" data-intro>${button('Explore the writing', '/post/')}<a href="${site.github}" class="quiet-link" target="_blank" rel="noopener noreferrer">GitHub ${icon('diagonal')}</a></div></div>
+      <div class="orb-panel md:col-span-4"><div aria-hidden="true"><div class="orb-grid"></div><div class="orb-fallback"><div></div><div></div><div></div><div></div></div><div id="orb-scene"></div><span class="orb-cross cross-top">+</span><span class="orb-cross cross-bottom">+</span><span class="orb-caption">ALWAYS A WORK IN PROGRESS</span><span class="orb-coordinate">[ 01 — ∞ ]</span></div><button type="button" class="orb-pause" data-pause-orb hidden>Pause motion</button></div>
+    </section>
+    <div class="section-heading" data-reveal><div class="flex items-center gap-3">${icon('grid')}<h2>The collection</h2></div><span>A few things worth keeping.</span></div>
+    <section class="bento-grid grid grid-cols-1 gap-5 lg:grid-cols-3" aria-label="The collection">
+      <article class="card featured-card lg:col-span-2" data-reveal><div class="featured-top">${label('FEATURED PROJECT', '01')}<a href="${site.repository}" class="featured-github icon-button" target="_blank" rel="noopener noreferrer" aria-label="Ksitigarbha on GitHub">${icon('github')}</a></div><div class="feature-art" aria-hidden="true"><div class="code-tile tile-back">{ }</div><div class="code-tile tile-front">go<span>_</span></div><span class="art-orbit"></span></div><div class="featured-copy"><span class="project-type"><span></span>OPEN SOURCE · GO</span><h2><a href="/post/ksitigarbha/">Ksitigarbha</a></h2><p>Small tools. Less friction.<br>A practical toolkit for building with Go.</p><a href="/post/ksitigarbha/" class="featured-link">Explore the project ${icon('arrow')}</a></div><div class="featured-bottom"><span>23 utilities. One collection.</span><span>BUILT TO BE USEFUL</span></div></article>
+      <article class="card about-card" data-reveal>${label('BEHIND THE SPACE', '02')}<div class="avatar" aria-hidden="true">ks<span></span></div><h2>Hello, I’m ks<span class="sage-text">.</span></h2><p>I build things for the web and keep notes along the way. This is where the code and the curiosity meet.</p><a href="${site.github}" class="text-link" target="_blank" rel="noopener noreferrer">More on GitHub ${icon('diagonal')}</a><div class="about-bottom"><span class="status-dot"></span>Learning by making.</div></article>
+      <section class="card latest-card lg:col-span-2" data-reveal><div class="card-heading">${label('LATEST WRITING', '03')}<a class="text-link" href="/post/">View all ${icon('arrow')}</a></div>${posts.map(postRow).join('')}</section>
+      <section class="card explore-card" data-reveal>${label('FIND YOUR THREAD', '04')}<h2>A little of everything.</h2><p>Follow an idea. See where it leads.</p><div class="topic-list">${[['Go', 'code', '1 article'], ['Open source', 'folder', '1 article'], ['Personal', 'book', '1 article']].map(([name, glyph, count]) => `<a href="/tags/?tag=${encodeURIComponent(name)}"><span class="topic-icon">${icon(glyph)}</span><span>${name}</span><span class="topic-count">${count}</span>${icon('chevron')}</a>`).join('')}</div><a class="text-link explore-all" href="/tags/">Explore all topics ${icon('arrow')}</a></section>
+    </section>
+    <section class="subscribe-strip flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between" data-reveal><div class="flex items-center gap-5"><span class="rss-symbol">${icon('rss')}</span><div><h2>Good things, at your own pace.</h2><p>Follow along with RSS. No noise, just new notes.</p></div></div><button type="button" class="button button-secondary" data-open-rss>Subscribe via RSS ${icon('arrow')}</button></section>
+  ` });
+}
+
+function archive(type = 'Writing', path = '/post/') {
+  const taxonomy = type !== 'Writing';
+  const options = type === 'Topics' ? [...new Set(posts.flatMap(p => p.tags))] : [...new Set(posts.map(p => p.category))];
+  return layout({ title: type, active: taxonomy ? 'Topics' : 'Writing', path, content: `
+    <section class="page-intro" data-intro>${label(taxonomy ? 'FOLLOW YOUR CURIOSITY' : 'THE NOTEBOOK')}<h1>${type === 'Writing' ? 'Notes from the journey.' : type === 'Topics' ? 'Find your thread.' : 'A place for everything.'}</h1><p>${taxonomy ? 'Different ideas, connected by curiosity. Explore the collection.' : 'Code, experiments, and the things learned along the way.'}</p></section>
+    <section class="archive-layout grid grid-cols-1 gap-8 lg:grid-cols-4" aria-label="${type}"><aside class="archive-sidebar lg:col-span-1"><div class="eyebrow">${taxonomy ? 'EXPLORE' : 'COLLECTION'}</div><nav aria-label="Collection navigation"><a href="/post/" ${type === 'Writing' ? 'aria-current="page"' : ''}>${icon('book')}All writing<span>02</span></a><a href="/tags/" ${type === 'Topics' ? 'aria-current="page"' : ''}>${icon('tag')}Topics<span>04</span></a><a href="/categories/" ${type === 'Categories' ? 'aria-current="page"' : ''}>${icon('folder')}Categories<span>02</span></a></nav><div class="sidebar-note">A small collection.<br>Room for more.</div></aside><div class="archive-main lg:col-span-3"><div class="archive-toolbar"><div class="filter-group" aria-label="Filter articles"><button class="filter-chip" type="button" data-filter="All" aria-pressed="true">All<span>2</span></button>${options.map(option => `<button class="filter-chip" type="button" data-filter="${escapeHtml(option)}" data-filter-type="${type === 'Topics' ? 'tag' : 'category'}" aria-pressed="false">${option}</button>`).join('')}</div><span id="result-count" aria-live="polite">2 articles</span></div><div class="card archive-posts">${posts.map(postRow).join('')}<div id="archive-empty" hidden>${emptyState('Nothing here yet.', 'Try another topic to find something to read.', '<button type="button" class="button button-secondary" data-reset-filter>Show all writing</button>')}</div></div><div class="archive-end"><span></span>You’re all caught up.<span></span></div></div></section>
+  ` });
+}
+
+function article(post) {
+  const other = posts.find(p => p.slug !== post.slug);
+  return layout({ title: post.title, description: post.description, path: `/post/${post.slug}/`, active: 'Writing', content: `
+    <div class="reading-progress" aria-hidden="true"></div><div class="article-back"><a href="/post/" class="text-link">${icon('back')}All writing</a></div><header class="article-header" data-intro>${label(post.category.toUpperCase())}<h1>${post.title}<span class="sage-text">.</span></h1><p>${post.description}</p><div class="article-meta"><span class="author-avatar">ks</span><span>ks</span><span class="meta-separator"></span><time datetime="${post.date}">February 18, 2022</time><span class="meta-separator"></span><span>${post.readingTime}</span></div><div class="flex gap-2">${tags(post.tags)}</div></header>
+    <div class="article-layout grid grid-cols-1 gap-12 lg:grid-cols-4"><article class="article-body lg:col-span-3">${post.body}<div class="article-signoff"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>Thanks for stopping by.</span><button type="button" class="text-link" data-share>${icon('copy')}Copy link</button></div><a class="next-post card" href="/post/${other.slug}/"><span class="eyebrow">KEEP EXPLORING</span><span>${other.title}${icon('arrow')}</span><p>${other.description}</p></a></article><aside class="article-toc lg:col-span-1"><nav aria-label="On this page"><div class="eyebrow">ON THIS PAGE</div>${post.sections.map(([id, title]) => `<a href="#${id}">${title}</a>`).join('')}</nav><button type="button" class="text-link" data-open-rss>${icon('rss')}Follow with RSS</button></aside></div>
+  ` });
+}
+
+export function renderPages() {
+  return new Map([
+    ['index.html', home()], ['post/index.html', archive()], ['tags/index.html', archive('Topics', '/tags/')],
+    ['categories/index.html', archive('Categories', '/categories/')],
+    ...posts.map(post => [`post/${post.slug}/index.html`, article(post)]),
+    ['404.html', layout({ title: 'Page not found', path: '/404.html', content: `<section class="not-found">${label('404 / A SMALL DETOUR')}<h1>A little off the map.</h1><p>This page doesn’t exist, but there’s still plenty to explore.</p>${button('Back to the collection', '/')}</section>` })],
+    ...[['page/1/index.html', '/'], ['post/page/1/index.html', '/post/']].map(([file, path]) => [file, `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Redirecting — bazaar</title><link rel="canonical" href="${site.url}${path}"><meta http-equiv="refresh" content="0; url=${path}"></head><body><a href="${path}">Continue to bazaar</a></body></html>`]),
+  ]);
+}
