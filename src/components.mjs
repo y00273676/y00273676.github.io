@@ -20,7 +20,6 @@ const paths = {
   copy: '<rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/>',
   check: '<path d="m5 12 4 4L19 6"/>',
   clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
-  edit: '<path d="m16 3 5 5M4 15 16 3l5 5L9 20l-6 1 1-6Z"/>',
 };
 
 export const icon = (name, classes = '') => `<svg class="icon ${classes}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name] || paths.arrow}</svg>`;
@@ -34,7 +33,7 @@ export function header(active) {
   return `<a class="skip-link" href="#main">Skip to content</a><header class="site-header"><div class="shell header-inner">
     <a href="/" class="brand" aria-label="bazaar home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>bazaar<span class="brand-dot">.</span></a>
     <nav id="main-nav" class="main-nav" aria-label="Main navigation">${[['Home', '/'], ['Writing', '/post/'], ['Topics', '/tags/']].map(([name, href]) => `<a href="${href}" ${active === name ? 'aria-current="page"' : ''}>${name}</a>`).join('')}</nav>
-    <div class="header-actions"><a href="/editor/" class="write-link icon-button" aria-label="写笔记" title="写笔记">${icon('edit')}</a><button type="button" class="search-trigger" data-open-search aria-label="Search articles">${icon('search')}<span>Search</span><kbd>⌘ K</kbd></button><span class="header-divider"></span><button type="button" class="icon-button" data-theme-toggle aria-label="Switch to dark theme">${icon('sun', 'theme-sun')}${icon('moon', 'theme-moon')}</button><button type="button" class="icon-button menu-trigger" aria-label="Open navigation" aria-expanded="false" aria-controls="main-nav">${icon('menu')}</button></div>
+    <div class="header-actions"><button type="button" class="search-trigger" data-open-search aria-label="Search articles">${icon('search')}<span>Search</span><kbd>⌘ K</kbd></button><span class="header-divider"></span><button type="button" class="icon-button" data-theme-toggle aria-label="Switch to dark theme">${icon('sun', 'theme-sun')}${icon('moon', 'theme-moon')}</button><button type="button" class="icon-button menu-trigger" aria-label="Open navigation" aria-expanded="false" aria-controls="main-nav">${icon('menu')}</button></div>
   </div></header>`;
 }
 
