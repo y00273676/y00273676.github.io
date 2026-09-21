@@ -1,0 +1,942 @@
+<!doctype html>
+<html lang="zh-CN" id="top"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f7f8f5"><title>RAG 技术（面试八股文 · 模块三） — bazaar</title><meta name="description" content="RAG 与检索 · Agent 面试与笔试笔记。"><meta name="author" content="ks"><link rel="canonical" href="https://y00273676.github.io/agent-interview/collected/rag/"><meta property="og:title" content="RAG 技术（面试八股文 · 模块三） — bazaar"><meta property="og:description" content="RAG 与检索 · Agent 面试与笔试笔记。"><meta property="og:type" content="website"><meta property="og:url" content="https://y00273676.github.io/agent-interview/collected/rag/"><link rel="icon" type="image/svg+xml" href="/assets/favicon.svg"><link rel="alternate" type="application/rss+xml" title="bazaar" href="/index.xml"><script>try{document.documentElement.dataset.theme=localStorage.getItem('bazaar-theme')||'light'}catch{document.documentElement.dataset.theme='light'}</script><link rel="stylesheet" href="/assets/site.css"><script type="module" src="/assets/main.js"></script></head><body><a class="skip-link" href="#main">Skip to content</a><header class="site-header"><div class="shell header-inner">
+    <a href="/" class="brand" aria-label="bazaar home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>bazaar<span class="brand-dot">.</span></a>
+    <nav id="main-nav" class="main-nav" aria-label="Main navigation"><a href="/" >Home</a><a href="/post/" >Writing</a><a href="/agent-interview/" aria-current="page">Agent 面试</a><a href="/tags/" >Topics</a></nav>
+    <div class="header-actions"><button type="button" class="search-trigger" data-open-search aria-label="Search articles"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><span>Search</span><kbd>⌘ K</kbd></button><span class="header-divider"></span><button type="button" class="icon-button" data-theme-toggle aria-label="Switch to dark theme"><svg class="icon theme-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.4 1.4m11.2 11.2L19 19M5 19l1.4-1.4M17.6 6.4 19 5"/></svg><svg class="icon theme-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 13.2A8.5 8.5 0 0 1 10.8 3.5 8.5 8.5 0 1 0 20.5 13.2Z"/></svg></button><button type="button" class="icon-button menu-trigger" aria-label="Open navigation" aria-expanded="false" aria-controls="main-nav"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div>
+  </div></header><main id="main" class="shell" tabindex="-1">
+    <div class="reading-progress" aria-hidden="true"></div><nav class="article-back study-breadcrumb" aria-label="面包屑"><a href="/agent-interview/" class="text-link"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6"/></svg>Agent 面试笔记</a><span>/</span><a href="/agent-interview/#rag">RAG 与检索</a></nav>
+    <header class="article-header study-article-header"><div class="eyebrow">AGENT INTERVIEW / RAG 与检索</div><h1>RAG 技术（面试八股文 · 模块三）</h1><div class="article-meta"><span class="author-avatar">↗</span><span>网络资料 · bcefghj</span><span class="meta-separator"></span><time datetime="2026-09-21">收录于 2026-09-21</time><span class="meta-separator"></span><span>约 47 分钟</span></div></header><aside class="study-attribution" aria-label="资料来源"><div><span class="note-source note-source-collected">网络收录</span><a href="https://github.com/bcefghj/ai-agent-interview-guide">bcefghj / ai-agent-interview-guide</a><a href="https://github.com/bcefghj/ai-agent-interview-guide/blob/9a987322f2d82ddabe4c1aabc7b4795749fa90a2/docs/01-%E9%9D%A2%E8%AF%95%E5%85%AB%E8%82%A1%E6%96%87/03-RAG%E6%8A%80%E6%9C%AF.md">查看原文 <svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a><a href="/agent-interview/downloads/collected/ai-agent-interview-guide/LICENSE">MIT 许可</a></div><p>原仓库版本：2026-04-01。保留原文内容与引用，方便对照学习。</p></aside>
+    <details class="study-mobile-toc"><summary>本页目录 · 14 节</summary><nav aria-label="本页目录（移动端）"><a href="#%E7%9B%AE%E5%BD%95">目录</a><a href="#1-rag-%E5%9F%BA%E7%A1%80">1. RAG 基础</a><a href="#2-%E6%96%87%E6%A1%A3%E8%A7%A3%E6%9E%90%E4%B8%8E%E9%A2%84%E5%A4%84%E7%90%86">2. 文档解析与预处理</a><a href="#3-%E6%96%87%E6%A1%A3%E5%88%86%E5%9D%97%E7%AD%96%E7%95%A5chunking">3. 文档分块策略（Chunking）</a><a href="#4-%E5%90%91%E9%87%8F%E5%8C%96embedding">4. 向量化（Embedding）</a><a href="#5-%E5%90%91%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93">5. 向量数据库</a><a href="#6-%E6%A3%80%E7%B4%A2%E7%AD%96%E7%95%A5">6. 检索策略</a><a href="#7-%E9%87%8D%E6%8E%92%E5%BA%8Freranking">7. 重排序（Reranking）</a><a href="#8-rag-%E9%AB%98%E7%BA%A7%E6%A8%A1%E5%BC%8F">8. RAG 高级模式</a><a href="#9-rag-%E8%AF%84%E4%BC%B0">9. RAG 评估</a><a href="#10-rag-%E7%94%9F%E4%BA%A7%E4%BC%98%E5%8C%96">10. RAG 生产优化</a><a href="#11-%E7%BB%BC%E5%90%88%E9%9D%A2%E8%AF%95%E9%A2%98%E5%BA%9320-%E9%A2%98">11. 综合面试题库（20+ 题）</a><a href="#%E9%99%84%E5%BD%95langchain-%E5%90%91%E9%87%8F%E5%AD%98%E5%82%A8%E6%A3%80%E7%B4%A2lcel-%E7%A4%BA%E6%84%8F">附录：LangChain 向量存储检索（LCEL 示意）</a><a href="#%E5%B0%8F%E7%BB%93">小结</a></nav></details>
+    <div class="article-layout study-article-layout"><article class="article-body study-prose" id="note-content"><p><img src="/agent-interview/media/collected/ai-agent-interview-guide/comics/03-RAG%E6%B5%81%E7%A8%8B.png" alt="RAG流程" width="1376" height="768" loading="lazy" decoding="async"></p>
+<blockquote>
+<p>面向初学者的系统梳理：每个主题尽量包含 <strong>概念</strong>、<strong>原理</strong>、<strong>面试问答</strong>、<strong>追问应对</strong> 与 <strong>Python 代码示例</strong>。<br>
+建议配合动手实验：同一批文档，对比「仅向量 / 混合检索 / +重排」的答案质量差异。</p>
+</blockquote>
+<hr>
+<h2 id="目录">目录</h2>
+<ol>
+<li><a href="/agent-interview/collected/rag/#1-rag-%E5%9F%BA%E7%A1%80">RAG 基础</a></li>
+<li><a href="/agent-interview/collected/rag/#2-%E6%96%87%E6%A1%A3%E8%A7%A3%E6%9E%90%E4%B8%8E%E9%A2%84%E5%A4%84%E7%90%86">文档解析与预处理</a></li>
+<li><a href="/agent-interview/collected/rag/#3-%E6%96%87%E6%A1%A3%E5%88%86%E5%9D%97%E7%AD%96%E7%95%A5chunking">文档分块策略（Chunking）</a></li>
+<li><a href="/agent-interview/collected/rag/#4-%E5%90%91%E9%87%8F%E5%8C%96embedding">向量化（Embedding）</a></li>
+<li><a href="/agent-interview/collected/rag/#5-%E5%90%91%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93">向量数据库</a></li>
+<li><a href="/agent-interview/collected/rag/#6-%E6%A3%80%E7%B4%A2%E7%AD%96%E7%95%A5">检索策略</a></li>
+<li><a href="/agent-interview/collected/rag/#7-%E9%87%8D%E6%8E%92%E5%BA%8Freranking">重排序（Reranking）</a></li>
+<li><a href="/agent-interview/collected/rag/#8-rag-%E9%AB%98%E7%BA%A7%E6%A8%A1%E5%BC%8F">RAG 高级模式</a></li>
+<li><a href="/agent-interview/collected/rag/#9-rag-%E8%AF%84%E4%BC%B0">RAG 评估</a></li>
+<li><a href="/agent-interview/collected/rag/#10-rag-%E7%94%9F%E4%BA%A7%E4%BC%98%E5%8C%96">RAG 生产优化</a></li>
+<li><a href="/agent-interview/collected/rag/#11-%E7%BB%BC%E5%90%88%E9%9D%A2%E8%AF%95%E9%A2%98%E5%BA%9320-%E9%A2%98">综合面试题库（20+ 题）</a></li>
+</ol>
+<hr>
+<h2 id="1-rag-基础">1. RAG 基础</h2>
+<h3 id="11-ragretrieval-augmented-generation定义与原理">1.1 RAG（Retrieval-Augmented Generation）定义与原理</h3>
+<p><strong>概念解释</strong><br>
+RAG（检索增强生成）指：在让大语言模型（LLM）生成答案 <strong>之前</strong>，先从 <strong>外部知识库</strong>（文档、数据库、网页等）中 <strong>检索</strong> 与用户问题相关的片段，再把这些片段作为 <strong>上下文</strong> 一并输入模型，从而 <strong>约束</strong> 模型的输出依据。</p>
+<p><strong>原理详解</strong></p>
+<ol>
+<li><strong>离线阶段</strong>：把原始文档解析、清洗、分块 → 用 Embedding 模型转成向量 → 存入向量索引（或配合关键词索引）。</li>
+<li><strong>在线阶段</strong>：用户提问 →（可选）查询改写 → 检索 Top-K 相关块 →（可选）重排序 → 将块拼进 Prompt → LLM 基于「问题 + 检索上下文」生成答案。</li>
+</ol>
+<p>核心思想：<strong>把「记忆」从模型参数里搬到「可更新的外部存储」</strong>，生成时按需取用。</p>
+<p><strong>面试 Q1：请用一句话解释 RAG。</strong><br>
+<strong>标准答案 A：</strong> RAG 是在生成前先从外部知识库检索相关证据，再把证据作为上下文交给大模型，以减少幻觉并支持实时更新的知识增强范式。</p>
+<p><strong>追问应对</strong></p>
+<ul>
+<li><strong>问：RAG 和「把文档全文塞进 Prompt」有什么区别？</strong><br>
+<strong>答：</strong> 全文往往超长、噪声大、成本高；RAG 通过检索只取 <strong>最相关的一小部分</strong>，在 <strong>效果、延迟、费用</strong> 上更可控，也更适合大规模知识库。</li>
+</ul>
+<hr>
+<h3 id="12-为什么需要-rag知识截止幻觉实时性">1.2 为什么需要 RAG（知识截止、幻觉、实时性）</h3>
+<p><strong>概念解释</strong></p>
+<ul>
+<li><strong>知识截止（Knowledge Cutoff）</strong>：预训练/基座模型只在某个时间点之前的数据上学习，之后发生的事实它「天然不知道」。</li>
+<li><strong>幻觉（Hallucination）</strong>：模型在缺乏依据时仍会「编得像真的」。</li>
+<li><strong>实时性</strong>：业务数据（工单、库存、政策）每分钟都在变，仅靠静态模型参数无法反映。</li>
+</ul>
+<p><strong>原理详解</strong><br>
+RAG 通过 <strong>可检索的外部证据</strong> 提供「当下可查」的依据，让模型 <strong>少凭空捏造</strong>；同时索引可 <strong>增量更新</strong>，不必频繁全量微调模型。</p>
+<p><strong>面试 Q2：为什么企业落地常选 RAG 而不是只靠更大的基座模型？</strong><br>
+<strong>标准答案 A：</strong> 大模型再强也有知识截止与领域盲区；企业私域数据往往不能用于预训练。RAG 把私域知识以索引形式接入，可审计、可更新，并在同样上下文窗口下聚焦 <strong>高相关片段</strong>，性价比更高。</p>
+<p><strong>追问应对</strong></p>
+<ul>
+<li><strong>问：RAG 能完全消除幻觉吗？</strong><br>
+<strong>答：</strong> 不能。若检索错、块质量差、或模型忽略证据，仍可能幻觉。需要检索、重排、引用约束、评估与人工审核配合。</li>
+</ul>
+<hr>
+<h3 id="13-rag-vs-微调-vs-长上下文-的对比">1.3 RAG vs 微调 vs 长上下文 的对比</h3>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>维度</th>
+<th>RAG</th>
+<th>微调（Fine-tuning）</th>
+<th>长上下文（Long Context）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>知识更新</strong></td>
+<td>更新索引即可，快</td>
+<td>需重新训练/LoRA，慢</td>
+<td>仍需把新内容「放进上下文」或靠记忆机制</td>
+</tr>
+<tr>
+<td><strong>私域/合规</strong></td>
+<td>文档可本地化部署</td>
+<td>数据需用于训练，合规要求高</td>
+<td>长上下文仍可能泄露敏感片段到日志</td>
+</tr>
+<tr>
+<td><strong>成本</strong></td>
+<td>检索+小上下文生成，通常更省</td>
+<td>训练/数据标注成本高</td>
+<td>长上下文推理贵、延迟高</td>
+</tr>
+<tr>
+<td><strong>适用</strong></td>
+<td>事实问答、手册、客服知识库</td>
+<td>风格、格式、领域「说话方式」、小任务专用模型</td>
+<td>单文档极长且需全局推理时</td>
+</tr>
+<tr>
+<td><strong>典型短板</strong></td>
+<td>检索失败则答案差</td>
+<td>难频繁追新事实；易过拟合小数据</td>
+<td>注意力分散、「中间遗忘」、费用</td>
+</tr>
+</tbody>
+</table></div><p><strong>原理简述</strong><br>
+三者不是互斥：常见做法是 <strong>RAG 提供事实依据 + 轻量微调改善领域表达 + 长上下文处理单篇超长材料</strong>。</p>
+<p><strong>面试 Q3：什么时候优先微调而不是 RAG？</strong><br>
+<strong>标准答案 A：</strong> 当目标主要是 <strong>行为与格式</strong>（如输出 JSON、口吻、工具调用习惯），或训练数据 <strong>稳定且可标注</strong>，而不仅是「塞事实」；事实类仍建议 RAG 或可检索记忆。</p>
+<hr>
+<h3 id="14-native-rag-完整流程图文字描述">1.4 Native RAG 完整流程图（文字描述）</h3>
+<p>可用以下 <strong>自上而下</strong> 的文字流程在面试中口述：</p>
+<div class="code-block"><div class="code-header"><span>text</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>[离线流水线]
+原始文件(PDF/Word/HTML/MD/...)
+    → 解析与清洗(去噪、统一编码、元数据)
+    → 结构化分块(Chunking，含重叠/父子块可选)
+    → 文本嵌入(Embedding)
+    → 写入向量索引(+ 可选倒排索引/BM25)
+    → (可选) 版本管理与增量更新
+
+[在线问答]
+用户 Query
+    → (可选) Query 改写 / 子问题分解 / HyDE
+    → 检索：向量相似度 Top-K (+ 可选 BM25 混合)
+    → (可选) Cross-Encoder 重排序
+    → (可选) MMR 去冗余
+    → 拼装 Prompt：系统指令 + 检索上下文 + 用户问题
+    → LLM 生成答案
+    → (可选) 引用出处、拒答策略、日志与评估回流
+</code></pre></div><p><strong>面试 Q4：离线与在线的职责分别是什么？</strong><br>
+<strong>标准答案 A：</strong> 离线负责 <strong>把非结构化知识变成可检索的索引</strong>（解析、分块、向量化、建索引、更新）；在线负责 <strong>理解用户意图、检索、融合、约束生成</strong>，并保证延迟与成本可控。</p>
+<hr>
+<h3 id="15-代码示例最小-rag-流水线概念级">1.5 代码示例：最小 RAG 流水线（概念级）</h3>
+<p>下面用 <strong>伪代码级</strong> 展示「嵌入 + 向量库 + 调用 LLM」的最小闭环（实际项目请替换为真实 API Key 与错误处理）。</p>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code># 最小概念示例：Embedding + 向量检索 + LLM（需安装 openai 等依赖）
+from typing import List
+
+def embed_texts(texts: List[str], model: str = &quot;text-embedding-3-small&quot;) -&gt; List[List[float]]:
+    &quot;&quot;&quot;将文本列表转为向量；此处用 OpenAI 风格接口举例。&quot;&quot;&quot;
+    import openai
+    resp = openai.embeddings.create(model=model, input=texts)
+    return [d.embedding for d in resp.data]
+
+def cosine_sim(a: List[float], b: List[float]) -&gt; float:
+    import math
+    dot = sum(x * y for x, y in zip(a, b))
+    na = math.sqrt(sum(x * x for x in a))
+    nb = math.sqrt(sum(y * y for y in b))
+    return dot / (na * nb + 1e-8)
+
+def naive_retrieve(query: str, chunks: List[str], top_k: int = 3) -&gt; List[str]:
+    q = embed_texts([query])[0]
+    scores = [(cosine_sim(q, embed_texts([c])[0]), c) for c in chunks]  # 生产应批量 embed
+    scores.sort(key=lambda x: x[0], reverse=True)
+    return [c for _, c in scores[:top_k]]
+
+# chunks = [&quot;公司年假规定...&quot;, &quot;报销流程...&quot;]
+# context = naive_retrieve(&quot;年假多少天？&quot;, chunks)
+# prompt = f&quot;仅根据上下文回答：\n{context}\n\n问题：年假多少天？&quot;
+</code></pre></div><blockquote>
+<p><strong>说明：</strong> 生产环境应对 <strong>chunks 批量嵌入并缓存</strong>；检索应用 <strong>ANN 索引</strong>（见第 5 节），不要暴力两两算相似度。</p>
+</blockquote>
+<hr>
+<h2 id="2-文档解析与预处理">2. 文档解析与预处理</h2>
+<h3 id="21-pdfwordhtmlmarkdown-解析工具">2.1 PDF、Word、HTML、Markdown 解析工具</h3>
+<p><strong>概念解释</strong><br>
+解析是把 <strong>二进制或标记格式</strong> 变成 <strong>可切分的纯文本</strong>（并尽量保留标题层级、表格位置等结构信息）。</p>
+<p><strong>常见工具</strong></p>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>类型</th>
+<th>工具</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PDF</td>
+<td><code>PyPDF2</code> / <code>pypdf</code>，<code>pdfplumber</code>（表格友好）</td>
+<td>纯文本 PDF 效果好；扫描版需 OCR</td>
+</tr>
+<tr>
+<td>多格式</td>
+<td><code>Unstructured</code></td>
+<td>统一分区（标题、列表、表格），适合流水线</td>
+</tr>
+<tr>
+<td>JVM 生态</td>
+<td><strong>Apache Tika</strong></td>
+<td>服务端批量解析 Word/PDF 等，适合 Java 栈或与 Python 子进程配合</td>
+</tr>
+<tr>
+<td>Word</td>
+<td><code>python-docx</code></td>
+<td>读 <code>.docx</code> 段落与表格</td>
+</tr>
+<tr>
+<td>HTML</td>
+<td><code>BeautifulSoup4</code>、<code>readability-lxml</code></td>
+<td>去导航栏等噪声，抽正文</td>
+</tr>
+<tr>
+<td>Markdown</td>
+<td>直接用文本读入 + <code>markdown</code> 库转 AST（可选）</td>
+<td>结构清晰，最适合 RAG</td>
+</tr>
+</tbody>
+</table></div><p><strong>原理详解</strong><br>
+PDF 本质是 <strong>排版指令</strong>，不是「自然段落」；同一页可能多栏、页眉页脚会混入。解析后要 <strong>按逻辑顺序</strong> 重组，否则分块会乱序。</p>
+<p><strong>面试 Q5：PDF 解析常见坑有哪些？</strong><br>
+<strong>标准答案 A：</strong><br>
+1）扫描件无文本层，必须 OCR；<br>
+2）多栏、脚注、页码混入正文；<br>
+3）表格被拆成无序碎片；<br>
+4）字体编码异常导致乱码。<br>
+对策：版面分析（layout）、表格专用解析、人工抽检与清洗规则。</p>
+<p><strong>追问应对</strong></p>
+<ul>
+<li><strong>问：为什么很多团队推荐 Unstructured？</strong><br>
+<strong>答：</strong> 它把文档分成带类型的元素（Title、NarrativeText、Table 等），便于 <strong>按结构分块</strong> 和后续路由（表格走表格策略）。</li>
+</ul>
+<hr>
+<h3 id="22-ocr-处理">2.2 OCR 处理</h3>
+<p><strong>概念解释</strong><br>
+OCR（光学字符识别）把 <strong>图像中的文字</strong> 变成可检索文本，用于扫描 PDF、拍照、截图。</p>
+<p><strong>原理简述</strong><br>
+典型流程：图像预处理（纠偏、二值化）→ 文字检测（框出文本行）→ 识别（CRNN/Transformer）→ 后处理（词典纠错）。</p>
+<p><strong>常用方案</strong></p>
+<ul>
+<li>云服务：Azure Document Intelligence、Google Document AI、阿里云 OCR</li>
+<li>开源：<code>Tesseract</code>、<code>PaddleOCR</code>（中文友好）、<code>EasyOCR</code></li>
+</ul>
+<p><strong>面试 Q6：OCR 结果对 RAG 有什么影响？</strong><br>
+<strong>标准答案 A：</strong> OCR 会引入错字、断行、丢标点，导致 <strong>检索词不匹配</strong> 与 <strong>embedding 语义偏移</strong>。需要在清洗阶段做规范化，并考虑 <strong>关键词 + 向量混合检索</strong> 提高鲁棒性。</p>
+<hr>
+<h3 id="23-表格和图片的处理策略">2.3 表格和图片的处理策略</h3>
+<p><strong>概念解释</strong></p>
+<ul>
+<li><strong>表格</strong>：结构化信息密集，拆成纯文本易丢行列关系。</li>
+<li><strong>图片</strong>：含流程图、架构图时，纯 OCR 往往不够，需要 <strong>多模态模型</strong> 生成描述。</li>
+</ul>
+<p><strong>策略</strong></p>
+<ol>
+<li><strong>表格</strong>：保留为 Markdown/HTML 表格字符串；或转为 <strong>JSON 行记录</strong> 存两份索引（自然语言版 + 结构化版）。</li>
+<li><strong>图片</strong>：用 <strong>Caption 模型</strong>（如 BLIP、多模态大模型）生成描述文本再入库；或对关键图做 <strong>人工标注</strong>。</li>
+<li><strong>图文混排</strong>：按阅读顺序拼接「图注 + OCR/Caption + 相邻段落」为一个块或父子块。</li>
+</ol>
+<p><strong>面试 Q7：表格为什么难做 RAG？</strong><br>
+<strong>标准答案 A：</strong> 表格语义依赖 <strong>行列关系</strong> 与 <strong>表头</strong>；固定长度切分易切断行列。应用 <strong>表头感知分块</strong>、<strong>SQL/结构化检索</strong> 或 <strong>专用表格问答模型</strong> 辅助。</p>
+<hr>
+<h3 id="24-数据清洗与标准化">2.4 数据清洗与标准化</h3>
+<p><strong>要点清单</strong></p>
+<ul>
+<li>统一编码（UTF-8）、去除不可见字符</li>
+<li>合并多余空白与断行</li>
+<li>全角半角、数字与单位格式统一</li>
+<li>去重（MinHash/SimHash 或 embedding 聚类）</li>
+<li>PII 脱敏（电话、身份证）按合规要求</li>
+</ul>
+<p><strong>代码示例：基础清洗</strong></p>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>import re
+import unicodedata
+
+def normalize_text(s: str) -&gt; str:
+    s = unicodedata.normalize(&quot;NFKC&quot;, s)
+    s = s.replace(&quot;\u200b&quot;, &quot;&quot;)  # 零宽字符
+    s = re.sub(r&quot;\s+&quot;, &quot; &quot;, s).strip()
+    return s
+</code></pre></div><p><strong>代码示例：PyPDF / Unstructured（按需安装：<code>pip install pypdf unstructured</code>）</strong></p>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code># --- 方式 A：pypdf 读取纯文本 PDF ---
+from pypdf import PdfReader
+
+def extract_pdf_pypdf(path: str) -&gt; str:
+    reader = PdfReader(path)
+    parts = []
+    for page in reader.pages:
+        parts.append(page.extract_text() or &quot;&quot;)
+    return normalize_text(&quot;\n&quot;.join(parts))
+
+# --- 方式 B：Unstructured 分区（适合后续按类型路由）---
+# from unstructured.partition.auto import partition
+# elements = partition(filename=&quot;手册.pdf&quot;)
+# texts = [el.text for el in elements if getattr(el, &quot;text&quot;, None)]
+</code></pre></div><p><strong>追问应对</strong></p>
+<ul>
+<li><strong>问：Apache Tika 在 Python 里怎么用？</strong><br>
+<strong>答：</strong> 常见做法是 <strong>Java 起 Tika Server</strong>，Python 用 HTTP 调用；或在 JVM 服务内解析后把文本推给 Python 流水线。适合已有 Java 中间件、需统一解析多种 Office 格式的企业。</li>
+</ul>
+<hr>
+<h2 id="3-文档分块策略chunking">3. 文档分块策略（Chunking）</h2>
+<h3 id="31-固定长度分块fixed-size">3.1 固定长度分块（Fixed Size）</h3>
+<p><strong>概念解释</strong><br>
+按字符数或 token 数切分，例如每 512 字符一块，简单高效。</p>
+<p><strong>原理与缺陷</strong><br>
+实现简单，但常在 <strong>句子中间</strong> 切断，语义不完整；对代码、Markdown 结构不友好。</p>
+<hr>
+<h3 id="32-递归字符分割recursivecharactertextsplitter">3.2 递归字符分割（RecursiveCharacterTextSplitter）</h3>
+<p><strong>概念解释</strong><br>
+LangChain 中常见：按 <strong>分隔符优先级</strong> 递归切分，例如 <code>[&quot;\n\n&quot;, &quot;\n&quot;, &quot; &quot;, &quot;&quot;]</code>，尽量在段落、句子边界断开。</p>
+<p><strong>原理</strong><br>
+先找高优先级分隔符；若块仍超长，再用下一级分隔符切，直到满足 <code>chunk_size</code>，并用 <code>chunk_overlap</code> 保留上下文衔接。</p>
+<hr>
+<h3 id="33-语义分块semantic-chunking">3.3 语义分块（Semantic Chunking）</h3>
+<p><strong>概念解释</strong><br>
+按 <strong>语义相似度变化</strong> 切分：相邻句子/段落嵌入向量，若相似度骤降则认为话题转换，在此处断开。</p>
+<p><strong>原理</strong><br>
+更贴近「话题边界」，但 <strong>计算成本高</strong>，需设定阈值与最小块长度，避免过碎。</p>
+<hr>
+<h3 id="34-按文档结构分块markdown-headerhtml-section">3.4 按文档结构分块（Markdown Header、HTML Section）</h3>
+<p><strong>概念解释</strong><br>
+利用 <code># 标题</code> 或 HTML 的 <code>&lt;section&gt;</code> / 标题标签，把 <strong>同一小节</strong> 作为块或父文档。</p>
+<p><strong>原理</strong><br>
+保证块内主题一致；检索命中时可返回 <strong>完整小节</strong>。</p>
+<hr>
+<h3 id="35-滑动窗口分块">3.5 滑动窗口分块</h3>
+<p><strong>概念解释</strong><br>
+以窗口长度 (W) 和步长 (S)（(S &lt; W)）滑动切分，相邻窗口重叠 (W-S)。</p>
+<p><strong>原理</strong><br>
+减少边界信息丢失；代价是 <strong>存储膨胀</strong> 与 <strong>冗余检索</strong>，常配合去重或 MMR。</p>
+<hr>
+<h3 id="36-chunksize-与-chunkoverlap-选择策略">3.6 chunk_size 与 chunk_overlap 选择策略</h3>
+<p><strong>经验法则（需实测）</strong></p>
+<ul>
+<li><strong>chunk_size</strong>：应覆盖 <strong>完整命题</strong>（一条规定、一个步骤），常见几百到一两千 token 量级；太小上下文不足，太大噪声多。</li>
+<li><strong>chunk_overlap</strong>：通常为 size 的 <strong>10%–20%</strong>，避免切断关键句；overlap 越大，索引越大。</li>
+<li><strong>以评估为准</strong>：同一数据集扫网格，看 <strong>召回率与答案质量</strong>。</li>
+</ul>
+<p><strong>面试 Q8：分块太大或太小分别会怎样？</strong><br>
+<strong>标准答案 A：</strong> 太小 → 语义不完整、检索片段缺主语或条件；太大 → 混入无关内容、噪声干扰生成、embedding 语义模糊、费用上升。</p>
+<hr>
+<h3 id="37-父子文档分块parent-child-chunking">3.7 父子文档分块（Parent-Child Chunking）</h3>
+<p><strong>概念解释</strong><br>
+<strong>子块</strong>（小，用于检索embedding）+ <strong>父块</strong>（大，用于喂给 LLM），检索命中子块后取回其父块全文。</p>
+<p><strong>原理</strong><br>
+兼顾 <strong>检索精度</strong>（细粒度匹配）与 <strong>生成上下文完整性</strong>（父块提供更多句子）。</p>
+<p><strong>面试 Q8a：父子块在向量库里怎么建索引？</strong><br>
+<strong>标准答案 A：</strong> 仅对 <strong>子块</strong> 写入向量与 <code>child_id</code>；元数据中存 <strong><code>parent_id</code> 与父块全文或父块存储路径</strong>。检索命中子块后，用 <code>parent_id</code> <strong>取父块</strong> 拼进 Prompt。若父块过长，可对父块再 <strong>摘要</strong> 后送入。</p>
+<p><strong>代码示例：父子块数据结构（最小示意）</strong></p>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>from dataclasses import dataclass
+from typing import List
+
+@dataclass
+class ParentChunk:
+    parent_id: str
+    text: str
+    children: List[&quot;ChildChunk&quot;]
+
+@dataclass
+class ChildChunk:
+    child_id: str
+    parent_id: str
+    text: str  # 小块，用于 embedding
+
+# 索引阶段：只对 ChildChunk.text 做 embed，payload 带 parent_id
+# 检索阶段：命中 child_id -&gt; 查 ParentChunk.text 作为生成上下文
+</code></pre></div><hr>
+<h3 id="38-代码示例langchain-各种-textsplitter">3.8 代码示例：LangChain 各种 TextSplitter</h3>
+<p>需安装：<code>pip install langchain langchain-text-splitters</code></p>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>from langchain_text_splitters import (
+    CharacterTextSplitter,
+    RecursiveCharacterTextSplitter,
+    MarkdownHeaderTextSplitter,
+)
+
+text = &quot;第一段。\n\n第二段更长一些，用于演示递归分割。\n\n第三段。\n&quot;
+
+# 1) 固定字符分块
+fixed = CharacterTextSplitter(separator=&quot;\n\n&quot;, chunk_size=40, chunk_overlap=5)
+print(&quot;Fixed:&quot;, fixed.split_text(text))
+
+# 2) 递归字符分割（推荐作为默认基线）
+recursive = RecursiveCharacterTextSplitter(
+    chunk_size=60,
+    chunk_overlap=10,
+    separators=[&quot;\n\n&quot;, &quot;\n&quot;, &quot; &quot;, &quot;&quot;],
+)
+print(&quot;Recursive:&quot;, recursive.split_text(text))
+
+# 3) Markdown 按标题分块
+md = &quot;# 总则\n内容A\n\n## 细则\n内容B\n&quot;
+headers = [(&quot;#&quot;, &quot;一级&quot;), (&quot;##&quot;, &quot;二级&quot;)]
+md_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=headers)
+md_docs = md_splitter.split_text(md)
+print(&quot;MD docs metadata:&quot;, [d.metadata for d in md_docs])
+
+# 4) 语义分块（需 embedding 模型；此处仅展示 API 思路）
+try:
+    from langchain_experimental.text_splitter import SemanticChunker
+    from langchain_openai import OpenAIEmbeddings
+    # embeddings = OpenAIEmbeddings(model=&quot;text-embedding-3-small&quot;)
+    # semantic_splitter = SemanticChunker(embeddings, breakpoint_threshold_type=&quot;percentile&quot;)
+    # semantic_chunks = semantic_splitter.create_documents([text])
+except Exception:
+    pass  # 实验包未安装时跳过
+</code></pre></div><p><strong>追问应对</strong></p>
+<ul>
+<li><strong>问：为什么生产常用 Recursive 而不是 Fixed？</strong><br>
+<strong>答：</strong> Recursive 尽量在 <strong>自然边界</strong> 断开，减少半句半段，提高检索与阅读连贯性。</li>
+</ul>
+<hr>
+<h2 id="4-向量化embedding">4. 向量化（Embedding）</h2>
+<h3 id="41-什么是文本嵌入embedding">4.1 什么是文本嵌入（Embedding）</h3>
+<p><strong>概念解释</strong><br>
+Embedding 把离散文本映射为 <strong>固定维度的稠密向量</strong>，语义相近的文本在向量空间中 <strong>距离更近</strong>（常用余弦相似度或内积）。</p>
+<p><strong>原理详解</strong><br>
+训练目标多为 <strong>对比学习</strong>：同义句拉近、无关句推远。下游用向量近似 <strong>语义检索</strong>。</p>
+<hr>
+<h3 id="42-常用-embedding-模型">4.2 常用 Embedding 模型</h3>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>系列</th>
+<th>代表</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OpenAI</td>
+<td><code>text-embedding-3-small/large</code></td>
+<td>生态成熟，需 API 费用</td>
+</tr>
+<tr>
+<td>BAAI</td>
+<td><strong>BGE</strong>（bge-large-zh-v1.5 等）</td>
+<td>中文开源常用，可本地部署</td>
+</tr>
+<tr>
+<td>Moka</td>
+<td><strong>M3E</strong></td>
+<td>中文句向量，轻量</td>
+</tr>
+<tr>
+<td>Jina</td>
+<td><strong>jina-embeddings</strong></td>
+<td>长文本、多语言场景有优势</td>
+</tr>
+</tbody>
+</table></div><hr>
+<h3 id="43-embedding-模型选型标准">4.3 Embedding 模型选型标准</h3>
+<ol>
+<li><strong>语言与领域</strong>：中文优先中文强化模型；医疗/法律可看领域微调版。</li>
+<li><strong>序列长度</strong>：长文档需更长上下文 embedding 或先分段再聚合。</li>
+<li><strong>许可证与部署</strong>：云端 API vs 私有化。</li>
+<li><strong>与重排/生成模型一致性</strong>：有时同一厂商链路更省心（非必须）。</li>
+</ol>
+<hr>
+<h3 id="44-维度速度效果的权衡">4.4 维度、速度、效果的权衡</h3>
+<ul>
+<li><strong>维度高</strong>：通常表达能力更强，但索引更大、ANN 更慢。</li>
+<li><strong>速度</strong>：批量推理、GPU、量化（INT8）可加速。</li>
+<li><strong>效果</strong>：以 <strong>检索召回@K</strong> 与 <strong>端到端问答</strong> 为准。</li>
+</ul>
+<p><strong>面试 Q9：同一个 Embedding 用于中英文混合文档要注意什么？</strong><br>
+<strong>标准答案 A：</strong> 选 <strong>多语言模型</strong> 或分别建索引；单语模型可能导致跨语言语义空间不一致。混合检索（BM25）可补关键词。</p>
+<p><strong>代码示例：sentence-transformers（本地 BGE）</strong></p>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code># pip install sentence-transformers
+from sentence_transformers import SentenceTransformer
+
+model = SentenceTransformer(&quot;BAAI/bge-large-zh-v1.5&quot;)
+sentences = [&quot;RAG 检索增强生成&quot;, &quot;大模型需要外部知识库&quot;]
+emb = model.encode(sentences, normalize_embeddings=True)  # 归一化后余弦=点积
+print(emb.shape)  # (2, dim)
+</code></pre></div><hr>
+<h2 id="5-向量数据库">5. 向量数据库</h2>
+<h3 id="51-什么是向量数据库">5.1 什么是向量数据库</h3>
+<p><strong>概念解释</strong><br>
+面向 <strong>高维向量</strong> 的存储与 <strong>近似最近邻（ANN）</strong> 查询系统，支持 <code>insert/delete/query</code>，常附带元数据过滤（时间、租户、标签）。</p>
+<p><strong>原理</strong><br>
+暴力精确检索在高维下不可行；用 <strong>ANN 算法</strong> 换 <strong>略微精度</strong> 换 <strong>数量级加速</strong>。</p>
+<hr>
+<h3 id="52-主流选型对比">5.2 主流选型对比</h3>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>产品</th>
+<th>特点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>FAISS</strong>（Meta）</td>
+<td>单机库，非完整数据库；极致性能研究向</td>
+<td>原型、离线实验、嵌入现有服务</td>
+</tr>
+<tr>
+<td><strong>Milvus</strong></td>
+<td>云原生、分布式、可扩展至百亿级</td>
+<td>大规模生产、需要分区与多副本</td>
+</tr>
+<tr>
+<td><strong>Pinecone</strong></td>
+<td>全托管 SaaS，零运维</td>
+<td>快速上线、无运维团队</td>
+</tr>
+<tr>
+<td><strong>Chroma</strong></td>
+<td>轻量、易上手</td>
+<td>原型、小项目</td>
+</tr>
+<tr>
+<td><strong>Weaviate</strong></td>
+<td>GraphQL API、内置模块</td>
+<td>需要图式查询与生态集成</td>
+</tr>
+<tr>
+<td><strong>Qdrant</strong></td>
+<td>Rust 实现、过滤丰富、性能强</td>
+<td>自托管生产、复杂过滤</td>
+</tr>
+</tbody>
+</table></div><p><strong>面试 Q10：FAISS 和 Milvus 本质区别？</strong><br>
+<strong>标准答案 A：</strong> FAISS 是 <strong>ANN 算法库</strong>，需自建存储、服务、容灾；Milvus 是 <strong>向量数据库系统</strong>，提供分布式存储、运维能力与数据管理接口。</p>
+<hr>
+<h3 id="53-ann-算法hnswivfpq">5.3 ANN 算法：HNSW、IVF、PQ</h3>
+<ul>
+<li><strong>HNSW（分层导航小世界图）</strong>：图索引，查询延迟低，内存占用偏高；高召回常用。</li>
+<li><strong>IVF（倒排文件）</strong>：聚类划分桶，查询只搜部分桶；需训练，适合大规模。</li>
+<li><strong>PQ（乘积量化）</strong>：向量压缩，省内存、加速距离计算；有损，精度略降。</li>
+</ul>
+<p><strong>面试 Q5a：HNSW 与 IVF 如何取舍？</strong><br>
+<strong>标准答案 A：</strong> 数据量 <strong>中等、追求低延迟高召回</strong>、内存可接受时优先 <strong>HNSW</strong>；数据量 <strong>极大、内存紧张</strong>、可接受离线训练与调参时考虑 <strong>IVF</strong>（常与 PQ 组合）。实际要在 <strong>召回率、QPS、内存、建索引时间</strong> 上做压测。</p>
+<p><strong>追问应对</strong></p>
+<ul>
+<li><strong>问：efSearch 调大有什么效果？</strong><br>
+<strong>答：</strong> HNSW 查询时访问更多邻居，<strong>召回上升、延迟上升</strong>；需在精度与 SLA 间折中。</li>
+</ul>
+<hr>
+<h3 id="54-索引选择策略">5.4 索引选择策略</h3>
+<ol>
+<li><strong>数据量小、要简单</strong>：HNSW + 精确参数调优。</li>
+<li><strong>数据量大、内存紧</strong>：IVF + PQ 组合（如 IVF_PQ）。</li>
+<li><strong>要磁盘级大规模</strong>：DiskANN 类方案（视产品支持）。</li>
+<li><strong>强过滤</strong>：选对 <strong>元数据索引友好</strong> 的实现（Qdrant、Milvus 过滤能力强）。</li>
+</ol>
+<p><strong>代码示例：FAISS + sentence-transformers（最小示例）</strong></p>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>import faiss
+import numpy as np
+from sentence_transformers import SentenceTransformer
+
+model = SentenceTransformer(&quot;BAAI/bge-small-zh-v1.5&quot;)
+texts = [&quot;条款A&quot;, &quot;条款B&quot;, &quot;无关内容C&quot;]
+emb = model.encode(texts, normalize_embeddings=True).astype(&quot;float32&quot;)
+dim = emb.shape[1]
+
+index = faiss.IndexFlatIP(dim)  # 归一化后内积=余弦相似度
+index.add(emb)
+
+q = model.encode([&quot;和A相关的查询&quot;], normalize_embeddings=True).astype(&quot;float32&quot;)
+D, I = index.search(q, k=2)
+print(&quot;scores:&quot;, D, &quot;indices:&quot;, I)
+</code></pre></div><hr>
+<h2 id="6-检索策略">6. 检索策略</h2>
+<h3 id="61-向量检索语义相似度">6.1 向量检索（语义相似度）</h3>
+<p><strong>概念解释</strong><br>
+Query 与文档块 embedding 后做 <strong>Top-K 最近邻</strong>。</p>
+<p><strong>短板</strong><br>
+专有名词、型号、编号等 <strong>精确匹配</strong> 不如关键词检索。</p>
+<hr>
+<h3 id="62-关键词检索bm25">6.2 关键词检索（BM25）</h3>
+<p><strong>概念解释</strong><br>
+BM25 是经典 <strong>词频-逆文档频率</strong> 加权排序函数，擅长 <strong>精确词匹配</strong>。</p>
+<hr>
+<h3 id="63-混合检索hybrid-search">6.3 混合检索（Hybrid Search）</h3>
+<p><strong>概念解释</strong><br>
+<strong>BM25 分数 + 向量分数</strong> 线性加权或归一化后融合，兼顾语义与字面。</p>
+<p><strong>代码思路（概念）</strong></p>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>def min_max_norm(scores):
+    s_min, s_max = min(scores), max(scores)
+    if s_max == s_min:
+        return [1.0 for _ in scores]
+    return [(s - s_min) / (s_max - s_min) for s in scores]
+
+def hybrid_fuse(vec_scores, bm25_scores, alpha=0.5):
+    v = min_max_norm(vec_scores)
+    b = min_max_norm(bm25_scores)
+    return [alpha * vi + (1 - alpha) * bi for vi, bi in zip(v, b)]
+</code></pre></div><hr>
+<h3 id="64-多路检索与结果融合rrf">6.4 多路检索与结果融合（RRF）</h3>
+<p><strong>概念解释</strong><br>
+<strong>RRF（Reciprocal Rank Fusion）</strong>：不依赖原始分数尺度，把多路检索的 <strong>排名</strong> 融合：<br>
+(\text{RRF}(d) = \sum_r \frac{1}{k + \text{rank}_r(d)})，常取 (k=60)。</p>
+<p><strong>原理</strong><br>
+各路检索分数不可比时，RRF 更稳健。</p>
+<p><strong>面试 Q11：为什么混合检索比单路向量更有效？</strong><br>
+<strong>标准答案 A：</strong> 向量捕获语义，但可能漏掉 <strong>专有名词与编号</strong>；BM25 补精确匹配。二者融合提高鲁棒性，尤其在技术文档与电商场景。</p>
+<p><strong>面试 Q11a：RRF 与加权分数融合各适合什么？</strong><br>
+<strong>标准答案 A：</strong> 当两路分数 <strong>量纲一致或已可靠归一化</strong> 时，加权融合直观可调；当一路是 <strong>排名</strong>、一路是 <strong>概率</strong>、或分数 <strong>不可比</strong> 时，<strong>RRF 更稳</strong>，且少调参（经典 (k=60)）。</p>
+<p><strong>代码示例：RRF 多路排名融合</strong></p>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>from typing import Dict, List, Sequence
+
+def rrf_fuse(
+    ranked_lists: Sequence[Sequence[str]],
+    k: int = 60,
+) -&gt; List[tuple[str, float]]:
+    &quot;&quot;&quot;ranked_lists: 多路检索结果，每路为 doc_id 从优到劣的列表。&quot;&quot;&quot;
+    scores: Dict[str, float] = {}
+    for ranks in ranked_lists:
+        for rank, doc_id in enumerate(ranks, start=1):
+            scores[doc_id] = scores.get(doc_id, 0.0) + 1.0 / (k + rank)
+    return sorted(scores.items(), key=lambda x: x[1], reverse=True)
+
+# 示例：向量路 Top-K 与 BM25 路 Top-K 的 doc_id 列表
+# vec_ids = [&quot;d3&quot;, &quot;d1&quot;, &quot;d2&quot;]
+# bm25_ids = [&quot;d1&quot;, &quot;d4&quot;, &quot;d3&quot;]
+# print(rrf_fuse([vec_ids, bm25_ids]))
+</code></pre></div><hr>
+<h3 id="65-查询改写query-rewriting">6.5 查询改写（Query Rewriting）</h3>
+<p><strong>概念解释</strong><br>
+把用户原始问句改写成 <strong>更易被检索匹配</strong> 的形式，或生成 <strong>多条查询变体</strong> 做多路召回。</p>
+<p><strong>原理详解</strong><br>
+口语与文档书面语不一致（「咋办」vs「处理流程」）；改写可 <strong>对齐术语</strong>。可用规则、同义词表，或用 LLM 生成「检索专用 Query」。</p>
+<p><strong>策略</strong></p>
+<ul>
+<li><strong>同义扩展</strong>、<strong>拆问句</strong>、<strong>补全主语</strong></li>
+<li>用 LLM 生成 <strong>检索友好</strong> 的 query 变体多条，多路检索再融合</li>
+</ul>
+<p><strong>面试 Q11b：查询改写会不会引入噪声？</strong><br>
+<strong>标准答案 A：</strong> 会。LLM 可能 <strong>篡改实体</strong> 或 <strong>添加未提及条件</strong>。对策：<strong>多路检索 + RRF</strong>、<strong>重排</strong>、<strong>引用校验</strong>，高敏场景用 <strong>人工词表 + 模板</strong> 优先。</p>
+<p><strong>追问应对</strong></p>
+<ul>
+<li><strong>问：需要保留原 Query 吗？</strong><br>
+<strong>答：</strong> 需要。常 <strong>原句 + 改写句</strong> 同时检索再融合，避免改写跑偏。</li>
+</ul>
+<hr>
+<h3 id="66-hyde假设文档嵌入">6.6 HyDE（假设文档嵌入）</h3>
+<p><strong>概念解释</strong><br>
+让 LLM 先写 <strong>假想的答案文档</strong>（可能含错），再对假想文档做 embedding 去检索。</p>
+<p><strong>原理</strong><br>
+拉近查询与文档在向量空间的距离，缓解 <strong>查询与文档表述风格不一致</strong>。</p>
+<p><strong>风险</strong><br>
+假想文档可能引入错误主题，需 <strong>重排与引用校验</strong>。</p>
+<hr>
+<h3 id="67-子问题分解">6.7 子问题分解</h3>
+<p><strong>概念解释</strong><br>
+对 <strong>多跳、多条件</strong> 问题，先由 LLM 或规则拆成 <strong>子问题序列</strong>，对每个子问题检索，再 <strong>拼接或图式合并</strong> 证据。</p>
+<p><strong>原理详解</strong><br>
+单句 embedding 难以覆盖「先 A 再 B」的复合语义；分解后每步检索更 <strong>聚焦</strong>，类似 <strong>多步检索增强</strong>。</p>
+<p><strong>面试 Q11c：子问题分解的典型失败模式？</strong><br>
+<strong>标准答案 A：</strong> <strong>分解错误</strong>（实体指代错）、<strong>子问题遗漏约束</strong>、或 <strong>合并时矛盾未检测</strong>。需要 <strong>一致性检查</strong> 与 <strong>重排</strong> 过滤无关块。</p>
+<p><strong>追问应对</strong></p>
+<ul>
+<li><strong>问：和 Agent 多步检索有什么区别？</strong><br>
+<strong>答：</strong> 子问题分解可以是 <strong>固定模板/一次 LLM 调用</strong>；Agentic 更强调 <strong>动态决定是否再检索</strong>，工具边界更宽。</li>
+</ul>
+<hr>
+<h3 id="68-step-back-prompting">6.8 Step-back Prompting</h3>
+<p><strong>概念解释</strong><br>
+先让模型生成 <strong>更抽象的后退一步的问题</strong>（背景原理），再并行检索「具体问题 + 抽象问题」，合并上下文。</p>
+<p><strong>原理</strong><br>
+补充 <strong>背景知识</strong>，减少只抓到细枝末节的可能。</p>
+<p><strong>面试 Q12：HyDE 适合什么场景？不适合什么？</strong><br>
+<strong>标准答案 A：</strong> 适合 <strong>表述差距大</strong>、短查询难对齐长文档；不适合 <strong>强事实约束</strong> 且模型易胡编的领域，除非加强校验与拒答。</p>
+<p><strong>面试 Q12a：Step-back Prompting 与 HyDE 有何异同？</strong><br>
+<strong>标准答案 A：</strong> 二者都试图 <strong>拉近查询与文档的语义距离</strong>。HyDE 用 <strong>假想答案文档</strong> 做 embedding；Step-back 用 <strong>更抽象的问题</strong> 再检索 <strong>原理/背景类</strong> 段落。HyDE 更激进（易引入虚构事实），Step-back 相对 <strong>克制</strong>（仍停留在问题空间）。实践中可 <strong>并行检索</strong> 后由重排裁决。</p>
+<p><strong>代码示例：Step-back（两次检索拼上下文，示意）</strong></p>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>def step_back_queries(user_question: str) -&gt; tuple[str, str]:
+    &quot;&quot;&quot;第二步可用 LLM 生成 abstract_q；此处用占位演示结构。&quot;&quot;&quot;
+    abstract_q = f&quot;与下列问题相关的背景原理与定义是什么？{user_question}&quot;
+    return user_question, abstract_q
+
+# concrete_ctx = retriever.invoke(q1)
+# background_ctx = retriever.invoke(q2)
+# final_prompt = merge(concrete_ctx, background_ctx)
+</code></pre></div><hr>
+<h2 id="7-重排序reranking">7. 重排序（Reranking）</h2>
+<h3 id="71-为什么需要重排序">7.1 为什么需要重排序</h3>
+<p><strong>概念解释</strong><br>
+向量检索（Bi-Encoder）为速度对 query-doc <strong>独立编码</strong>，交互信息不足；<strong>Cross-Encoder</strong> 把 query 与 doc <strong>拼在一起</strong> 打分，精度更高但慢，故放在 <strong>Top-K 之后做小范围重排</strong>。</p>
+<hr>
+<h3 id="72-cross-encoder-vs-bi-encoder">7.2 Cross-Encoder vs Bi-Encoder</h3>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>类型</th>
+<th>机制</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bi-Encoder</td>
+<td>两路编码，点积/余弦</td>
+<td>快，可 ANN</td>
+<td>精度低于 CE</td>
+</tr>
+<tr>
+<td>Cross-Encoder</td>
+<td>拼接后深度交互</td>
+<td>精度高</td>
+<td>慢，只能小批量</td>
+</tr>
+</tbody>
+</table></div><hr>
+<h3 id="73-常用重排序模型">7.3 常用重排序模型</h3>
+<ul>
+<li><strong>Cohere Rerank API</strong></li>
+<li><strong>BGE Reranker</strong>（如 <code>bge-reranker-large</code>）开源可本地部署</li>
+</ul>
+<hr>
+<h3 id="74-mmr最大边际相关性">7.4 MMR（最大边际相关性）</h3>
+<p><strong>概念解释</strong><br>
+在相关性与 <strong>多样性</strong> 间权衡，避免 Top-K 几乎重复的段落：迭代选择与 query 相关、但与已选集合 <strong>冗余度低</strong> 的文档。</p>
+<p><strong>原理简述</strong><br>
+设已选集合 (S)，候选 (d)，MMR 常写作：<br>
+(\text{MMR} = \arg\max_d [\lambda \cdot \text{sim}(q,d) - (1-\lambda)\cdot \max_{s\in S}\text{sim}(d,s)])。<br>
+(\lambda) 大则偏 <strong>相关</strong>，小则偏 <strong>多样</strong>。</p>
+<p><strong>面试 Q13：重排放在检索后哪一步？</strong><br>
+<strong>标准答案 A：</strong> 一般在 <strong>召回 Top-K（几十到几百）→ Cross-Encoder 精排取 Top-N（3–10）→ 再生成</strong>，平衡延迟与效果。</p>
+<p><strong>代码示例：MMR 贪心选择（向量已归一化时 sim 可用点积）</strong></p>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>import numpy as np
+
+def mmr_select(query_vec: np.ndarray, doc_vecs: np.ndarray, top_k: int, lambda_mult: float = 0.5):
+    &quot;&quot;&quot;doc_vecs: shape (n, dim)，已归一化。&quot;&quot;&quot;
+    sim_to_q = doc_vecs @ query_vec
+    selected: list[int] = []
+    candidates = set(range(len(doc_vecs)))
+    while len(selected) &lt; top_k and candidates:
+        best_idx, best_score = None, -1e9
+        for i in candidates:
+            redundant = 0.0
+            if selected:
+                redundant = max(float(doc_vecs[i] @ doc_vecs[j]) for j in selected)
+            score = lambda_mult * sim_to_q[i] - (1 - lambda_mult) * redundant
+            if score &gt; best_score:
+                best_score, best_idx = score, i
+        selected.append(best_idx)  # type: ignore
+        candidates.remove(best_idx)  # type: ignore
+    return selected
+
+# q = model.encode([&quot;问题&quot;], normalize_embeddings=True)[0]
+# d = model.encode(docs, normalize_embeddings=True)
+# idxs = mmr_select(q, d, top_k=3)
+</code></pre></div><p><strong>代码示例：CrossEncoder 重排（sentence-transformers）</strong></p>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>from sentence_transformers import CrossEncoder
+
+cross = CrossEncoder(&quot;BAAI/bge-reranker-base&quot;)
+query = &quot;员工年假天数&quot;
+docs = [&quot;本公司年假为15天...&quot;, &quot;报销应提交发票原件...&quot;]
+pairs = [[query, d] for d in docs]
+scores = cross.predict(pairs)
+ranked = sorted(zip(scores, docs), key=lambda x: x[0], reverse=True)
+print(ranked)
+</code></pre></div><hr>
+<h2 id="8-rag-高级模式">8. RAG 高级模式</h2>
+<h3 id="81-graphrag基于知识图谱的-rag">8.1 GraphRAG（基于知识图谱的 RAG）</h3>
+<p><strong>概念解释</strong><br>
+从文本抽取 <strong>实体与关系</strong> 构建图，检索时沿 <strong>子图</strong> 或 <strong>社区摘要</strong> 获取证据，适合 <strong>多跳关系</strong> 与 <strong>全局问题</strong>（「整体主题是什么」）。</p>
+<p><strong>对比普通 RAG</strong><br>
+普通向量 RAG 擅 <strong>局部相似块</strong>；GraphRAG 强化 <strong>关系推理与全局聚合</strong>（微软 GraphRAG 等工作）。</p>
+<hr>
+<h3 id="82-agentic-ragagent-驱动的-rag">8.2 Agentic RAG（Agent 驱动的 RAG）</h3>
+<p><strong>概念解释</strong><br>
+由 Agent <strong>决定</strong>何时检索、检索什么、是否再检索，可调用 <strong>多工具</strong>（搜索、数据库、代码执行）。</p>
+<p><strong>原理</strong><br>
+把 RAG 从「一次检索」变为 <strong>多步决策循环</strong>，适合复杂任务。</p>
+<hr>
+<h3 id="83-self-rag自我反思的-rag">8.3 Self-RAG（自我反思的 RAG）</h3>
+<p><strong>概念解释</strong><br>
+模型在生成过程中插入 <strong>反思 token</strong>：是否需要检索、检索内容是否有用、生成是否支持等，形成 <strong>自我批评与修正</strong> 循环。</p>
+<hr>
+<h3 id="84-corrective-rag纠正性-rag">8.4 Corrective RAG（纠正性 RAG）</h3>
+<p><strong>概念解释</strong><br>
+当检索质量 <strong>不达标</strong> 时，触发 <strong>额外检索</strong>（如网页搜索）或 <strong>改写查询</strong>，纠正证据不足。</p>
+<hr>
+<h3 id="85-adaptive-rag">8.5 Adaptive RAG</h3>
+<p><strong>概念解释</strong><br>
+按问题类型 <strong>路由</strong> 到不同链路：有的只需单跳向量检索，有的需多跳或工具，避免 <strong>过度检索</strong> 浪费成本。</p>
+<p><strong>原理详解</strong><br>
+常见实现：用 <strong>轻量分类器</strong> 或 <strong>小模型</strong> 判断「需不需要检索 / 需要 SQL 还是文档 / 是否需要多跳」，再 <strong>分发</strong> 到不同子管道；与 <strong>Agentic RAG</strong> 的边界在于：Adaptive 强调 <strong>路由策略</strong>，Agentic 强调 <strong>循环决策与工具调用</strong>。</p>
+<p><strong>面试 Q14：GraphRAG 的成本与挑战？</strong><br>
+<strong>标准答案 A：</strong> 构图与抽取 <strong>成本高</strong>、抽取错误会污染图；运维复杂。适合关系密集、愿意投入工程化的场景。</p>
+<p><strong>面试 Q14a：Agentic RAG 与 Self-RAG 有什么共同点？</strong><br>
+<strong>标准答案 A：</strong> 都引入 <strong>多步决策与反思</strong>；区别在于 Agentic 常外显为 <strong>工具调用与规划</strong>，Self-RAG 用 <strong>反思 token/标签</strong> 把「要不要检索、证据是否支持」内嵌在生成格式中，更偏 <strong>训练与解码策略</strong>。</p>
+<p><strong>面试 Q14b：Corrective RAG 典型触发信号？</strong><br>
+<strong>标准答案 A：</strong> <strong>检索置信度低</strong>（Top1 与 Top2 差距小）、<strong>检索结果与问题实体不一致</strong>、<strong>重排后仍低分</strong>、或 <strong>生成与引用冲突</strong>（可做一致性检测）。触发后执行 <strong>查询改写、换索引源、或联网搜索</strong>。</p>
+<p><strong>面试 Q14c：Adaptive RAG 如何避免路由误判？</strong><br>
+<strong>标准答案 A：</strong> <strong>混合路由</strong>（并行短路与完整链路）、<strong>置信度阈值 + 默认安全策略</strong>（不确定则走更强检索）、持续用 <strong>线上反馈</strong> 迭代分类器。</p>
+<p><strong>追问应对</strong></p>
+<ul>
+<li><strong>问：小公司是否值得上 GraphRAG？</strong><br>
+<strong>答：</strong> 若数据以 <strong>说明文、FAQ</strong> 为主，<strong>向量 RAG + 混合检索 + 重排</strong> 通常足够；图适合 <strong>关系问题占比高</strong> 且团队有 <strong>图谱与评测</strong> 能力时再投入。</li>
+</ul>
+<hr>
+<h2 id="9-rag-评估">9. RAG 评估</h2>
+<h3 id="91-评估指标忠实度相关性答案正确性">9.1 评估指标：忠实度、相关性、答案正确性</h3>
+<ul>
+<li><strong>忠实度（Faithfulness）</strong>：答案是否可由检索上下文推出，不编造。</li>
+<li><strong>上下文相关性（Context Relevance）</strong>：检索块与问题是否相关。</li>
+<li><strong>答案正确性 / 有用性</strong>：是否真正解决问题（可用人工或强模型裁判）。</li>
+</ul>
+<hr>
+<h3 id="92-ragas-框架">9.2 RAGAS 框架</h3>
+<p><strong>概念解释</strong><br>
+RAGAS 提供一组 <strong>基于 LLM 的指标</strong>（如 faithfulness、answer relevancy、context precision/recall），自动化评估 RAG 管道。</p>
+<p><strong>使用注意</strong><br>
+裁判模型本身有偏差，应 <strong>抽样人工复核</strong>。</p>
+<hr>
+<h3 id="93-评估数据集构建">9.3 评估数据集构建</h3>
+<ol>
+<li>从真实日志 <strong>脱敏</strong> 抽样问题</li>
+<li>标注 <strong>标准答案</strong> 或 <strong>支持文档 ID</strong></li>
+<li>覆盖 <strong>简单事实、多跳、拒答、无答案</strong> 等类型</li>
+</ol>
+<p><strong>面试 Q15：为什么说「只看最终答案对错」不够？</strong><br>
+<strong>标准答案 A：</strong> 可能 <strong>猜对</strong> 或 <strong>上下文不相关仍生成</strong>；需同时评 <strong>检索质量</strong> 与 <strong>忠实度</strong>，定位瓶颈在检索还是生成。</p>
+<p><strong>代码示例：RAGAS 最小调用形态（示意）</strong></p>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code># pip install ragas datasets
+# 以下为结构示意，版本差异请以官方文档为准
+from ragas import evaluate
+from ragas.metrics import faithfulness, answer_relevancy, context_precision
+from datasets import Dataset
+
+data = {
+    &quot;question&quot;: [&quot;公司总部在哪？&quot;],
+    &quot;answer&quot;: [&quot;上海。&quot;],
+    &quot;contexts&quot;: [[&quot;公司总部位于上海浦东新区……&quot;]],
+    &quot;ground_truth&quot;: [&quot;上海&quot;],
+}
+ds = Dataset.from_dict(data)
+result = evaluate(ds, metrics=[faithfulness, answer_relevancy, context_precision])
+print(result)
+</code></pre></div><hr>
+<h2 id="10-rag-生产优化">10. RAG 生产优化</h2>
+<h3 id="101-索引优化">10.1 索引优化</h3>
+<ul>
+<li>选择合适的 <strong>ANN 参数</strong>（HNSW 的 M、efConstruction、efSearch）</li>
+<li><strong>分段分区</strong>（按租户、时间、产品线）减少搜索空间</li>
+<li><strong>定期重建</strong> vs <strong>增量插入</strong> 权衡</li>
+</ul>
+<hr>
+<h3 id="102-缓存策略">10.2 缓存策略</h3>
+<ul>
+<li><strong>Query 级缓存</strong>：相同问题直接返回答案（注意权限与 TTL）</li>
+<li><strong>Embedding 缓存</strong>：热门 query 的向量</li>
+<li><strong>LLM 响应缓存</strong>：对低敏场景可缩短延迟</li>
+</ul>
+<hr>
+<h3 id="103-增量更新">10.3 增量更新</h3>
+<ul>
+<li>文档变更 <strong>版本化</strong>；删除旧向量 <strong>按 doc_id</strong></li>
+<li>大批量用 <strong>离线任务</strong> 重建分区索引，小批量 <strong>实时 upsert</strong></li>
+</ul>
+<hr>
+<h3 id="104-多租户设计">10.4 多租户设计</h3>
+<ul>
+<li><strong>逻辑隔离</strong>：<code>tenant_id</code> 元数据强制过滤</li>
+<li><strong>物理隔离</strong>：大客户独立集群或命名空间</li>
+<li><strong>配额与限流</strong>：按租户限制 QPS 与存储</li>
+</ul>
+<hr>
+<h3 id="105-token-成本控制">10.5 Token 成本控制</h3>
+<ul>
+<li>控制 <strong>检索条数与块长度</strong></li>
+<li>选用 <strong>更小上下文模型</strong> 做摘要与路由</li>
+<li><strong>压缩检索结果</strong>（抽取句子级证据再喂给主模型）</li>
+</ul>
+<p><strong>面试 Q16：多租户下最常见的安全事故是什么？</strong><br>
+<strong>标准答案 A：</strong> 检索 <strong>未带租户过滤</strong> 导致 <strong>跨租户数据泄露</strong>；必须在数据库层与查询层 <strong>双重校验</strong>。</p>
+<hr>
+<h2 id="11-综合面试题库20-题">11. 综合面试题库（20+ 题）</h2>
+<blockquote>
+<p>下列每题均可作为「概念 + 落地」题；<strong>追问应对</strong> 见各节括号提示。</p>
+</blockquote>
+<p><strong>Q1：简述 RAG 两步流水线（离线与在线）。</strong><br>
+<strong>A：</strong> 离线：解析→清洗→分块→嵌入→建索引；在线：Query（可选改写）→检索→（可选重排）→拼 Prompt→生成。追问：增量更新怎么做？（见 10.3）</p>
+<p><strong>Q2：RAG 与微调如何配合？</strong><br>
+<strong>A：</strong> 微调改善 <strong>格式与领域表达</strong>，RAG 提供 <strong>可更新事实</strong>；事实类优先 RAG。追问：何时单独微调？（数据稳定且任务行为化）</p>
+<p><strong>Q3：为什么需要 chunk_overlap？</strong><br>
+<strong>A：</strong> 防止关键句被切断在两块边界，检索时丢上下文；代价是存储增加。</p>
+<p><strong>Q4：RecursiveCharacterTextSplitter 的分隔符顺序为什么重要？</strong><br>
+<strong>A：</strong> 优先在更大语义单元（段落）断开，再退到句子、空格，减少碎片化。</p>
+<p><strong>Q5：语义分块比递归分块更好吗？</strong><br>
+<strong>A：</strong> 不一定；语义分块成本高、阈值敏感。应用数据 A/B 测试。</p>
+<p><strong>Q6：父子文档如何存储？</strong><br>
+<strong>A：</strong> 子块带 <code>parent_id</code>，检索子块→映射父块文本再生成。</p>
+<p><strong>Q7：Embedding 是否需要归一化？</strong><br>
+<strong>A：</strong> 若用 <strong>内积/余弦</strong> 且框架假设归一化向量，应归一化以稳定相似度。</p>
+<p><strong>Q8：FAISS IndexFlatIP 与 IndexHNSW 区别？</strong><br>
+<strong>A：</strong> Flat 精确但慢；HNSW 近似快，适合大规模。</p>
+<p><strong>Q9：混合检索权重 alpha 怎么定？</strong><br>
+<strong>A：</strong> 验证集网格搜索；或 RRF 避免调权。</p>
+<p><strong>Q10：RRF 为什么鲁棒？</strong><br>
+<strong>A：</strong> 只用排名融合，规避不同路分数尺度问题。</p>
+<p><strong>Q11：HyDE 的风险如何缓解？</strong><br>
+<strong>A：</strong> 重排序、引用约束、拒答、对比多条检索结果。</p>
+<p><strong>Q12：BM25 在中文要不要分词？</strong><br>
+<strong>A：</strong> 依赖引擎；中文常需 <strong>分词或 n-gram</strong>，否则粒度不当影响效果。</p>
+<p><strong>Q13：Cross-Encoder 为何不能替代向量索引？</strong><br>
+<strong>A：</strong> 需对 <strong>每个 doc</strong> 与 query 运行，复杂度高，无法对百万级全库实时扫描。</p>
+<p><strong>Q14：MMR 的 lambda 参数含义？</strong><br>
+<strong>A：</strong> 调节 <strong>相关性 vs 多样性</strong>；lambda 大更偏相关。</p>
+<p><strong>Q15：GraphRAG 解决普通 RAG 的什么痛点？</strong><br>
+<strong>A：</strong> 多跳关系与部分 <strong>全局聚合类</strong> 问题。</p>
+<p><strong>Q16：Agentic RAG 与一次性 RAG 差异？</strong><br>
+<strong>A：</strong> 多步工具决策与再检索，更灵活更高成本。</p>
+<p><strong>Q17：Self-RAG 核心思想？</strong><br>
+<strong>A：</strong> 生成中 <strong>自我评估</strong> 是否需要检索与证据是否充分。</p>
+<p><strong>Q18：Corrective RAG 触发条件？</strong><br>
+<strong>A：</strong> 检索置信度低或证据矛盾时 <strong>改查或换源</strong>。</p>
+<p><strong>Q19：RAGAS 的局限？</strong><br>
+<strong>A：</strong> 依赖裁判模型，可能有 <strong>偏好与盲区</strong>。</p>
+<p><strong>Q20：如何做低成本在线评估？</strong><br>
+<strong>A：</strong> 采样 + 用户反馈（点赞/纠错）+ 弱监督信号（是否点击引用）。</p>
+<p><strong>Q21：索引频繁更新如何保持一致性？</strong><br>
+<strong>A：</strong> 版本号、双写切换、后台重建与灰度；读写分离。</p>
+<p><strong>Q22：如何防止 Prompt 注入污染 RAG？</strong><br>
+<strong>A：</strong> 文档清洗、权限隔离、输出引用限制、检测异常指令模式。</p>
+<p><strong>Q23：长上下文模型出现后 RAG 会消失吗？</strong><br>
+<strong>A：</strong> 不会；私域数据规模与成本、检索聚焦证据、合规审计仍需要 RAG 范式。</p>
+<p><strong>Q24：多模态 RAG 要点？</strong><br>
+<strong>A：</strong> 图像/表格编码、跨模态对齐、与文本混合索引与路由。</p>
+<hr>
+<h2 id="附录langchain-向量存储检索lcel-示意">附录：LangChain 向量存储检索（LCEL 示意）</h2>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code># pip install langchain langchain-openai langchain-community faiss-cpu
+from langchain_community.vectorstores import FAISS
+from langchain_openai import OpenAIEmbeddings
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_core.documents import Document
+
+docs = [Document(page_content=&quot;公司年假15天，需提前申请。&quot;)]
+splitter = RecursiveCharacterTextSplitter(chunk_size=200, chunk_overlap=20)
+chunks = splitter.split_documents(docs)
+
+emb = OpenAIEmbeddings(model=&quot;text-embedding-3-small&quot;)
+vs = FAISS.from_documents(chunks, emb)
+retriever = vs.as_retriever(search_kwargs={&quot;k&quot;: 2})
+
+found = retriever.invoke(&quot;年假天数&quot;)
+print(found)
+</code></pre></div><hr>
+<h2 id="小结">小结</h2>
+<p>RAG 的本质是 <strong>用检索把「可更新证据」接到生成模型上</strong>；落地胜负手常在 <strong>解析与分块、混合检索、重排、评估与多租户安全</strong>。建议你在简历项目里准备 <strong>一条可量化指标</strong>（如：Top-5 召回提升、成本下降比例）与 <strong>一次失败案例分析</strong>（检索错还是生成胡编），面试会非常有说服力。</p>
+<div class="article-signoff"><a class="text-link" href="/agent-interview/"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6"/></svg>返回全部专题</a><button type="button" class="text-link" data-share><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>复制文章链接</button></div><nav class="study-adjacent" aria-label="继续阅读"></nav></article><aside class="article-toc study-toc"><nav aria-label="本页目录"><div class="eyebrow">ON THIS PAGE / 本页目录</div><a href="#%E7%9B%AE%E5%BD%95">目录</a><a href="#1-rag-%E5%9F%BA%E7%A1%80">1. RAG 基础</a><a href="#2-%E6%96%87%E6%A1%A3%E8%A7%A3%E6%9E%90%E4%B8%8E%E9%A2%84%E5%A4%84%E7%90%86">2. 文档解析与预处理</a><a href="#3-%E6%96%87%E6%A1%A3%E5%88%86%E5%9D%97%E7%AD%96%E7%95%A5chunking">3. 文档分块策略（Chunking）</a><a href="#4-%E5%90%91%E9%87%8F%E5%8C%96embedding">4. 向量化（Embedding）</a><a href="#5-%E5%90%91%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93">5. 向量数据库</a><a href="#6-%E6%A3%80%E7%B4%A2%E7%AD%96%E7%95%A5">6. 检索策略</a><a href="#7-%E9%87%8D%E6%8E%92%E5%BA%8Freranking">7. 重排序（Reranking）</a><a href="#8-rag-%E9%AB%98%E7%BA%A7%E6%A8%A1%E5%BC%8F">8. RAG 高级模式</a><a href="#9-rag-%E8%AF%84%E4%BC%B0">9. RAG 评估</a><a href="#10-rag-%E7%94%9F%E4%BA%A7%E4%BC%98%E5%8C%96">10. RAG 生产优化</a><a href="#11-%E7%BB%BC%E5%90%88%E9%9D%A2%E8%AF%95%E9%A2%98%E5%BA%9320-%E9%A2%98">11. 综合面试题库（20+ 题）</a><a href="#%E9%99%84%E5%BD%95langchain-%E5%90%91%E9%87%8F%E5%AD%98%E5%82%A8%E6%A3%80%E7%B4%A2lcel-%E7%A4%BA%E6%84%8F">附录：LangChain 向量存储检索（LCEL 示意）</a><a href="#%E5%B0%8F%E7%BB%93">小结</a></nav></aside></div>
+  </main><footer class="shell site-footer"><div class="flex items-center gap-3"><span class="footer-brand">bazaar.</span><span>A little corner of the internet.</span></div><div class="flex items-center gap-5"><span>© 2026 ks</span><a href="https://github.com/y00273676" target="_blank" rel="noopener noreferrer" aria-label="ks on GitHub"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-4.5 1.4-4.5-2.5-6-3m12 6v-3.8a3.3 3.3 0 0 0-.9-2.6c3-.4 6.1-1.5 6.1-6.8a5.3 5.3 0 0 0-1.4-3.6 4.9 4.9 0 0 0-.1-3.6s-1.1-.4-3.7 1.4a12.8 12.8 0 0 0-6.7 0C5.7 1.2 4.6 1.6 4.6 1.6a4.9 4.9 0 0 0-.1 3.6A5.3 5.3 0 0 0 3.1 9c0 5.3 3.1 6.4 6.1 6.8a3.3 3.3 0 0 0-.9 2.5V22"/></svg></a><a href="/index.xml" aria-label="RSS feed"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></a><a href="#top" class="back-top" aria-label="Back to top">↑</a></div></footer><dialog id="search-dialog" class="dialog search-dialog" aria-labelledby="search-title">
+    <div class="dialog-heading"><h2 id="search-title">Find something good.</h2><button type="button" class="icon-button" data-close-dialog aria-label="Close search"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button></div>
+    <p class="muted">Search the collection by title, topic, or keyword.</p>
+    <div class="search-input-wrap"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><input id="search-input" class="input" type="search" placeholder="Try “Go”, “Agent” or “幂等”" aria-label="Search articles" autocomplete="off" autofocus></div>
+    <div id="search-results" class="search-results" aria-live="polite"></div><div class="dialog-footnote"><span><kbd>↑</kbd> <kbd>↓</kbd> to navigate · <kbd>↵</kbd> to open</span><span><kbd>esc</kbd> to close</span></div>
+  </dialog>
+  <dialog id="rss-dialog" class="dialog rss-dialog" aria-labelledby="rss-title"><div class="dialog-heading"><span class="mini-icon"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></span><button type="button" class="icon-button" data-close-dialog aria-label="Close subscription dialog"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button></div><h2 id="rss-title">A quieter way to keep up.</h2><p class="muted">Add this feed to your favorite RSS reader. New writing comes to you, on your terms.</p><label class="input-label" for="feed-url">Feed URL</label><div class="flex gap-2"><input class="input" id="feed-url" value="https://y00273676.github.io/index.xml" readonly><button type="button" class="button button-primary" data-copy-feed aria-label="Copy RSS feed URL"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg> Copy</button></div><a class="text-link" href="/index.xml">Open RSS feed <svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg><span></span></div></body></html>

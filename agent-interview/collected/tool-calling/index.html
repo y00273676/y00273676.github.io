@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="zh-CN" id="top"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f7f8f5"><title>04 工具调用（Tool / Function Calling） — bazaar</title><meta name="description" content="工具调用 · Agent 面试与笔试笔记。包含 Q1、Q2、Q3、Q4、Q5、Q6、Q7、Q8、Q9、Q10、Q11、Q12、Q13、Q14、Q15。"><meta name="author" content="ks"><link rel="canonical" href="https://y00273676.github.io/agent-interview/collected/tool-calling/"><meta property="og:title" content="04 工具调用（Tool / Function Calling） — bazaar"><meta property="og:description" content="工具调用 · Agent 面试与笔试笔记。包含 Q1、Q2、Q3、Q4、Q5、Q6、Q7、Q8、Q9、Q10、Q11、Q12、Q13、Q14、Q15。"><meta property="og:type" content="website"><meta property="og:url" content="https://y00273676.github.io/agent-interview/collected/tool-calling/"><link rel="icon" type="image/svg+xml" href="/assets/favicon.svg"><link rel="alternate" type="application/rss+xml" title="bazaar" href="/index.xml"><script>try{document.documentElement.dataset.theme=localStorage.getItem('bazaar-theme')||'light'}catch{document.documentElement.dataset.theme='light'}</script><link rel="stylesheet" href="/assets/site.css"><script type="module" src="/assets/main.js"></script></head><body><a class="skip-link" href="#main">Skip to content</a><header class="site-header"><div class="shell header-inner">
+    <a href="/" class="brand" aria-label="bazaar home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>bazaar<span class="brand-dot">.</span></a>
+    <nav id="main-nav" class="main-nav" aria-label="Main navigation"><a href="/" >Home</a><a href="/post/" >Writing</a><a href="/agent-interview/" aria-current="page">Agent 面试</a><a href="/tags/" >Topics</a></nav>
+    <div class="header-actions"><button type="button" class="search-trigger" data-open-search aria-label="Search articles"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><span>Search</span><kbd>⌘ K</kbd></button><span class="header-divider"></span><button type="button" class="icon-button" data-theme-toggle aria-label="Switch to dark theme"><svg class="icon theme-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.4 1.4m11.2 11.2L19 19M5 19l1.4-1.4M17.6 6.4 19 5"/></svg><svg class="icon theme-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 13.2A8.5 8.5 0 0 1 10.8 3.5 8.5 8.5 0 1 0 20.5 13.2Z"/></svg></button><button type="button" class="icon-button menu-trigger" aria-label="Open navigation" aria-expanded="false" aria-controls="main-nav"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div>
+  </div></header><main id="main" class="shell" tabindex="-1">
+    <div class="reading-progress" aria-hidden="true"></div><nav class="article-back study-breadcrumb" aria-label="面包屑"><a href="/agent-interview/" class="text-link"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6"/></svg>Agent 面试笔记</a><span>/</span><a href="/agent-interview/#tools">工具调用</a></nav>
+    <header class="article-header study-article-header"><div class="eyebrow">AGENT INTERVIEW / 工具调用</div><h1>04 工具调用（Tool / Function Calling）</h1><div class="article-meta"><span class="author-avatar">↗</span><span>网络资料 · bcefghj</span><span class="meta-separator"></span><time datetime="2026-09-21">收录于 2026-09-21</time><span class="meta-separator"></span><span>约 39 分钟</span></div></header><aside class="study-attribution" aria-label="资料来源"><div><span class="note-source note-source-collected">网络收录</span><a href="https://github.com/bcefghj/ai-agent-interview-guide">bcefghj / ai-agent-interview-guide</a><a href="https://github.com/bcefghj/ai-agent-interview-guide/blob/9a987322f2d82ddabe4c1aabc7b4795749fa90a2/docs/01-%E9%9D%A2%E8%AF%95%E5%85%AB%E8%82%A1%E6%96%87/04-%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8.md">查看原文 <svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a><a href="/agent-interview/downloads/collected/ai-agent-interview-guide/LICENSE">MIT 许可</a></div><p>原仓库版本：2026-04-01。保留原文内容与引用，方便对照学习。</p></aside>
+    <details class="study-mobile-toc"><summary>本页目录 · 10 节</summary><nav aria-label="本页目录（移动端）"><a href="#%E7%9B%AE%E5%BD%95">目录</a><a href="#1-function-calling-%E5%9F%BA%E7%A1%80">1. Function Calling 基础</a><a href="#2-tool-use-tool-calling">2. Tool Use / Tool Calling</a><a href="#3-mcp-%E5%8D%8F%E8%AE%AEmodel-context-protocol">3. MCP 协议（Model Context Protocol）</a><a href="#4-%E5%B7%A5%E5%85%B7%E8%B7%AF%E7%94%B1tool-routing">4. 工具路由（Tool Routing）</a><a href="#5-%E5%B7%A5%E5%85%B7%E7%BC%96%E6%8E%92tool-orchestration">5. 工具编排（Tool Orchestration）</a><a href="#6-%E5%AE%89%E5%85%A8%E6%80%A7">6. 安全性</a><a href="#7-%E5%B8%B8%E8%A7%81%E5%B7%A5%E5%85%B7%E5%AE%9E%E7%8E%B0">7. 常见工具实现</a><a href="#8-%E7%BB%BC%E5%90%88%E9%9D%A2%E8%AF%95%E9%A2%98%E7%B2%BE%E9%80%8915-%E9%A2%98">8. 综合面试题精选（≥15 题）</a><a href="#%E5%B0%8F%E7%BB%93">小结</a></nav></details>
+    <div class="article-layout study-article-layout"><article class="article-body study-prose" id="note-content"><blockquote>
+<p>面向初学者的 AI Agent「工具调用」面试八股文：从 Function Calling、Tool 设计，到 MCP、路由与编排，再到安全与常见实现。<br>
+每个知识点尽量包含：<strong>概念解释</strong>、<strong>原理详解</strong>、<strong>面试 Q&amp;A</strong>、<strong>追问应对</strong>、<strong>Python 代码示例</strong>。</p>
+</blockquote>
+<hr>
+<h2 id="目录">目录</h2>
+<ol>
+<li><a href="/agent-interview/collected/tool-calling/#1-function-calling-%E5%9F%BA%E7%A1%80">Function Calling 基础</a></li>
+<li><a href="/agent-interview/collected/tool-calling/#2-tool-use-tool-calling">Tool Use / Tool Calling</a></li>
+<li><a href="/agent-interview/collected/tool-calling/#3-mcp-%E5%8D%8F%E8%AE%AEmodel-context-protocol">MCP 协议（Model Context Protocol）</a></li>
+<li><a href="/agent-interview/collected/tool-calling/#4-%E5%B7%A5%E5%85%B7%E8%B7%AF%E7%94%B1tool-routing">工具路由（Tool Routing）</a></li>
+<li><a href="/agent-interview/collected/tool-calling/#5-%E5%B7%A5%E5%85%B7%E7%BC%96%E6%8E%92tool-orchestration">工具编排（Tool Orchestration）</a></li>
+<li><a href="/agent-interview/collected/tool-calling/#6-%E5%AE%89%E5%85%A8%E6%80%A7">安全性</a></li>
+<li><a href="/agent-interview/collected/tool-calling/#7-%E5%B8%B8%E8%A7%81%E5%B7%A5%E5%85%B7%E5%AE%9E%E7%8E%B0">常见工具实现</a></li>
+<li><a href="/agent-interview/collected/tool-calling/#8-%E7%BB%BC%E5%90%88%E9%9D%A2%E8%AF%95%E9%A2%98%E7%B2%BE%E9%80%8915-%E9%A2%98">综合面试题精选（≥15 题）</a></li>
+</ol>
+<hr>
+<h2 id="1-function-calling-基础">1. Function Calling 基础</h2>
+<h3 id="11-什么是-function-calling">1.1 什么是 Function Calling</h3>
+<p><strong>概念解释</strong><br>
+Function Calling（函数调用）指：大语言模型在生成回复时，<strong>不是直接输出最终答案</strong>，而是先输出「要调用哪个外部函数、用什么参数」的结构化指令；宿主程序（你的 Python 服务）<strong>真正执行</strong>该函数，再把结果喂回模型，形成多轮对话闭环。这样模型可以查实时数据、算复杂表达式、操作数据库等，突破「仅靠训练记忆回答」的限制。</p>
+<p><strong>原理详解</strong></p>
+<ul>
+<li>从接口角度：多数厂商把「可调用的函数列表」和「用户问题」一起发给模型；模型在概率分布上被训练/对齐为：在合适时输出 <strong>tool_calls</strong>（或等价字段），而不是胡编乱造函数结果。</li>
+<li>从安全角度：<strong>模型不直接执行代码</strong>，执行权在应用层，便于鉴权、审计、限流。</li>
+<li>与「纯文本里写 <code>call foo(1,2)</code>」的区别：Function Calling 使用 <strong>机器可解析</strong> 的 JSON/结构化格式，便于框架自动解析与校验。</li>
+</ul>
+<hr>
+<h3 id="12-openai-function-calling-的工作原理">1.2 OpenAI Function Calling 的工作原理</h3>
+<p><strong>概念解释</strong><br>
+以 OpenAI Chat Completions 为例：你在请求里提供 <code>tools</code>（函数元数据数组）和 <code>tool_choice</code>（可选，控制是否必须调用工具）；模型返回的 <code>message</code> 里可能带有 <code>tool_calls</code>，每一项包含 <code>id</code>、<code>function.name</code>、<code>function.arguments</code>（JSON 字符串）。你的代码解析后执行本地函数，再以 <code>role=tool</code> 的消息把结果追加到对话里，再次请求模型生成面向用户的自然语言答案。</p>
+<p><strong>原理详解</strong></p>
+<ol>
+<li><strong>首轮</strong>：<code>system</code> + <code>user</code> + <code>tools</code> → 模型可能返回 <code>assistant</code> + <code>tool_calls</code>。</li>
+<li><strong>执行</strong>：应用根据 <code>name</code> 路由到 Python 函数，<code>arguments</code> 反序列化后调用。</li>
+<li><strong>次轮</strong>：把每条工具结果作为 <code>tool</code> 消息（带 <code>tool_call_id</code>）写回，再请求 → 模型综合工具输出作答。</li>
+<li><strong>并行</strong>：若模型一次返回多个 <code>tool_calls</code>，可并行执行（注意线程安全与副作用）。</li>
+<li><strong>流式</strong>：流式响应里 <code>tool_calls</code> 可能分片到达，需要增量拼接 <code>arguments</code>。</li>
+</ol>
+<p><strong>面试 Q1：OpenAI 的 Function Calling 大致流程是什么？</strong><br>
+<strong>标准答案（A）</strong>：客户端把工具定义（名称、描述、参数 JSON Schema）随对话发给 API；模型在需要时返回 <code>tool_calls</code>；宿主解析并执行真实函数；将结果以 <code>tool</code> 角色消息写回并再次调用 API；直到模型不再请求工具或达到轮次上限。核心是「模型只负责决策与参数，执行在应用侧」。</p>
+<p><strong>追问应对</strong></p>
+<ul>
+<li><strong>问</strong>：<code>tool_choice</code> 有什么用？<br>
+<strong>答</strong>：<code>auto</code> 由模型决定；<code>none</code> 禁止工具；<code>required</code> 强制至少调用一次；也可指定某个 <code>function</code> 强制调用。用于调试、合规场景（必须走某工具）或 A/B。</li>
+<li><strong>问</strong>：和 RAG 的关系？<br>
+<strong>答</strong>：RAG 是「检索再生成」；Function Calling 是「模型选择动作」。常组合：检索用工具或向量库，生成阶段再决定是否调用计算器/数据库。</li>
+</ul>
+<hr>
+<h3 id="13-函数定义json-schema">1.3 函数定义（JSON Schema）</h3>
+<p><strong>概念解释</strong><br>
+每个可调用函数在 API 里通常描述为：<code>type: function</code>，<code>function.name</code>（唯一标识），<code>function.description</code>（给模型看的自然语言说明），<code>function.parameters</code>（符合 JSON Schema 的对象，描述参数类型、是否必填、枚举等）。</p>
+<p><strong>原理详解</strong></p>
+<ul>
+<li>JSON Schema 让<strong>运行时</strong>可以做校验（<code>jsonschema</code> 库），也让<strong>模型</strong>有明确字段名与类型提示。</li>
+<li>建议：<code>description</code> 写清「何时调用、不何时调用」；对模糊词（如「最近」）在描述里约定格式（如 ISO 日期）。</li>
+<li>复杂结构可用 <code>object</code>、<code>array</code>、<code>enum</code>、<code>oneOf</code> 等；但过于复杂的 Schema 可能增加模型填错概率，可适当拆分多个小函数。</li>
+</ul>
+<p><strong>面试 Q2：为什么用 JSON Schema 描述参数？</strong><br>
+<strong>A</strong>：三方面——（1）跨语言标准，各 SDK 统一；（2）可自动校验，避免脏参数进业务；（3）作为模型「字段说明」，减少胡编参数名。缺点是 Schema 过长会占 token，需要精简描述或工具路由。</p>
+<p><strong>追问应对</strong></p>
+<ul>
+<li><strong>问</strong>：必填字段怎么表示？<br>
+<strong>答</strong>：在 JSON Schema 里用 <code>required: [&quot;a&quot;,&quot;b&quot;]</code>，同时 <code>properties</code> 里声明各字段 <code>type</code>。OpenAI 工具格式与 JSON Schema Draft 兼容（具体以厂商文档为准）。</li>
+</ul>
+<hr>
+<h3 id="14-模型如何决定调用哪个函数">1.4 模型如何决定调用哪个函数</h3>
+<p><strong>概念解释</strong><br>
+模型并非运行「真正的 if-else 规则引擎」，而是基于<strong>训练与对齐</strong>后，在看到用户意图 + 工具描述时，输出概率最高的结构化动作。等价于：在「续写」空间里，工具描述把某些 token 序列（函数名、JSON 参数）的概率抬高。</p>
+<p><strong>原理详解</strong></p>
+<ul>
+<li><strong>描述质量</strong>决定区分度：两个工具功能重叠时，模型容易混淆。</li>
+<li><strong>用户表述</strong>触发关键词与语义：例如「明天天气」更可能触发 <code>get_weather</code>。</li>
+<li><strong>系统提示</strong>可约束：「涉及计算必须用 <code>calculate</code>」。</li>
+<li>部分实现会做<strong>两阶段</strong>：先小模型/分类器选工具，再大模型填参（见「工具路由」）。</li>
+</ul>
+<p><strong>面试 Q3：模型选错工具怎么办？</strong><br>
+<strong>A</strong>：工程上（1）优化 <code>description</code> 与示例边界；（2）工具路由缩小候选集；（3）执行前做规则校验或二次确认；（4）对高风险操作要求人类确认；（5）记录 bad case 做 prompt 迭代。不能假设模型 100% 正确。</p>
+<hr>
+<h3 id="15-参数提取与验证">1.5 参数提取与验证</h3>
+<p><strong>概念解释</strong><br>
+参数提取：从 <code>tool_calls[].function.arguments</code> 得到 JSON 字符串并 <code>json.loads</code>。验证：用 JSON Schema 校验类型、范围、枚举；业务层再校验权限与资源是否存在。</p>
+<p><strong>原理详解</strong></p>
+<ul>
+<li>模型可能输出<strong>不完整 JSON</strong>（流式）或<strong>多余字段</strong>（若你未禁止）；需在服务端 <code>additionalProperties: false</code>（若支持）并剥离未知键。</li>
+<li>对数字、日期做<strong>规范化</strong>（时区）。</li>
+<li>失败策略：返回错误信息给模型「请重试」或降级为只读工具。</li>
+</ul>
+<p><strong>面试 Q4：如何做参数校验？</strong><br>
+<strong>A</strong>：分层——语法层 <code>json.loads</code>；结构层 <code>jsonschema.validate</code>；语义层业务函数（如用户 ID 是否存在）；安全层鉴权与输入清洗（见第 6 节）。</p>
+<hr>
+<h3 id="16-完整代码示例openai-api-调用">1.6 完整代码示例（OpenAI API 调用）</h3>
+<p>下面示例使用 <strong>OpenAI 官方 Python SDK</strong> 风格（需安装 <code>openai</code>，并设置环境变量 <code>OPENAI_API_KEY</code>）。为便于阅读，省略生产级重试与日志。</p>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>import json
+from typing import Any
+
+from jsonschema import validate, ValidationError
+from openai import OpenAI
+
+# 工具 JSON Schema（parameters）
+WEATHER_PARAMS = {
+    &quot;type&quot;: &quot;object&quot;,
+    &quot;properties&quot;: {
+        &quot;city&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;description&quot;: &quot;城市名，中文或英文&quot;},
+        &quot;date&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;description&quot;: &quot;日期 YYYY-MM-DD&quot;},
+    },
+    &quot;required&quot;: [&quot;city&quot;],
+    &quot;additionalProperties&quot;: False,
+}
+
+TOOLS = [
+    {
+        &quot;type&quot;: &quot;function&quot;,
+        &quot;function&quot;: {
+            &quot;name&quot;: &quot;get_weather&quot;,
+            &quot;description&quot;: &quot;查询指定城市在某日期的天气。用户只说「今天」时，请换算为具体日期再调用。&quot;,
+            &quot;parameters&quot;: WEATHER_PARAMS,
+        },
+    }
+]
+
+# 假实现：真实项目里对接 HTTP API
+def get_weather(city: str, date: str | None = None) -&gt; dict[str, Any]:
+    return {&quot;city&quot;: city, &quot;date&quot;: date or &quot;today&quot;, &quot;condition&quot;: &quot;晴&quot;, &quot;temp_c&quot;: 22}
+
+
+def run_tool(name: str, arguments: str) -&gt; str:
+    args = json.loads(arguments or &quot;{}&quot;)
+    validate(instance=args, schema=WEATHER_PARAMS)  # 与 TOOLS 中一致
+    if name == &quot;get_weather&quot;:
+        return json.dumps(get_weather(**args), ensure_ascii=False)
+    raise ValueError(f&quot;unknown tool: {name}&quot;)
+
+
+def chat_with_tools(user_message: str) -&gt; str:
+    client = OpenAI()
+    messages: list[dict[str, Any]] = [
+        {&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: &quot;你是助手，需要数据时调用工具，不要编造天气。&quot;},
+        {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: user_message},
+    ]
+
+    for _ in range(5):  # 防止死循环
+        resp = client.chat.completions.create(
+            model=&quot;gpt-4o-mini&quot;,
+            messages=messages,
+            tools=TOOLS,
+            tool_choice=&quot;auto&quot;,
+        )
+        msg = resp.choices[0].message
+        messages.append(msg.model_dump())
+
+        if not msg.tool_calls:
+            return msg.content or &quot;&quot;
+
+        for tc in msg.tool_calls:
+            try:
+                result = run_tool(tc.function.name, tc.function.arguments)
+            except (json.JSONDecodeError, ValidationError, ValueError) as e:
+                result = json.dumps({&quot;error&quot;: str(e)}, ensure_ascii=False)
+            messages.append(
+                {
+                    &quot;role&quot;: &quot;tool&quot;,
+                    &quot;tool_call_id&quot;: tc.id,
+                    &quot;content&quot;: result,
+                }
+            )
+    return &quot;超过最大工具调用轮次&quot;
+
+
+if __name__ == &quot;__main__&quot;:
+    print(chat_with_tools(&quot;北京明天天气怎么样？&quot;))
+</code></pre></div><p><strong>追问应对</strong></p>
+<ul>
+<li><strong>问</strong>：为什么要循环 <code>for _ in range(5)</code>？<br>
+<strong>答</strong>：多轮工具调用（先查列表再查详情）需要多次 API；上限防止逻辑错误导致无限循环。</li>
+<li><strong>问</strong>：<code>tool_call_id</code> 作用？<br>
+<strong>答</strong>：把工具结果与某次 <code>tool_calls</code> 中的条目一一对应，支持并行多个调用。</li>
+</ul>
+<hr>
+<h2 id="2-tool-use-tool-calling">2. Tool Use / Tool Calling</h2>
+<h3 id="21-tool-的定义与注册">2.1 Tool 的定义与注册</h3>
+<p><strong>概念解释</strong><br>
+在应用内部，「Tool」= <strong>可执行能力单元</strong>：名称、描述、参数规范、处理函数。注册指在 Agent 启动时把工具对象加入注册表（字典或列表），运行时由路由器/模型选择并派发。</p>
+<p><strong>原理详解</strong></p>
+<ul>
+<li>注册表常见结构：<code>name -&gt; callable</code> 或 <code>List[BaseTool]</code>。</li>
+<li>与纯 Function Calling 映射：把同一套元数据转成各厂商 API 需要的 <code>tools</code> 格式（适配层）。</li>
+</ul>
+<p><strong>面试 Q5：Tool 与业务里的普通 Python 函数有何不同？</strong><br>
+<strong>A</strong>：Tool 多了<strong>面向模型的元数据</strong>（描述、Schema）和<strong>统一执行接口</strong>（记录日志、超时、权限）。业务函数关注领域逻辑；Tool 是 Agent 可调度的「外壳」。</p>
+<hr>
+<h3 id="22-工具描述的最佳实践">2.2 工具描述的最佳实践</h3>
+<p><strong>概念解释</strong><br>
+<code>description</code> 是模型判断是否调用、如何填参的主要依据。应写：<strong>功能一句话</strong>、<strong>何时用</strong>、<strong>何时不要用</strong>、<strong>参数含义与格式</strong>、<strong>返回值语义</strong>（若影响后续推理）。</p>
+<p><strong>原理详解</strong></p>
+<ul>
+<li>避免两个工具描述语义重叠；重叠时加「优先使用 A 当…，否则 B」。</li>
+<li>对易混参数（如 <code>user_id</code> vs <code>email</code>）举例说明。</li>
+<li>英文或中文与模型服务语言一致可减少混淆。</li>
+</ul>
+<p><strong>追问应对</strong></p>
+<ul>
+<li><strong>问</strong>：描述太长怎么办？<br>
+<strong>答</strong>：分层——核心描述保持短；细节放 <code>parameter.description</code>；超大工具集用路由先筛选（见第 4 节）。</li>
+</ul>
+<hr>
+<h3 id="23-工具参数设计">2.3 工具参数设计</h3>
+<p><strong>概念解释</strong><br>
+参数宜<strong>少而精</strong>、类型明确；能用枚举就不用自由文本；日期时间统一 ISO 8601；避免「万能字符串」承载多种含义。</p>
+<p><strong>原理详解</strong></p>
+<ul>
+<li>多参数强依赖时，可拆成链式多个工具，降低单次 JSON 复杂度。</li>
+<li>对可选参数默认值在 Schema 或文档中写清。</li>
+</ul>
+<hr>
+<h3 id="24-工具返回值处理">2.4 工具返回值处理</h3>
+<p><strong>概念解释</strong><br>
+工具返回值会作为 <code>tool</code> 消息内容进入上下文。应<strong>稳定、可解析</strong>：优先 JSON 字符串；错误用统一结构 <code>{ &quot;error&quot;: &quot;...&quot; }</code>，便于模型纠错。</p>
+<p><strong>原理详解</strong></p>
+<ul>
+<li>超大结果需<strong>摘要</strong>或<strong>分页</strong>（再提供 <code>fetch_more</code> 工具），避免撑爆上下文。</li>
+<li>二进制内容应转为文本描述或 URL，不要直接塞原始字节。</li>
+</ul>
+<p><strong>面试 Q6：工具返回 10MB 日志怎么办？</strong><br>
+<strong>A</strong>：不应直接返回。应（1）截断 + 摘要；（2）写入对象存储返回链接；（3）提供 <code>grep_in_log</code> 等缩小工具；（4）向量索引仅检索相关片段。</p>
+<hr>
+<h3 id="25-错误处理与重试">2.5 错误处理与重试</h3>
+<p><strong>概念解释</strong><br>
+网络与模型都可能失败。策略包括：可重试错误（429、5xx）指数退避；不可重试（4xx 参数错）把错误给模型；工具内部超时；熔断防止拖垮依赖。</p>
+<p><strong>原理详解</strong></p>
+<ul>
+<li><strong>幂等</strong>：重试前确认接口幂等或使用去重键。</li>
+<li><strong>部分成功</strong>：多工具并行时，单个子失败可只重试该分支。</li>
+</ul>
+<hr>
+<h3 id="26-langchain-中的-tool-定义代码示例">2.6 LangChain 中的 Tool 定义代码示例</h3>
+<p>以下使用 <strong>LangChain 1.x 风格</strong>（<code>langchain-core</code> 的 <code>@tool</code>；版本差异请以官方文档为准）。若你环境版本不同，可改为 <code>StructuredTool.from_function</code>。</p>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>from typing import Literal
+
+from langchain_core.tools import tool
+
+
+@tool
+def search_product(
+    query: str,
+    category: Literal[&quot;book&quot;, &quot;electronics&quot;, &quot;&quot;] = &quot;&quot;,
+) -&gt; str:
+    &quot;&quot;&quot;在电商站内搜索商品。用户要找商品、比价、看库存时用；不要用于闲聊。
+
+    Args:
+        query: 搜索关键词
+        category: 可选类目过滤，不知道则留空
+    &quot;&quot;&quot;
+    # 伪实现
+    return f&quot;[dummy] results for {query!r} in {category or &#39;all&#39;}&quot;
+
+
+# 注册到 Agent 时通常传入 tools=[search_product]
+# 例如 create_react_agent(llm, tools=[search_product], ...)
+</code></pre></div><p><strong>追问应对</strong></p>
+<ul>
+<li><strong>问</strong>：<code>@tool</code> 和手写 <code>StructuredTool</code> 区别？<br>
+<strong>答</strong>：<code>@tool</code> 从 docstring 推断描述与参数，开发快；复杂 Schema 或需自定义校验时用 <code>StructuredTool</code> 更可控。</li>
+</ul>
+<hr>
+<h2 id="3-mcp-协议model-context-protocol">3. MCP 协议（Model Context Protocol）</h2>
+<h3 id="31-mcp-是什么">3.1 MCP 是什么</h3>
+<p><strong>概念解释</strong><br>
+MCP（Model Context Protocol）是由 <strong>Anthropic 推动</strong>的开放标准，用于在 <strong>AI 应用（Host）</strong> 与 <strong>外部数据源/工具（MCP Server）</strong> 之间建立<strong>统一、可插拔</strong>的通信方式。可理解为「AI 侧的 USB-C」：一次实现 Server，多个客户端（Claude Desktop、IDE、自研 Agent）可复用。</p>
+<p><strong>原理详解</strong></p>
+<ul>
+<li>协议定义了能力发现、资源读取、工具调用、提示模板等消息格式与生命周期。</li>
+<li>目标：把「每个产品各写一套插件」变成「标准协议 + 多实现」。</li>
+</ul>
+<hr>
+<h3 id="32-核心组件clientservertransport">3.2 核心组件：Client、Server、Transport</h3>
+<p><strong>概念解释</strong></p>
+<ul>
+<li><strong>MCP Server</strong>：暴露工具/资源/提示的实现进程（如连接 GitHub、数据库）。</li>
+<li><strong>MCP Client</strong>：运行在 Host 内，与 Server 建立会话，转发模型侧请求与结果。</li>
+<li><strong>Transport</strong>：传输层，常见 <strong>stdio</strong>（子进程标准输入输出）、<strong>HTTP/SSE</strong> 等。</li>
+</ul>
+<p><strong>原理详解</strong></p>
+<ul>
+<li>stdio 适合本地子进程；HTTP 适合远程服务。</li>
+<li>Client 负责能力协商、把 Server 工具<strong>映射</strong>为模型可用的工具列表（与 Function Calling 衔接）。</li>
+</ul>
+<p><strong>面试 Q7：MCP 里 Client 和你在 OpenAI 里写的「执行工具的 Python 代码」是什么关系？</strong><br>
+<strong>A</strong>：OpenAI 场景下你手写 <code>run_tool</code>；MCP 下 <strong>Client 把远端/子进程 Server 的工具列表拉平</strong>，调用时按协议发 RPC，结果再转成 <code>tool</code> 消息。你仍要写 Host 逻辑，但工具实现可独立进程、独立语言。</p>
+<hr>
+<h3 id="33-mcp-vs-function-calling-的区别">3.3 MCP vs Function Calling 的区别</h3>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>维度</th>
+<th>Function Calling</th>
+<th>MCP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>层级</td>
+<td>多为「单次 API 能力」：模型输出调用指令</td>
+<td><strong>系统级协议</strong>：如何发现与调用工具、资源</td>
+</tr>
+<tr>
+<td>实现位置</td>
+<td>通常在应用进程内函数</td>
+<td>常在独立 Server，可远程</td>
+</tr>
+<tr>
+<td>复用</td>
+<td>每个应用复制粘贴集成</td>
+<td>标准 Server 多 Host 复用</td>
+</tr>
+<tr>
+<td>关系</td>
+<td><strong>互补</strong>：Host 常把 MCP 工具转成 FC 的 tools 定义给模型</td>
+<td></td>
+</tr>
+</tbody>
+</table></div><p><strong>标准答案</strong>：Function Calling 解决「模型怎么表达调用」；MCP 解决「工具能力怎么暴露与连接」。二者常一起出现：模型侧用 FC，工具侧来自 MCP。</p>
+<hr>
+<h3 id="34-mcp-的优势">3.4 MCP 的优势</h3>
+<p><strong>概念解释</strong></p>
+<ul>
+<li><strong>标准化</strong>：消息与能力模型统一，降低集成成本。</li>
+<li><strong>可复用</strong>：同一 MCP Server 给桌面、IDE、Agent 用。</li>
+<li><strong>生态</strong>：社区可共享 Server 实现；企业可内网部署私有 Server。</li>
+<li><strong>隔离</strong>：工具崩溃不拖垮主进程（进程边界）。</li>
+</ul>
+<hr>
+<h3 id="35-mcp-server-的实现示例">3.5 MCP Server 的实现示例</h3>
+<p>以下为<strong>示意代码</strong>：真实项目请使用官方 <code>mcp</code> Python 包（<code>pip install mcp</code>），并以最新文档为准。下面用常见「FastMCP」风格说明结构。</p>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code># 需要: pip install mcp
+# 以下为概念示例，包名与 API 请以官方文档为准
+
+try:
+    from mcp.server.fastmcp import FastMCP
+except ImportError:
+    FastMCP = None  # 环境未安装时仅作结构说明
+
+
+if FastMCP:
+    mcp = FastMCP(&quot;demo&quot;)
+
+    @mcp.tool()
+    def add(a: int, b: int) -&gt; int:
+        &quot;&quot;&quot;返回两个整数之和。&quot;&quot;&quot;
+        return a + b
+
+    # 通常以 `mcp.run(transport=&quot;stdio&quot;)` 由 Host 拉起子进程
+</code></pre></div><p>若未使用 FastMCP，也可用手写 <strong>Server + stdio</strong>，核心是：<strong>声明工具列表</strong>、<strong>处理 <code>tools/call</code> 类请求</strong>、<strong>返回结构化内容</strong>。面试中讲清「进程边界 + JSON-RPC 风格消息」即可得分。</p>
+<p><strong>追问应对</strong></p>
+<ul>
+<li><strong>问</strong>：MCP 和 OpenAPI 网关区别？<br>
+<strong>答</strong>：OpenAPI 面向通用 HTTP 客户端；MCP 面向 <strong>AI Host 与模型工具循环</strong>，带会话、资源、提示等 AI 原生语义。</li>
+</ul>
+<hr>
+<h3 id="36-mcp-在企业级应用中的价值">3.6 MCP 在企业级应用中的价值</h3>
+<p><strong>概念解释</strong></p>
+<ul>
+<li><strong>治理</strong>：工具集中在 MCP Server，便于审计、版本与权限。</li>
+<li><strong>复用</strong>：数据中台、工单、内部 Wiki 各做一个 Server，多产品接入。</li>
+<li><strong>安全边界</strong>：敏感系统只对内网 Server 开放，模型不直连数据库。</li>
+<li><strong>合规</strong>：在 Server 侧落日志与审批，比散落在每个 Agent 代码里更可控。</li>
+</ul>
+<p><strong>面试 Q8：企业为什么愿意接 MCP 而不是每个业务线自己写 Function？</strong><br>
+<strong>A</strong>：降低重复建设、统一安全与观测、加快试点（换模型不换工具链）、利于平台组与业务组分工。</p>
+<hr>
+<h2 id="4-工具路由tool-routing">4. 工具路由（Tool Routing）</h2>
+<h3 id="41-当工具数量多时如何高效选择">4.1 当工具数量多时如何高效选择</h3>
+<p><strong>概念解释</strong><br>
+工具过多时，一次性把所有 <code>description</code> 塞进上下文会：<strong>费 token</strong>、<strong>干扰模型</strong>、<strong>增加误选</strong>。解决思路是<strong>先缩小候选集</strong>再让大模型填参，或用小模型专门做路由。</p>
+<p><strong>原理详解</strong></p>
+<ul>
+<li>典型阈值：几十到上百个工具就要开始考虑路由（视模型与描述长度而定）。</li>
+<li>方法：<strong>向量检索</strong>、<strong>分类/意图模型</strong>、<strong>层级目录</strong>（先选类再选工具）、<strong>规则前缀</strong>（用户以 <code>/db</code> 开头走数据库类）。</li>
+</ul>
+<hr>
+<h3 id="42-基于向量检索的工具路由">4.2 基于向量检索的工具路由</h3>
+<p><strong>概念解释</strong><br>
+离线：把每个工具的 <code>name + description + 关键词</code> 做成 embedding，存向量库。在线：用户问题 embedding，<strong>Top-K 相似工具</strong>作为本轮唯一候选，再交给 LLM。</p>
+<p><strong>原理详解</strong></p>
+<ul>
+<li>优点：实现快、可跨语种模糊匹配。</li>
+<li>缺点：极依赖描述质量；边界 case 需加规则或混合检索（关键词 + 向量）。</li>
+</ul>
+<hr>
+<h3 id="43-基于分类模型的工具路由">4.3 基于分类模型的工具路由</h3>
+<p><strong>概念解释</strong><br>
+训练或提示一个<strong>轻量分类器</strong>（BERT、小 LLM、或结构化输出），输入用户句，输出工具 ID 或工具组 ID。比全量工具更省、更稳。</p>
+<p><strong>原理详解</strong></p>
+<ul>
+<li>数据：历史日志标注「正确工具」可finetune。</li>
+<li>与向量路由混合：分类器粗分 + 向量细分。</li>
+</ul>
+<hr>
+<h3 id="44-工具分组与层级">4.4 工具分组与层级</h3>
+<p><strong>概念解释</strong><br>
+按域分组：<code>database_*</code>、<code>hr_*</code>、<code>crm_*</code>。第一轮只暴露<strong>组级 meta-tool</strong>（如 <code>list_hr_tools</code>），或让模型先选组再选具体工具。</p>
+<p><strong>原理详解</strong></p>
+<ul>
+<li>层级过深会增加对话轮次，需在「token 节省」与「轮次增加」间权衡。</li>
+</ul>
+<hr>
+<h3 id="45-代码示例向量路由示意">4.5 代码示例（向量路由示意）</h3>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>from dataclasses import dataclass
+
+# 需要: pip install numpy openai
+import numpy as np
+from openai import OpenAI
+
+
+@dataclass
+class ToolSpec:
+    name: str
+    description: str
+
+
+def embed_texts(client: OpenAI, model: str, texts: list[str]) -&gt; np.ndarray:
+    resp = client.embeddings.create(model=model, input=texts)
+    vecs = [np.array(d.embedding, dtype=np.float32) for d in resp.data]
+    mat = np.stack(vecs, axis=0)
+    norms = np.linalg.norm(mat, axis=1, keepdims=True) + 1e-8
+    return mat / norms
+
+
+def route_tools(
+    query: str,
+    tools: list[ToolSpec],
+    client: OpenAI,
+    embed_model: str = &quot;text-embedding-3-small&quot;,
+    top_k: int = 3,
+) -&gt; list[ToolSpec]:
+    corpus = [f&quot;{t.name}\n{t.description}&quot; for t in tools]
+    doc_emb = embed_texts(client, embed_model, corpus)
+    q_emb = embed_texts(client, embed_model, [query])[0]
+    scores = doc_emb @ q_emb
+    idx = np.argsort(-scores)[:top_k]
+    return [tools[i] for i in idx]
+
+
+# 使用：仅把 route_tools 返回的子集塞进 chat.completions 的 tools 参数
+</code></pre></div><p><strong>面试 Q9：向量路由选出来的工具不对怎么兜底？</strong><br>
+<strong>A</strong>：Top-K 调大、混合关键词打分、加一层 LLM「是否适用」二分类、允许用户澄清、保留「通用搜索」工具作后备。</p>
+<hr>
+<h2 id="5-工具编排tool-orchestration">5. 工具编排（Tool Orchestration）</h2>
+<h3 id="51-串行工具调用">5.1 串行工具调用</h3>
+<p><strong>概念解释</strong><br>
+后一步依赖前一步输出，例如：先 <code>lookup_user_id</code> 再 <code>get_orders(user_id)</code>。实现上必须等前一个 <code>tool</code> 消息返回后再发起下一轮模型请求（或在同轮若模型一次输出多个有依赖的调用，需谨慎，通常仍按顺序执行）。</p>
+<p><strong>原理详解</strong></p>
+<ul>
+<li>在图工作流里体现为<strong>有向边</strong>；LangGraph、Temporal 等可显式建模。</li>
+</ul>
+<hr>
+<h3 id="52-并行工具调用">5.2 并行工具调用</h3>
+<p><strong>概念解释</strong><br>
+无相互依赖的多个查询（查天气 + 查股价）可并行 HTTP，缩短延迟。OpenAI 可能在一次 <code>assistant</code> 消息返回多个 <code>tool_calls</code>。</p>
+<p><strong>原理详解</strong></p>
+<ul>
+<li>注意<strong>速率限制</strong>与<strong>连接池</strong>；写操作并行可能导致竞态，需业务锁或串行。</li>
+</ul>
+<hr>
+<h3 id="53-工具链tool-chain">5.3 工具链（Tool Chain）</h3>
+<p><strong>概念解释</strong><br>
+把多个工具按固定或动态顺序组合成<strong>复合流程</strong>，如「检索 → 摘要 → 存储」。可以是代码写死的 Pipeline，也可以是 LLM 每步决定下一步（ReAct / Agent）。</p>
+<p><strong>原理详解</strong></p>
+<ul>
+<li><strong>静态链</strong>：适合稳定 SOP；<strong>动态链</strong>：适合开放域任务，但要防循环与成本失控。</li>
+</ul>
+<hr>
+<h3 id="54-条件工具调用">5.4 条件工具调用</h3>
+<p><strong>概念解释</strong><br>
+根据中间结果分支：仅当 <code>risk_score &gt; 0.8</code> 才调用 <code>human_review</code>。可用规则引擎、小模型分类、或让主模型输出结构化「分支字段」（需校验）。</p>
+<hr>
+<h3 id="55-工具调用的依赖管理">5.5 工具调用的依赖管理</h3>
+<p><strong>概念解释</strong><br>
+显式维护 DAG：节点是工具调用，边是数据依赖。调度器拓扑排序执行；检测环；失败时重试或补偿。</p>
+<p><strong>原理详解</strong></p>
+<ul>
+<li>对长事务用 <strong>Saga</strong> 或<strong>幂等重试</strong>；对 AI 步骤用「检查点」持久化状态。</li>
+</ul>
+<p><strong>面试 Q10：并行与串行如何取舍？</strong><br>
+<strong>A</strong>：读多且无依赖并行；有写冲突、强一致、或后一步参数必须来自上一步精确字段时串行；可并行读再串行写（Quorum 读/写视业务而定）。</p>
+<hr>
+<h3 id="56-代码示例简单编排先路由再并行">5.6 代码示例（简单编排：先路由再并行）</h3>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>import concurrent.futures
+import json
+from typing import Any, Callable
+
+ToolFn = Callable[..., Any]
+
+
+def safe_call(name: str, fn: ToolFn, kwargs: dict[str, Any]) -&gt; dict[str, Any]:
+    try:
+        return {&quot;tool&quot;: name, &quot;ok&quot;: True, &quot;result&quot;: fn(**kwargs)}
+    except Exception as e:
+        return {&quot;tool&quot;: name, &quot;ok&quot;: False, &quot;error&quot;: str(e)}
+
+
+def run_parallel_tools(
+    calls: list[tuple[str, ToolFn, dict[str, Any]]],
+) -&gt; list[dict[str, Any]]:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as ex:
+        futs = [ex.submit(safe_call, n, f, k) for n, f, k in calls]
+        return [f.result() for f in futs]
+
+
+# 例：先串行拿 user_id，再并行查订单与积分（伪函数）
+def lookup_user_id(email: str) -&gt; str:
+    return &quot;u_123&quot;
+
+
+def fetch_orders(uid: str) -&gt; list:
+    return [{&quot;id&quot;: 1}]
+
+
+def fetch_points(uid: str) -&gt; int:
+    return 42
+
+
+def orchestrate(user_email: str) -&gt; str:
+    uid = lookup_user_id(user_email)
+    second = run_parallel_tools(
+        [
+            (&quot;orders&quot;, fetch_orders, {&quot;uid&quot;: uid}),
+            (&quot;points&quot;, fetch_points, {&quot;uid&quot;: uid}),
+        ]
+    )
+    return json.dumps(second, ensure_ascii=False)
+</code></pre></div><hr>
+<h2 id="6-安全性">6. 安全性</h2>
+<h3 id="61-工具调用的权限控制">6.1 工具调用的权限控制</h3>
+<p><strong>概念解释</strong><br>
+模型本身<strong>没有用户身份</strong>，必须在服务端把「当前会话用户」与<strong>角色/权限</strong>绑定，执行工具前检查：是否可读该表、是否可操作该租户。</p>
+<p><strong>原理详解</strong></p>
+<ul>
+<li><strong>禁止</strong>把服务账号密钥交给模型侧推理环境。</li>
+<li>使用<strong>用户 OAuth token</strong> 或<strong>后端代持</strong>且按最小权限。</li>
+</ul>
+<hr>
+<h3 id="62-输入验证与清洗">6.2 输入验证与清洗</h3>
+<p><strong>概念解释</strong><br>
+防 <strong>Prompt 注入</strong> 诱导工具执行越权参数；防 SQL 注入、路径穿越（<code>../../etc/passwd</code>）。对所有进入工具的字符串做<strong>白名单、参数化查询、chroot/沙箱</strong>。</p>
+<hr>
+<h3 id="63-敏感操作确认">6.3 敏感操作确认</h3>
+<p><strong>概念解释</strong><br>
+删除、转账、对外发邮件等，需 <strong>人在回路（HITL）</strong> 或二次令牌；或把工具设计为「创建草稿」而非「直接发送」。</p>
+<hr>
+<h3 id="64-调用频率限制">6.4 调用频率限制</h3>
+<p><strong>概念解释</strong><br>
+按用户/IP/工具维度 <strong>rate limit</strong>，防刷与成本失控；指数退避应对 429。</p>
+<hr>
+<h3 id="65-审计日志">6.5 审计日志</h3>
+<p><strong>概念解释</strong><br>
+记录：时间、用户、工具名、参数摘要、结果状态、模型请求 ID。用于合规与事后追溯。</p>
+<p><strong>面试 Q11：如何防止模型通过工具泄露敏感数据？</strong><br>
+<strong>A</strong>：最小权限、结果脱敏（掩码）、行级权限、禁止把密钥放进工具返回值、敏感字段仅后端可见且不出现在模型上下文。</p>
+<hr>
+<h2 id="7-常见工具实现">7. 常见工具实现</h2>
+<h3 id="71-搜索工具web-search">7.1 搜索工具（Web Search）</h3>
+<p><strong>概念解释</strong><br>
+封装搜索引擎 API（Bing、SerpAPI、自建爬虫需合规）。返回<strong>摘要与链接</strong>，避免整页 HTML 直接进入上下文。</p>
+<p><strong>Python 示意</strong></p>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>import os
+import urllib.parse
+import urllib.request
+
+
+def web_search(query: str, max_results: int = 5) -&gt; list[dict]:
+    &quot;&quot;&quot;占位：真实环境使用官方搜索 API 并处理分页。&quot;&quot;&quot;
+    q = urllib.parse.quote(query)
+    url = f&quot;https://duckduckgo.com/html/?q={q}&quot;  # 示例仅作结构说明，生产请用合规 API
+    req = urllib.request.Request(url, headers={&quot;User-Agent&quot;: &quot;AgentBot/1.0&quot;})
+    with urllib.request.urlopen(req, timeout=10) as resp:
+        html = resp.read(200_000)
+    return [{&quot;title&quot;: &quot;stub&quot;, &quot;snippet&quot;: html[:200].decode(errors=&quot;ignore&quot;), &quot;url&quot;: url}]
+</code></pre></div><hr>
+<h3 id="72-数据库查询工具">7.2 数据库查询工具</h3>
+<p><strong>概念解释</strong><br>
+<strong>永远参数化查询</strong>，禁止字符串拼接 SQL。最好只允许<strong>只读账号</strong> + 白名单表 + 行级权限。</p>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>def query_user_orders(conn, user_id: str, limit: int = 20) -&gt; list:
+    sql = &quot;SELECT id, amount, created_at FROM orders WHERE user_id = %s ORDER BY created_at DESC LIMIT %s&quot;
+    with conn.cursor() as cur:
+        cur.execute(sql, (user_id, limit))
+        return list(cur.fetchall())
+</code></pre></div><hr>
+<h3 id="73-api-调用工具">7.3 API 调用工具</h3>
+<p><strong>概念解释</strong><br>
+对内部 REST 封装：<code>GET/POST</code>、超时、重试、鉴权头从<strong>服务端保险柜</strong>取，不让模型看见 token。</p>
+<hr>
+<h3 id="74-代码执行工具">7.4 代码执行工具</h3>
+<p><strong>概念解释</strong><br>
+高风险：必须在<strong>沙箱</strong>（Docker、gVisor、WASM）中执行，限制 CPU/内存/网络，禁用危险模块；默认应关闭或仅对内网。</p>
+<hr>
+<h3 id="75-文件操作工具">7.5 文件操作工具</h3>
+<p><strong>概念解释</strong><br>
+限制<strong>根目录</strong>（chroot 或路径规范化），禁止任意路径；写操作需备份或 diff；大文件分块读。</p>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>import os
+
+SANDBOX_ROOT = &quot;/var/agent_sandbox&quot;
+
+
+def safe_read_file(path: str, max_bytes: int = 50_000) -&gt; str:
+    full = os.path.realpath(os.path.join(SANDBOX_ROOT, path))
+    if not full.startswith(os.path.realpath(SANDBOX_ROOT) + os.sep):
+        raise PermissionError(&quot;path escapes sandbox&quot;)
+    with open(full, &quot;rb&quot;) as f:
+        return f.read(max_bytes).decode(&quot;utf-8&quot;, errors=&quot;replace&quot;)
+</code></pre></div><hr>
+<h3 id="76-计算器工具">7.6 计算器工具</h3>
+<p><strong>概念解释</strong><br>
+对数学表达式用 <strong>AST 解析</strong>或 <code>numexpr</code>，<strong>禁止</strong> <code>eval</code> 任意字符串，以防代码执行。</p>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>import ast
+import operator
+
+
+_ALLOWED = {
+    ast.Add: operator.add,
+    ast.Sub: operator.sub,
+    ast.Mult: operator.mul,
+    ast.Div: operator.truediv,
+    ast.USub: operator.neg,
+    ast.Pow: operator.pow,
+}
+
+
+def eval_expr(node: ast.AST) -&gt; float:
+    if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
+        return float(node.value)
+    if isinstance(node, ast.BinOp) and type(node.op) in _ALLOWED:
+        return _ALLOWED[type(node.op)](eval_expr(node.left), eval_expr(node.right))
+    if isinstance(node, ast.UnaryOp) and type(node.op) in _ALLOWED:
+        return _ALLOWED[type(node.op)](eval_expr(node.operand))
+    raise ValueError(&quot;unsupported expression&quot;)
+
+
+def calculator(expr: str) -&gt; float:
+    tree = ast.parse(expr, mode=&quot;eval&quot;)
+    return eval_expr(tree.body)
+</code></pre></div><hr>
+<h2 id="8-综合面试题精选15-题">8. 综合面试题精选（≥15 题）</h2>
+<blockquote>
+<p>下列题目覆盖前文各模块，便于系统复习。背诵时建议理解「为什么」，而非死记句子。</p>
+</blockquote>
+<h3 id="q1function-calling-和让模型输出-json有什么本质区别">Q1：Function Calling 和「让模型输出 JSON」有什么本质区别？</h3>
+<p><strong>A</strong>：Function Calling 是厂商提供的<strong>结构化工具调用通道</strong>（字段名、类型、与对话轮次绑定）；纯 JSON 输出依赖 prompt 约束，<strong>解析脆弱</strong>、易混入闲聊文本。FC 更利于多轮 tool 消息与并行调用 ID 对齐。实践中也可结合：FC 负责调度，JSON 负责业务负载。</p>
+<p><strong>追问</strong>：若模型不支持 FC 怎么办？——可用 JSON mode / 约束解码 / 后处理抽取；或用小模型做「动作分类」。</p>
+<hr>
+<h3 id="q2描述-openai-兼容接口里-toolcalls-与-tool-消息的对应关系">Q2：描述 OpenAI 兼容接口里 <code>tool_calls</code> 与 <code>tool</code> 消息的对应关系。</h3>
+<p><strong>A</strong>：每条 <code>assistant.tool_calls[]</code> 有唯一 <code>id</code>；执行后每条结果作为一条 <code>role=tool</code> 消息，且必须带相同 <code>tool_call_id</code>，保证多并行调用时不错配。</p>
+<hr>
+<h3 id="q3为什么工具-description-比函数名更重要">Q3：为什么工具 <code>description</code> 比函数名更重要？</h3>
+<p><strong>A</strong>：模型主要依据自然语言描述区分相似工具；函数名更多是给程序路由用。描述应写清边界与反例。</p>
+<hr>
+<h3 id="q4如何设计-json-schema-降低模型填错概率">Q4：如何设计 JSON Schema 降低模型填错概率？</h3>
+<p><strong>A</strong>：减少可选参数模糊性；用 <code>enum</code>；在 <code>description</code> 给示例；避免深层嵌套；必要时分拆多个函数。</p>
+<hr>
+<h3 id="q5langchain-tool-的-docstring-为什么要写何时不要用">Q5：LangChain Tool 的 docstring 为什么要写「何时不要用」？</h3>
+<p><strong>A</strong>：减少误触发（false positive），尤其在工具功能重叠时，这是线上质量关键。</p>
+<hr>
+<h3 id="q6mcp-解决的主要痛点是什么">Q6：MCP 解决的主要痛点是什么？</h3>
+<p><strong>A</strong>：工具集成碎片化、重复建设、难以跨产品复用；MCP 提供标准边界（Server）与传输，使工具像外设一样即插即用（在生态支持前提下）。</p>
+<hr>
+<h3 id="q7mcp-与-function-calling-是替代关系吗">Q7：MCP 与 Function Calling 是替代关系吗？</h3>
+<p><strong>A</strong>：不是。FC 是模型侧表达；MCP 是工具侧集成。Host 常将 MCP 工具列表映射为 FC 的 <code>tools</code>。</p>
+<hr>
+<h3 id="q8工具路由什么时候必须上">Q8：工具路由什么时候必须上？</h3>
+<p><strong>A</strong>：当工具数量导致上下文膨胀、误选率上升或延迟/成本明显增加时；具体阈值依赖模型与描述长度，常见从几十起考虑。</p>
+<hr>
+<h3 id="q9向量路由的缺陷与改进">Q9：向量路由的缺陷与改进？</h3>
+<p><strong>A</strong>：缺陷：描述不佳则 embedding 不准；OOV 专有名词弱。改进：混合检索、同义词表、用户域特征、日志驱动迭代描述、加轻量分类器。</p>
+<hr>
+<h3 id="q10并行工具调用要注意什么">Q10：并行工具调用要注意什么？</h3>
+<p><strong>A</strong>：幂等性、后端并发限制、数据竞争（写操作）、结果合并顺序、部分失败重试策略。</p>
+<hr>
+<h3 id="q11什么是工具编排中的依赖-dag">Q11：什么是工具编排中的「依赖 DAG」？</h3>
+<p><strong>A</strong>：把工具调用当节点，数据依赖当边；拓扑排序执行，避免环与竞态，便于失败重试与可视化监控。</p>
+<hr>
+<h3 id="q12敏感操作为什么推荐两阶段提交式工具设计">Q12：敏感操作为什么推荐「两阶段提交」式工具设计？</h3>
+<p><strong>A</strong>：第一阶段生成草稿/待确认对象，第二阶段在用户确认后再真正执行，降低模型误触发损失。</p>
+<hr>
+<h3 id="q13工具返回为什么要尽量结构化json">Q13：工具返回为什么要尽量结构化（JSON）？</h3>
+<p><strong>A</strong>：便于模型解析下一步推理、便于程序校验与日志；纯自然语言易产生歧义。</p>
+<hr>
+<h3 id="q14如何做工具调用的权限控制">Q14：如何做工具调用的权限控制？</h3>
+<p><strong>A</strong>：会话绑定真实用户身份；服务端校验租户与角色；最小权限；敏感操作 HITL；不把长期密钥暴露给模型上下文。</p>
+<hr>
+<h3 id="q15代码执行工具如何做到基本安全">Q15：代码执行工具如何做到基本安全？</h3>
+<p><strong>A</strong>：沙箱隔离、资源与网络限制、禁用危险模块、超时、只读默认、审计；生产慎用。</p>
+<hr>
+<h3 id="q16加一审计日志至少记哪些字段">Q16（加一）：审计日志至少记哪些字段？</h3>
+<p><strong>A</strong>：时间、trace/request id、用户/租户、工具名、参数摘要（脱敏）、结果状态、耗时、模型版本；合规场景保留策略与不可篡改存储视要求而定。</p>
+<hr>
+<h3 id="q17加一calculator-为什么禁止-eval">Q17（加一）：Calculator 为什么禁止 <code>eval</code>？</h3>
+<p><strong>A</strong>：<code>eval</code> 可执行任意 Python，等同于远程代码执行；应使用 AST 白名单或安全数学库。</p>
+<hr>
+<h2 id="小结">小结</h2>
+<ul>
+<li><strong>Function Calling</strong>：模型产出结构化调用意图，应用在本地执行并回传，是 Agent 的「手」。</li>
+<li><strong>Tool 工程</strong>：描述、Schema、返回值与错误模式与路由同样重要。</li>
+<li><strong>MCP</strong>：标准化工具与上下文连接，利于复用与治理。</li>
+<li><strong>路由与编排</strong>：解决规模与依赖问题；<strong>安全</strong>贯穿权限、输入、确认、限流与审计。</li>
+</ul>
+<p>建议结合自家业务画一张「用户请求 → 路由 → 工具 → 依赖 → 回传模型」的时序图，面试时能用白板讲清楚，比背诵定义更有说服力。</p>
+<div class="article-signoff"><a class="text-link" href="/agent-interview/"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6"/></svg>返回全部专题</a><button type="button" class="text-link" data-share><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>复制文章链接</button></div><nav class="study-adjacent" aria-label="继续阅读"></nav></article><aside class="article-toc study-toc"><nav aria-label="本页目录"><div class="eyebrow">ON THIS PAGE / 本页目录</div><a href="#%E7%9B%AE%E5%BD%95">目录</a><a href="#1-function-calling-%E5%9F%BA%E7%A1%80">1. Function Calling 基础</a><a href="#2-tool-use-tool-calling">2. Tool Use / Tool Calling</a><a href="#3-mcp-%E5%8D%8F%E8%AE%AEmodel-context-protocol">3. MCP 协议（Model Context Protocol）</a><a href="#4-%E5%B7%A5%E5%85%B7%E8%B7%AF%E7%94%B1tool-routing">4. 工具路由（Tool Routing）</a><a href="#5-%E5%B7%A5%E5%85%B7%E7%BC%96%E6%8E%92tool-orchestration">5. 工具编排（Tool Orchestration）</a><a href="#6-%E5%AE%89%E5%85%A8%E6%80%A7">6. 安全性</a><a href="#7-%E5%B8%B8%E8%A7%81%E5%B7%A5%E5%85%B7%E5%AE%9E%E7%8E%B0">7. 常见工具实现</a><a href="#8-%E7%BB%BC%E5%90%88%E9%9D%A2%E8%AF%95%E9%A2%98%E7%B2%BE%E9%80%8915-%E9%A2%98">8. 综合面试题精选（≥15 题）</a><a href="#%E5%B0%8F%E7%BB%93">小结</a></nav></aside></div>
+  </main><footer class="shell site-footer"><div class="flex items-center gap-3"><span class="footer-brand">bazaar.</span><span>A little corner of the internet.</span></div><div class="flex items-center gap-5"><span>© 2026 ks</span><a href="https://github.com/y00273676" target="_blank" rel="noopener noreferrer" aria-label="ks on GitHub"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-4.5 1.4-4.5-2.5-6-3m12 6v-3.8a3.3 3.3 0 0 0-.9-2.6c3-.4 6.1-1.5 6.1-6.8a5.3 5.3 0 0 0-1.4-3.6 4.9 4.9 0 0 0-.1-3.6s-1.1-.4-3.7 1.4a12.8 12.8 0 0 0-6.7 0C5.7 1.2 4.6 1.6 4.6 1.6a4.9 4.9 0 0 0-.1 3.6A5.3 5.3 0 0 0 3.1 9c0 5.3 3.1 6.4 6.1 6.8a3.3 3.3 0 0 0-.9 2.5V22"/></svg></a><a href="/index.xml" aria-label="RSS feed"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></a><a href="#top" class="back-top" aria-label="Back to top">↑</a></div></footer><dialog id="search-dialog" class="dialog search-dialog" aria-labelledby="search-title">
+    <div class="dialog-heading"><h2 id="search-title">Find something good.</h2><button type="button" class="icon-button" data-close-dialog aria-label="Close search"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button></div>
+    <p class="muted">Search the collection by title, topic, or keyword.</p>
+    <div class="search-input-wrap"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><input id="search-input" class="input" type="search" placeholder="Try “Go”, “Agent” or “幂等”" aria-label="Search articles" autocomplete="off" autofocus></div>
+    <div id="search-results" class="search-results" aria-live="polite"></div><div class="dialog-footnote"><span><kbd>↑</kbd> <kbd>↓</kbd> to navigate · <kbd>↵</kbd> to open</span><span><kbd>esc</kbd> to close</span></div>
+  </dialog>
+  <dialog id="rss-dialog" class="dialog rss-dialog" aria-labelledby="rss-title"><div class="dialog-heading"><span class="mini-icon"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></span><button type="button" class="icon-button" data-close-dialog aria-label="Close subscription dialog"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button></div><h2 id="rss-title">A quieter way to keep up.</h2><p class="muted">Add this feed to your favorite RSS reader. New writing comes to you, on your terms.</p><label class="input-label" for="feed-url">Feed URL</label><div class="flex gap-2"><input class="input" id="feed-url" value="https://y00273676.github.io/index.xml" readonly><button type="button" class="button button-primary" data-copy-feed aria-label="Copy RSS feed URL"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg> Copy</button></div><a class="text-link" href="/index.xml">Open RSS feed <svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg><span></span></div></body></html>

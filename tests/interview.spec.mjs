@@ -8,15 +8,18 @@ test('all imported notes preserve readable content and resolve internal links an
   const documents = await Promise.all(interviewNotes.map(async note => ({ url: note.url, html: await readFile(`agent-interview/${note.route}/index.html`, 'utf8') })));
   const parsed = await page.evaluate(documents => documents.map(({ url, html }) => {
     const document = new DOMParser().parseFromString(html, 'text/html');
+    const prose = document.querySelector('.study-prose').cloneNode(true);
+    prose.querySelectorAll('pre, code').forEach(node => node.remove());
     return {
       url, titles: document.querySelectorAll('h1').length,
-      text: document.querySelector('.study-prose').textContent,
+      text: prose.textContent,
       ids: [...document.querySelectorAll('[id]')].map(node => node.id),
-      links: [...document.querySelectorAll('.study-prose a, .study-toc a')].map(link => link.getAttribute('href')),
+      links: [...document.querySelectorAll('.study-prose a, .study-toc a, .study-attribution a, .study-downloads a')].map(link => link.getAttribute('href')),
+      images: [...document.querySelectorAll('.study-prose img')].map(image => ({ src: image.getAttribute('src'), alt: image.alt })),
     };
   }), documents);
   const byUrl = new Map(parsed.map(document => [decodeURI(document.url), document]));
-  expect(parsed).toHaveLength(57);
+  expect(parsed).toHaveLength(77);
   for (const document of parsed) {
     expect(document.titles, document.url).toBe(1);
     expect(document.text.length, document.url).toBeGreaterThan(50);
@@ -29,6 +32,10 @@ test('all imported notes preserve readable content and resolve internal links an
       await access(`.${path}${path.endsWith('/') ? 'index.html' : ''}`);
       if (target.hash) expect(byUrl.get(path)?.ids, `${document.url} → ${href}`).toContain(decodeURIComponent(target.hash.slice(1)));
     }
+    for (const image of document.images) {
+      expect(image.alt).not.toBe('');
+      await access(`.${decodeURIComponent(image.src)}`);
+    }
   }
   for (const attachment of interviewAttachments) {
     expect(await readFile(`.${decodeURIComponent(attachment.url)}`)).toEqual(await readFile(`src/notes/agent-interview/${attachment.file}`));
@@ -38,6 +45,8 @@ test('all imported notes preserve readable content and resolve internal links an
 test('study directory filters by topic and question and can recover from no results', async ({ page }) => {
   await page.goto('/agent-interview/');
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Agent 面试与笔试');
+  await expect(page.locator('[data-note]:visible')).toHaveCount(71);
+  await page.getByRole('button', { name: '个人笔记', exact: true }).click();
   await expect(page.locator('[data-note]:visible')).toHaveCount(53);
   await page.getByRole('button', { name: '工具调用', exact: true }).click();
   await expect(page.locator('[data-note]:visible')).toHaveCount(5);
@@ -48,7 +57,7 @@ test('study directory filters by topic and question and can recover from no resu
   await page.getByRole('searchbox', { name: '搜索专题、标题或题号' }).fill('no-such-note');
   await expect(page.getByText('没有找到匹配的笔记')).toBeVisible();
   await page.getByRole('button', { name: '查看全部专题' }).click();
-  await expect(page.locator('[data-note]:visible')).toHaveCount(53);
+  await expect(page.locator('[data-note]:visible')).toHaveCount(71);
   await page.locator('.study-start').first().click();
   await expect(page).toHaveURL(/\/senior\/interview\/$/);
   await expect(page.locator('.study-prose h2')).toHaveCount(24);
@@ -91,8 +100,59 @@ test('all study navigation and note bodies remain available without JavaScript',
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto('http://127.0.0.1:5173/agent-interview/');
-  await expect(page.locator('[data-note]:visible')).toHaveCount(53);
+  await expect(page.locator('[data-note]:visible')).toHaveCount(71);
   await page.locator('.study-start').nth(1).click();
   await expect(page.locator('.study-prose')).toContainText('总分解释与面试追问');
   await context.close();
+});
+
+
+test('collected sources filter independently, survive reload, and appear in full-text search', async ({ page }) => {
+  await page.goto('/agent-interview/?source=collected');
+  await expect(page.locator('[data-note]:visible')).toHaveCount(18);
+  await expect(page.getByRole('button', { name: '网络资料', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  await page.getByRole('button', { name: '求职准备', exact: true }).click();
+  await expect(page.locator('[data-note]:visible')).toHaveCount(4);
+  await page.reload();
+  await expect(page.locator('[data-note]:visible')).toHaveCount(4);
+  await page.getByRole('button', { name: '个人笔记', exact: true }).click();
+  await expect(page.getByText('没有找到匹配的笔记')).toBeVisible();
+  await page.getByRole('button', { name: '查看全部专题' }).click();
+  await expect(page.locator('[data-note]:visible')).toHaveCount(71);
+  await page.getByRole('button', { name: '搜索全文', exact: true }).click();
+  await page.getByRole('searchbox', { name: 'Search articles' }).fill('STAR 面试稿');
+  await page.locator('.search-result').filter({ hasText: 'STAR 面试稿准备指南' }).click();
+  await expect(page).toHaveURL(/\/collected\/star\/$/);
+  await expect(page.getByRole('complementary', { name: '资料来源' })).toContainText('bcefghj');
+  await expect(page.locator('.article-meta')).toContainText('收录于');
+});
+
+test('collected pages expose images, question navigation, and licensed project downloads', async ({ page, request }) => {
+  await page.goto('/agent-interview/collected/overview/');
+  const image = page.locator('.study-prose img').first();
+  await image.scrollIntoViewIfNeeded();
+  await expect(image).toBeVisible();
+  await expect.poll(() => image.evaluate(image => image.complete && image.naturalWidth > 0)).toBe(true);
+  const downloads = page.locator('.study-downloads a[download]');
+  await expect(downloads).toHaveCount(3);
+  for (const href of await downloads.evaluateAll(links => links.map(link => link.getAttribute('href')))) {
+    const response = await request.get(href);
+    expect(response.status()).toBe(200);
+    expect((await response.body()).subarray(0, 2).toString()).toBe('PK');
+  }
+  const license = await request.get(await page.locator('.study-attribution').getByRole('link', { name: 'MIT 许可' }).getAttribute('href'));
+  expect(await license.text()).toContain('Permission is hereby granted');
+  await page.goto('/agent-interview/collected/project-qa/');
+  await expect(page.locator('.study-prose h3').filter({ hasText: /^Q\d+:/ })).toHaveCount(92);
+  await expect(page.locator('.study-toc details a').filter({ hasText: /^Q\d+:/ })).toHaveCount(92);
+});
+
+test('collected documents fit mobile screens and meet accessibility checks', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  for (const path of ['/agent-interview/collected/overview/', '/agent-interview/collected/rag/', '/agent-interview/collected/project-qa/', '/agent-interview/collected/go-project/']) {
+    await page.goto(path);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), path).toBe(true);
+    const result = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
+    expect(result.violations.map(v => ({ id: v.id, nodes: v.nodes.map(n => n.target) })), path).toEqual([]);
+  }
 });

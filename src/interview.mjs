@@ -3,6 +3,7 @@ import { dirname, basename, posix } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import MarkdownIt from 'markdown-it';
 import { escapeHtml } from './components.mjs';
+import { collectedSource, collectedDocuments, collectedAnchorAliases } from './interview-sources.mjs';
 
 export const interviewRoot = fileURLToPath(new URL('./notes/agent-interview/', import.meta.url));
 export const interviewBase = '/agent-interview/';
@@ -17,6 +18,10 @@ export const interviewGroups = [
   ['08-安全伦理', 'safety', '安全伦理', '注入、隐私、对齐与权限控制。', 'check'],
   ['09-高级架构与技术负责人', 'senior', '高级架构与技术负责人', '24 道场景题与 120 分钟笔试，练习决策与取舍。', 'book'],
   ['10-笔试代码', 'code', '笔试代码', 'Agent loop、重试、并发执行器与 RRF 参考实现。', 'code'],
+  [null, 'rag', 'RAG 与检索', '文档处理、混合检索、重排序与效果评估。', 'search'],
+  [null, 'llm', '大模型基础', 'Transformer、推理优化、微调与对齐。', 'grid'],
+  [null, 'career', '求职准备', '学习路线、招聘分析、简历模板与 STAR 表达。', 'book'],
+  [null, 'practice', '项目实战与问答', '开源项目分析、92 道问答与三种语言的项目源码。', 'code'],
 ].map(([directory, slug, title, description, icon]) => ({ directory, slug, title, description, icon }));
 
 const specialRoutes = {
@@ -33,7 +38,7 @@ function walk(directory = '') {
   for (const entry of readdirSync(`${interviewRoot}${directory}`, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name, 'zh-CN'))) {
     const file = posix.join(directory, entry.name);
     if (entry.isDirectory() && !entry.name.startsWith('.') && entry.name !== '__pycache__') walk(`${file}/`);
-    else if (entry.isFile() && /\.(md|py|zip)$/.test(entry.name)) files.push(file);
+    else if (entry.isFile() && (/\.(md|py|zip|png)$/.test(entry.name) || entry.name === 'LICENSE')) files.push(file);
   }
 }
 walk();
@@ -44,26 +49,28 @@ const slugify = text => plain(text).toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu, 
 const encodePath = path => path.split('/').map(encodeURIComponent).join('/');
 
 export const interviewNotes = files.filter(file => file.endsWith('.md')).map(file => {
+  const collected = collectedDocuments.find(document => document.file === file);
   const raw = readFileSync(`${interviewRoot}${file}`, 'utf8');
   const frontmatter = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/);
   const markdown = raw.slice(frontmatter?.[0].length || 0);
   const heading = markdown.match(/^# (.+)$/m)?.[1];
   const title = frontmatter?.[1].match(/^title:\s*(.+)$/m)?.[1] || heading || basename(file, '.md');
-  const group = interviewGroups.find(group => file.startsWith(`${group.directory}/`));
-  const route = specialRoutes[file] || `${group.slug}/${basename(file, '.md')}`;
+  const group = interviewGroups.find(group => collected ? group.slug === collected.group : group.directory && file.startsWith(`${group.directory}/`));
+  const route = collected?.route || specialRoutes[file] || `${group.slug}/${basename(file, '.md')}`;
   const text = plain(markdown);
   const questionIds = [...markdown.matchAll(/^#{2,3}\s+(Q\d+|S\d+|SD\d+|D\d+|C\d+|P\d+|B\d+)[：:、\s]/gm)].map(match => match[1]);
   return {
     file, markdown, title, group: group?.slug || 'resources',
-    category: group?.title || '复习指南', shortTitle: basename(file) === 'README.md' ? title : basename(file, '.md'),
-    date: frontmatter?.[1].match(/^updated:\s*(.+)$/m)?.[1] || markdown.match(/校订：(\d{4}-\d{2}-\d{2})/)?.[1] || '2026-09-21',
+    source: collected ? collectedSource.id : 'personal', sourcePath: collected?.sourcePath,
+    category: group?.title || '复习指南', shortTitle: collected?.shortTitle || (basename(file) === 'README.md' ? title : basename(file, '.md')),
+    date: collected ? collectedSource.imported : frontmatter?.[1].match(/^updated:\s*(.+)$/m)?.[1] || markdown.match(/校订：(\d{4}-\d{2}-\d{2})/)?.[1] || '2026-09-21',
     url: `${interviewBase}${encodePath(route)}/`, route, text, questionIds,
     readingTime: `${Math.max(1, Math.ceil(text.length / 450))} 分钟`,
   };
 });
 const byFile = new Map(interviewNotes.map(note => [note.file, note]));
 export const interviewAttachments = files.filter(file => !file.endsWith('.md')).map(file => ({
-  file, url: `${interviewBase}downloads/${encodePath(file)}`,
+  file, url: `${interviewBase}${file.endsWith('.png') ? 'media' : 'downloads'}/${encodePath(file)}`,
 }));
 
 function resolveLink(href, current, wiki = false) {
@@ -83,7 +90,9 @@ function resolveLink(href, current, wiki = false) {
   if (!target) throw new Error(`Unresolved note link in ${current.file}: ${href}`);
   const note = byFile.get(target);
   const url = note?.url || interviewAttachments.find(item => item.file === target).url;
-  return `${url}${fragment ? `#${encodeURIComponent(slugify(fragment))}` : ''}`;
+  const anchor = fragment ? slugify(fragment) : '';
+  const resolvedAnchor = collectedAnchorAliases[note?.route]?.[anchor] || anchor;
+  return `${url}${resolvedAnchor ? `#${encodeURIComponent(resolvedAnchor)}` : ''}`;
 }
 
 function renderNote(note) {
@@ -112,6 +121,21 @@ function renderNote(note) {
     if (token.attrGet('href')?.startsWith(`${interviewBase}downloads/`)) token.attrSet('download', '');
     return originalLink(tokens, index, options, env, self);
   };
+  const originalImage = md.renderer.rules.image;
+  md.renderer.rules.image = (tokens, index, options, env, self) => {
+    const token = tokens[index];
+    const src = resolveLink(token.attrGet('src'), note);
+    token.attrSet('src', src);
+    const attachment = interviewAttachments.find(attachment => attachment.url === src && attachment.file.endsWith('.png'));
+    if (attachment) {
+      const png = readFileSync(`${interviewRoot}${attachment.file}`);
+      token.attrSet('width', String(png.readUInt32BE(16)));
+      token.attrSet('height', String(png.readUInt32BE(20)));
+    }
+    token.attrSet('loading', 'lazy');
+    token.attrSet('decoding', 'async');
+    return originalImage(tokens, index, options, env, self);
+  };
   md.renderer.rules.fence = (tokens, index) => {
     const token = tokens[index];
     return `<div class="code-block"><div class="code-header"><span>${escapeHtml(token.info || 'text')}</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>${escapeHtml(token.content)}</code></pre></div>`;
@@ -138,7 +162,7 @@ function renderNote(note) {
     const id = count ? `${base}-${count + 1}` : base;
     token.attrSet('id', id);
     const level = Number(token.tag.slice(1));
-    if (level === 2 || (hasParts && level === 3)) note.headings.push({ id, title, level });
+    if (level === 2 || ((hasParts || note.route === 'collected/project-qa') && level === 3)) note.headings.push({ id, title, level });
   }
   note.body = md.renderer.render(tokens, md.options, {});
 }
@@ -146,5 +170,5 @@ interviewNotes.forEach(renderNote);
 
 export const interviewSearchIndex = interviewNotes.filter(note => note.route !== 'archive').map(note => ({
   title: note.title, url: note.url, description: note.category, category: 'Agent 面试',
-  tags: ['Agent', note.category, ...note.questionIds], text: note.text, readingTime: note.readingTime,
+  tags: ['Agent', note.source === 'collected' ? '网络资料' : '个人笔记', note.category, ...note.questionIds], text: note.text, readingTime: note.readingTime,
 }));

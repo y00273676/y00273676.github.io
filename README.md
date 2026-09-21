@@ -29,6 +29,7 @@ Tests use an installed Google Chrome. To use Playwright Chromium instead, instal
 - `src/main.js`: search, filters, dialogs, clipboard feedback, reading progress, Motion.
 - `src/orb.js`: decorative scene; pauses offscreen and in hidden tabs, respects reduced motion, and falls back to CSS without WebGL.
 - `src/notes/agent-interview/`: 57 original Markdown notes imported from the Obsidian interview notebook, with Python reference code and the historical backup.
+- `src/interview-sources.mjs`: source attribution, upstream revision, and topic placement for the collected guide.
 - `src/interview.mjs`: build-time Markdown rendering, Obsidian links, heading anchors, downloads, and the full-text search index.
 - `src/interview-pages.mjs`: the `/agent-interview/` study directory and note reading pages.
 
@@ -51,3 +52,11 @@ After editing notes, run `npm run build` and `npm test`. To verify the reference
 ```sh
 python3 -m unittest discover -s src/notes/agent-interview/10-笔试代码 -p 'test_*.py' -v
 ```
+
+## Collected interview guide
+
+The Agent interview section also includes 20 documents and 6 comics from [bcefghj/ai-agent-interview-guide](https://github.com/bcefghj/ai-agent-interview-guide), revision `9a987322f2d82ddabe4c1aabc7b4795749fa90a2` (2026-04-01), imported on 2026-09-21. Originals and the MIT license are retained under `src/notes/agent-interview/collected/ai-agent-interview-guide/`. The upstream README also asks that study materials be used for noncommercial learning; its wording is preserved.
+
+The 20 documents are mapped into the existing topics plus RAG, LLM foundations, career preparation, and project practice. `/agent-interview/collected/overview/` links to the complete collection. Source filters distinguish personal notes from collected material; both participate in full-text search. The 92 project interview questions keep their own numbering. Source pages identify the original repository and revision rather than attributing the upstream examples or metrics to the site owner.
+
+Three project ZIP files preserve all tracked files from the Python, Java, and Go projects, plus the upstream license and a source record. They are study downloads; importing them does not run or validate the external services or dependencies described in their READMEs. The build uses only the committed local snapshot, with no dependency on the original checkout. Update the snapshot, ZIP files, and `src/interview-sources.mjs` together when importing a new upstream revision.

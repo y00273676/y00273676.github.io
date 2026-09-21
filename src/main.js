@@ -164,7 +164,9 @@ if (studyFilter) {
   document.querySelectorAll('[data-study-controls]').forEach(element => { element.hidden = false; });
   const groups = [...document.querySelectorAll('[data-study-group]')];
   const buttons = [...document.querySelectorAll('[data-study-topic]')];
+  const sourceButtons = [...document.querySelectorAll('[data-study-source]')];
   let topic = 'all';
+  let source = 'all';
   function filterStudy(updateUrl = true) {
     const query = studyFilter.value.trim().toLocaleLowerCase();
     const words = query.split(/\s+/).filter(Boolean);
@@ -173,19 +175,21 @@ if (studyFilter) {
       let visible = 0;
       group.querySelectorAll('[data-note]').forEach(row => {
         const text = `${group.querySelector('h3').textContent} ${row.dataset.noteSearch}`.toLocaleLowerCase();
-        row.hidden = (topic !== 'all' && group.dataset.studyGroup !== topic) || !words.every(word => text.includes(word));
+        row.hidden = (topic !== 'all' && group.dataset.studyGroup !== topic) || (source !== 'all' && row.dataset.noteSource !== source) || !words.every(word => text.includes(word));
         if (!row.hidden) visible++;
       });
       group.hidden = visible === 0;
       count += visible;
     });
     buttons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.studyTopic === topic)));
+    sourceButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.studySource === source)));
     document.querySelector('#study-count').textContent = `${count} 篇专题笔记`;
     document.querySelector('#study-empty').hidden = count > 0;
     if (updateUrl) {
       const url = new URL(location.href);
       if (query) url.searchParams.set('q', studyFilter.value.trim()); else url.searchParams.delete('q');
       if (topic !== 'all') url.searchParams.set('topic', topic); else url.searchParams.delete('topic');
+      if (source !== 'all') url.searchParams.set('source', source); else url.searchParams.delete('source');
       history.replaceState({}, '', url);
     }
   }
@@ -193,11 +197,13 @@ if (studyFilter) {
     const params = new URLSearchParams(location.search);
     studyFilter.value = params.get('q') || '';
     topic = params.get('topic') || 'all';
+    source = params.get('source') || 'all';
     filterStudy(false);
   }
   studyFilter.addEventListener('input', () => filterStudy());
   buttons.forEach(button => button.addEventListener('click', () => { topic = button.dataset.studyTopic; filterStudy(); }));
-  document.querySelector('[data-study-reset]').addEventListener('click', () => { topic = 'all'; studyFilter.value = ''; filterStudy(); studyFilter.focus(); });
+  sourceButtons.forEach(button => button.addEventListener('click', () => { source = button.dataset.studySource; filterStudy(); }));
+  document.querySelector('[data-study-reset]').addEventListener('click', () => { topic = 'all'; source = 'all'; studyFilter.value = ''; filterStudy(); studyFilter.focus(); });
   addEventListener('popstate', readStudyUrl);
   readStudyUrl();
 }

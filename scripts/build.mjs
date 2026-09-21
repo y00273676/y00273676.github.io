@@ -26,7 +26,7 @@ await Promise.all([
 for (const [file, html] of renderPages()) { await mkdir(dirname(file), { recursive: true }); await writeFile(file, html); }
 await writeFile('assets/interview-search.json', JSON.stringify(interviewSearchIndex));
 for (const attachment of interviewAttachments) {
-  const target = `agent-interview/downloads/${attachment.file}`;
+  const target = decodeURIComponent(attachment.url.slice(1));
   await mkdir(dirname(target), { recursive: true });
   await copyFile(`${interviewRoot}${attachment.file}`, target);
 }

@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="zh-CN" id="top"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f7f8f5"><title>07 · 大模型基础（面试八股文） — bazaar</title><meta name="description" content="大模型基础 · Agent 面试与笔试笔记。"><meta name="author" content="ks"><link rel="canonical" href="https://y00273676.github.io/agent-interview/collected/llm/"><meta property="og:title" content="07 · 大模型基础（面试八股文） — bazaar"><meta property="og:description" content="大模型基础 · Agent 面试与笔试笔记。"><meta property="og:type" content="website"><meta property="og:url" content="https://y00273676.github.io/agent-interview/collected/llm/"><link rel="icon" type="image/svg+xml" href="/assets/favicon.svg"><link rel="alternate" type="application/rss+xml" title="bazaar" href="/index.xml"><script>try{document.documentElement.dataset.theme=localStorage.getItem('bazaar-theme')||'light'}catch{document.documentElement.dataset.theme='light'}</script><link rel="stylesheet" href="/assets/site.css"><script type="module" src="/assets/main.js"></script></head><body><a class="skip-link" href="#main">Skip to content</a><header class="site-header"><div class="shell header-inner">
+    <a href="/" class="brand" aria-label="bazaar home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>bazaar<span class="brand-dot">.</span></a>
+    <nav id="main-nav" class="main-nav" aria-label="Main navigation"><a href="/" >Home</a><a href="/post/" >Writing</a><a href="/agent-interview/" aria-current="page">Agent 面试</a><a href="/tags/" >Topics</a></nav>
+    <div class="header-actions"><button type="button" class="search-trigger" data-open-search aria-label="Search articles"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><span>Search</span><kbd>⌘ K</kbd></button><span class="header-divider"></span><button type="button" class="icon-button" data-theme-toggle aria-label="Switch to dark theme"><svg class="icon theme-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.4 1.4m11.2 11.2L19 19M5 19l1.4-1.4M17.6 6.4 19 5"/></svg><svg class="icon theme-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 13.2A8.5 8.5 0 0 1 10.8 3.5 8.5 8.5 0 1 0 20.5 13.2Z"/></svg></button><button type="button" class="icon-button menu-trigger" aria-label="Open navigation" aria-expanded="false" aria-controls="main-nav"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div>
+  </div></header><main id="main" class="shell" tabindex="-1">
+    <div class="reading-progress" aria-hidden="true"></div><nav class="article-back study-breadcrumb" aria-label="面包屑"><a href="/agent-interview/" class="text-link"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6"/></svg>Agent 面试笔记</a><span>/</span><a href="/agent-interview/#llm">大模型基础</a></nav>
+    <header class="article-header study-article-header"><div class="eyebrow">AGENT INTERVIEW / 大模型基础</div><h1>07 · 大模型基础（面试八股文）</h1><div class="article-meta"><span class="author-avatar">↗</span><span>网络资料 · bcefghj</span><span class="meta-separator"></span><time datetime="2026-09-21">收录于 2026-09-21</time><span class="meta-separator"></span><span>约 33 分钟</span></div></header><aside class="study-attribution" aria-label="资料来源"><div><span class="note-source note-source-collected">网络收录</span><a href="https://github.com/bcefghj/ai-agent-interview-guide">bcefghj / ai-agent-interview-guide</a><a href="https://github.com/bcefghj/ai-agent-interview-guide/blob/9a987322f2d82ddabe4c1aabc7b4795749fa90a2/docs/01-%E9%9D%A2%E8%AF%95%E5%85%AB%E8%82%A1%E6%96%87/07-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80.md">查看原文 <svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a><a href="/agent-interview/downloads/collected/ai-agent-interview-guide/LICENSE">MIT 许可</a></div><p>原仓库版本：2026-04-01。保留原文内容与引用，方便对照学习。</p></aside>
+    <details class="study-mobile-toc"><summary>本页目录 · 12 节</summary><nav aria-label="本页目录（移动端）"><a href="#%E7%9B%AE%E5%BD%95">目录</a><a href="#1-transformer-%E6%9E%B6%E6%9E%84">1. Transformer 架构</a><a href="#2-%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E8%AF%A6%E8%A7%A3">2. 注意力机制详解</a><a href="#3-tokenization">3. Tokenization</a><a href="#4-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86">4. 大模型推理</a><a href="#5-%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83">5. 模型微调</a><a href="#6-%E5%AF%B9%E9%BD%90%E6%8A%80%E6%9C%AF">6. 对齐技术</a><a href="#7-%E6%A8%A1%E5%9E%8B%E9%87%8F%E5%8C%96">7. 模型量化</a><a href="#8-%E6%8E%A8%E7%90%86%E4%BC%98%E5%8C%96">8. 推理优化</a><a href="#9-%E5%89%8D%E6%B2%BF%E6%A8%A1%E5%9E%8B%E4%B8%8E%E9%80%89%E5%9E%8B">9. 前沿模型与选型</a><a href="#10-%E7%BB%BC%E5%90%88%E9%9D%A2%E8%AF%95%E9%A2%98%E5%BA%9320-%E9%A2%98">10. 综合面试题库（20+ 题）</a><a href="#%E9%99%84%E5%BD%95%E9%80%9F%E6%9F%A5%E5%85%AC%E5%BC%8F%E4%B8%8E%E6%9C%AF%E8%AF%AD">附录：速查公式与术语</a></nav></details>
+    <div class="article-layout study-article-layout"><article class="article-body study-prose" id="note-content"><blockquote>
+<p>面向零基础读者的系统梳理：每个知识点尽量包含「概念解释、原理详解、面试问答、追问应对、代码示例（如适用）」。本模块是 LLM / Agent 面试的高频核心，建议结合论文与开源实现（如 Hugging Face Transformers、vLLM）对照理解。</p>
+</blockquote>
+<hr>
+<h2 id="目录">目录</h2>
+<ol>
+<li><a href="/agent-interview/collected/llm/#1-transformer-%E6%9E%B6%E6%9E%84">Transformer 架构</a></li>
+<li><a href="/agent-interview/collected/llm/#2-%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E8%AF%A6%E8%A7%A3">注意力机制详解</a></li>
+<li><a href="/agent-interview/collected/llm/#3-tokenization">Tokenization</a></li>
+<li><a href="/agent-interview/collected/llm/#4-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86">大模型推理</a></li>
+<li><a href="/agent-interview/collected/llm/#5-%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83">模型微调</a></li>
+<li><a href="/agent-interview/collected/llm/#6-%E5%AF%B9%E9%BD%90%E6%8A%80%E6%9C%AF">对齐技术</a></li>
+<li><a href="/agent-interview/collected/llm/#7-%E6%A8%A1%E5%9E%8B%E9%87%8F%E5%8C%96">模型量化</a></li>
+<li><a href="/agent-interview/collected/llm/#8-%E6%8E%A8%E7%90%86%E4%BC%98%E5%8C%96">推理优化</a></li>
+<li><a href="/agent-interview/collected/llm/#9-%E5%89%8D%E6%B2%BF%E6%A8%A1%E5%9E%8B%E4%B8%8E%E9%80%89%E5%9E%8B">前沿模型与选型</a></li>
+<li><a href="/agent-interview/collected/llm/#10-%E7%BB%BC%E5%90%88%E9%9D%A2%E8%AF%95%E9%A2%98%E5%BA%9320-%E9%A2%98">综合面试题库（20+ 题）</a></li>
+</ol>
+<hr>
+<h2 id="1-transformer-架构">1. Transformer 架构</h2>
+<h3 id="11-概念解释">1.1 概念解释</h3>
+<p><strong>Transformer</strong> 是一种完全基于<strong>自注意力（Self-Attention）<strong>的神经网络结构，用于序列建模。与 RNN/CNN 不同，它不依赖逐步递归或局部卷积，而是通过注意力在</strong>任意两个位置之间</strong>直接建立依赖关系，因而<strong>并行度高</strong>，且更容易捕捉<strong>长距离依赖</strong>。</p>
+<p>经典论文 <em>Attention Is All You Need</em> 提出了两种用法：</p>
+<ul>
+<li><strong>Encoder</strong>：把输入序列编码成一组上下文相关的表示（适合理解、分类、双向信息）。</li>
+<li><strong>Decoder</strong>：自回归地生成下一个 token（适合生成）；Decoder 还可通过 <strong>Cross-Attention</strong> 读 Encoder 的输出（机器翻译等 <strong>Encoder–Decoder</strong> 任务）。</li>
+</ul>
+<p>纯 Decoder 堆叠（如 GPT 系列）已成为当前大语言模型（LLM）的主流形态。</p>
+<h3 id="12-原理详解">1.2 原理详解</h3>
+<h4 id="121-encoderdecoder-结构">1.2.1 Encoder–Decoder 结构</h4>
+<ul>
+<li><strong>Encoder</strong>（多层堆叠）：每层包含 <strong>Self-Attention</strong>（双向，每个位置能看到整句）+ <strong>FFN</strong>。输出是一组向量 (H)，编码了源序列信息。</li>
+<li><strong>Decoder</strong>（多层堆叠）：每层包含 <strong>Masked Self-Attention</strong>（只能看到当前位置及之前，保证自回归）+ <strong>Encoder–Decoder Attention（Cross-Attention）</strong>（Query 来自 Decoder，Key/Value 来自 Encoder）+ <strong>FFN</strong>。</li>
+<li><strong>用途</strong>：Seq2Seq（翻译、摘要等）。<strong>纯 Decoder LLM</strong> 往往只有 Decoder 块，用「前缀」当条件做生成，不再单独训练 Encoder。</li>
+</ul>
+<h4 id="122-self-attention-的计算过程qkv-与缩放点积注意力">1.2.2 Self-Attention 的计算过程（Q、K、V 与缩放点积注意力）</h4>
+<p>对输入序列的每个位置 (i)，先把隐向量变成三个向量：</p>
+<ul>
+<li><strong>Query (Q)</strong>：「我要查什么」</li>
+<li><strong>Key (K)</strong>：「我有什么可被匹配的标签」</li>
+<li><strong>Value (V)</strong>：「匹配成功后取出什么内容」</li>
+</ul>
+<p>实现上：(X \in \mathbb{R}^{n \times d_{model}})，可学习矩阵 (W_Q, W_K, W_V)，则<br>
+(Q = XW_Q,\ K = XW_K,\ V = XW_V)。</p>
+<p><strong>缩放点积注意力</strong>输出：</p>
+<p>[
+\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^\top}{\sqrt{d_k}}\right) V
+]</p>
+<p>其中 (d_k) 为每个头的维度。对第 (i) 个位置，注意力权重是它对各个位置 (j) 的分布，再对 (V) 做加权求和。</p>
+<h4 id="123-multi-head-attentionmha">1.2.3 Multi-Head Attention（MHA）</h4>
+<p>将 (d_{model}) 拆成 (h) 个头，每个头在 (d_k = d_{model}/h) 维子空间上独立做注意力，最后 <strong>Concat</strong> 再乘 (W_O) 投回 (d_{model})。</p>
+<p><strong>直觉</strong>：不同头可以关注不同模式（语法、指代、局部搭配等），<strong>表达能力更强</strong>。</p>
+<h4 id="124-position-encoding">1.2.4 Position Encoding</h4>
+<p>注意力本身<strong>置换不变</strong>（打乱 token 顺序若不加位置信息则结果不变），必须注入位置信息。</p>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>方法</th>
+<th>思路简述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>正弦位置编码（Sinusoidal PE）</strong></td>
+<td>固定函数，不同维度用不同频率的正弦/余弦；可外推到比训练更长的位置（但现代 LLM 仍常用可学习或 RoPE）。</td>
+</tr>
+<tr>
+<td><strong>RoPE（Rotary Position Embedding）</strong></td>
+<td>在 Q、K 上施加与位置相关的<strong>旋转</strong>，相对位置以旋转角度差体现；广泛用于 LLaMA、ChatGLM 等，外推与相对位置性质较好。</td>
+</tr>
+<tr>
+<td><strong>ALiBi（Attention with Linear Biases）</strong></td>
+<td>不在 embedding 加位置向量，而在注意力 logits 上按距离加<strong>线性负偏置</strong>，远处更负，实现简单且对长度外推有一定帮助。</td>
+</tr>
+</tbody>
+</table></div><h4 id="125-feed-forward-networkffn">1.2.5 Feed-Forward Network（FFN）</h4>
+<p>每层注意力子层后接一个位置独立的 FFN，通常形式为：</p>
+<p>[
+\text{FFN}(x) = \text{Activation}(xW_1 + b_1) W_2 + b_2
+]</p>
+<p>常见 <strong>扩展比</strong> 为 4（隐层维度 (4 \times d_{model})），激活函数常用 GELU/SwiGLU（SwiGLU 会用三个矩阵，等价于门控 FFN）。</p>
+<h4 id="126-layer-normalizationpre-norm-vs-post-norm">1.2.6 Layer Normalization：Pre-Norm vs Post-Norm</h4>
+<ul>
+<li><strong>Post-Norm</strong>（原始 Transformer）：(x \leftarrow x + \text{Sublayer}(x))，再在子层输出上做 Norm。</li>
+<li><strong>Pre-Norm</strong>（现代 LLM 常见）：先 Norm 再进子层：(x \leftarrow x + \text{Sublayer}(\text{LN}(x)))。</li>
+</ul>
+<p><strong>Pre-Norm</strong> 通常<strong>更稳定、更易训练深层网络</strong>；<strong>Post-Norm</strong> 在理论上与残差更「经典」，但深层时更难训。</p>
+<h4 id="127-residual-connection残差连接">1.2.7 Residual Connection（残差连接）</h4>
+<p>[
+x_{l+1} = x_l + \text{Sublayer}(x_l) \quad (\text{或 Pre-Norm 变体})
+]</p>
+<p>作用：<strong>缓解梯度消失、提供恒等映射捷径</strong>，使深层网络可优化。</p>
+<h3 id="13-面试问题q与标准答案a">1.3 面试问题（Q）与标准答案（A）</h3>
+<p><strong>Q：Transformer 和 RNN 相比，核心优势是什么？</strong><br>
+<strong>A：</strong> 自注意力在单步内连接任意两位置，<strong>并行计算</strong>好、<strong>长距离依赖</strong>路径短（常数层数内）；RNN 顺序计算且长序列梯度路径长。代价是 (O(n^2)) 注意力内存与时间（相对序列长度）。</p>
+<p><strong>Q：Decoder 里的 Masked Self-Attention 为什么要 mask？</strong><br>
+<strong>A：</strong> 训练时一次看到整句，若不 mask，位置 (i) 会看到「未来」token，造成<strong>信息泄漏</strong>；mask 保证训练和推理（自回归）一致。</p>
+<h3 id="14-追问应对">1.4 追问应对</h3>
+<ul>
+<li>
+<p><strong>追问：为什么大模型多是 Decoder-only？</strong><br>
+<strong>应对：</strong> 生成式预训练目标（下一词预测）与架构一致；工程上堆叠简单、扩展性好；Encoder-only（如 BERT）更偏理解，需另做生成适配。</p>
+</li>
+<li>
+<p><strong>追问：Pre-Norm 和 Post-Norm 训练稳定性差异原因？</strong><br>
+<strong>应对：</strong> Pre-Norm 让子层输入分布更稳定，梯度在残差路径上更平滑；可提一嘴深层 Transformer 实践中 Pre-Norm 更常见。</p>
+</li>
+</ul>
+<h3 id="15-代码示例缩放点积注意力pytorch-风格伪代码">1.5 代码示例：缩放点积注意力（PyTorch 风格伪代码）</h3>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>import torch
+import torch.nn.functional as F
+import math
+
+def scaled_dot_product_attention(Q, K, V, attn_mask=None):
+    # Q,K,V: (batch, heads, seq_len, d_k)
+    scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(Q.size(-1))
+    if attn_mask is not None:
+        scores = scores.masked_fill(attn_mask == 0, float(&quot;-inf&quot;))
+    attn = F.softmax(scores, dim=-1)
+    return torch.matmul(attn, V), attn
+</code></pre></div><hr>
+<h2 id="2-注意力机制详解">2. 注意力机制详解</h2>
+<h3 id="21-概念解释">2.1 概念解释</h3>
+<p><strong>注意力</strong>本质上是一种<strong>软寻址</strong>机制：根据 Query 与各个 Key 的相似度得到权重，再对 Value 加权求和。Self-Attention 中 Q、K、V 都来自同一组输入（不同线性投影）。</p>
+<h3 id="22-原理详解">2.2 原理详解</h3>
+<h4 id="221-数学公式">2.2.1 数学公式</h4>
+<p>[
+\text{Attention}(Q,K,V) = \text{softmax}\left(\frac{QK^\top}{\sqrt{d_k}}\right) V
+]</p>
+<p>（若为多头，则对每个头分别计算再拼接。）</p>
+<h4 id="222-为什么要除以-sqrtdk">2.2.2 为什么要除以 (\sqrt{d_k})</h4>
+<p>当 (d_k) 较大时，(q \cdot k) 的点积<strong>方差</strong>约为 (d_k)（假设分量独立零均值单位方差），数值幅度大，softmax 会进入<strong>极陡区域</strong>，梯度不稳定。除以 (\sqrt{d_k}) 将方差缩放到约 1，使 softmax 更平滑，训练更稳定。</p>
+<h4 id="223-multi-head-的作用">2.2.3 Multi-Head 的作用</h4>
+<ul>
+<li>多头 = 多个<strong>并行子空间</strong>的注意力，每头可学习不同关系。</li>
+<li>单头表达能力有限；多头类似 CNN 多通道，<strong>提高表示丰富度</strong>。</li>
+</ul>
+<h4 id="224-grouped-query-attentiongqa">2.2.4 Grouped Query Attention（GQA）</h4>
+<p>在 <strong>MHA</strong> 中，每头有独立 K、V。在 <strong>MQA</strong> 中，所有头<strong>共享</strong>一套 K、V。<br>
+<strong>GQA</strong> 介于两者之间：<strong>多组 Query 共享同一组 K、V</strong>（例如 8 个 Q 组对应 2 组 KV），在<strong>推理显存与带宽</strong>（KV Cache 更小）和<strong>质量</strong>之间折中。Llama 3、Mistral 等采用 GQA。</p>
+<h4 id="225-multi-query-attentionmqa">2.2.5 Multi-Query Attention（MQA）</h4>
+<p>所有注意力头<strong>共享同一份 K、V</strong>，大幅减少 KV Cache 体积与内存带宽需求，推理加速明显；但可能略损质量，故后来流行 <strong>GQA</strong> 折中。</p>
+<h4 id="226-flash-attention-原理核心思想">2.2.6 Flash Attention 原理（核心思想）</h4>
+<p>标准实现需物化完整 (n \times n) 注意力矩阵，<strong>显存占用大</strong>。<br>
+<strong>Flash Attention</strong> 利用 <strong>GPU SRAM 快、HBM 慢</strong> 的层次结构，把 Q、K、V 分块（tiling），在块上<strong>融合</strong>矩阵乘、softmax 与对 V 的加权，避免或减少完整 (n \times n) 矩阵写回 HBM；并可配合 <strong>recomputation</strong> 在反向时重算以省显存。</p>
+<p><strong>要点</strong>：IO-aware / 分块 softmax 数值稳定实现、减少 HBM 读写。后续 FlashAttention-2 等进一步优化并行与工作划分。</p>
+<h3 id="23-面试问题q与标准答案a">2.3 面试问题（Q）与标准答案（A）</h3>
+<p><strong>Q：简述 Flash Attention 为什么能快和省显存？</strong><br>
+<strong>A：</strong> 通过分块在片上完成注意力计算，减少对慢速全局显存的读写；避免存储完整大注意力矩阵（或显著降低峰值），并融合算子提高吞吐。</p>
+<p><strong>Q：GQA 相对 MHA 推理上主要省在哪里？</strong><br>
+<strong>A：</strong> <strong>KV Cache</strong> 随层缓存的 K、V 体积减小（多组 Query 共享 KV），内存带宽与显存占用下降，decode 阶段受益明显。</p>
+<h3 id="24-追问应对">2.4 追问应对</h3>
+<ul>
+<li><strong>追问：不用 softmax 可以吗？</strong><br>
+<strong>应对：</strong> 注意力需非负且归一的权重；softmax 是最常见选择，也有线性注意力、核方法等变体用于线性复杂度，但各有近似与实现代价。</li>
+</ul>
+<h3 id="25-代码示例多头形状演示">2.5 代码示例：多头形状演示</h3>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code># batch=2, seq=128, heads=8, d_model=512 -&gt; d_k=64
+# Q: (2, 8, 128, 64)  # 注意力在最后一维 seq 上 softmax
+# 合并多头: (2, 128, 512) @ W_o
+</code></pre></div><hr>
+<h2 id="3-tokenization">3. Tokenization</h2>
+<h3 id="31-概念解释">3.1 概念解释</h3>
+<p><strong>Tokenization</strong> 把原始文本切成模型可处理的 <strong>token</strong> 序列；每个 token 对应词表中的 <strong>id</strong>，再经 embedding 变为向量。切分方式直接影响<strong>序列长度、OOV 处理、多语言与符号</strong>表现。</p>
+<h3 id="32-原理详解">3.2 原理详解</h3>
+<h4 id="321-bpebyte-pair-encoding">3.2.1 BPE（Byte Pair Encoding）</h4>
+<p>从字符或字节开始，<strong>统计</strong>相邻符号对频率，<strong>合并</strong>最高频对为新符号，迭代直到词表达目标规模。<br>
+<strong>特点</strong>：平衡词级与字符级，可表示未登录词（由子词拼出）；广泛用于 GPT-2、RoBERTa 等。</p>
+<h4 id="322-wordpiecebert">3.2.2 WordPiece（BERT）</h4>
+<p>与 BPE 类似，但合并准则常基于<strong>最大化语言模型似然</strong>（选择使训练数据概率提升最大的合并），而非单纯最高频。</p>
+<h4 id="323-sentencepiece">3.2.3 SentencePiece</h4>
+<p>把<strong>整句</strong>当作输入，<strong>不依赖</strong>预分词空格；在原始字符串上学习子词（可处理无空格语言如日文）。支持 <strong>BPE</strong> 与 <strong>Unigram</strong> 等算法。Unigram 从大批子词出发，迭代删除使损失最小的词表，适合多语言。</p>
+<h4 id="324-中文-tokenization-的特殊处理">3.2.4 中文 Tokenization 的特殊处理</h4>
+<ul>
+<li>中文无天然空格，需在字符、子词、词级之间选择；子词级（字 + 常见片段）较常见。</li>
+<li><strong>字符级</strong>：词表大、序列长；<strong>子词</strong>可压缩长度。</li>
+<li>中英混合、数字、emoji 常统一用 <strong>字节级 BPE</strong>（如 UTF-8 字节）避免 OOV，但序列可能变长。</li>
+<li>实践上多用 <strong>SentencePiece + 大词表</strong> 或 <strong>字节 BPE</strong>，并对领域语料再训练词表/适配。</li>
+</ul>
+<h4 id="325-tokenizer-对模型效果的影响">3.2.5 Tokenizer 对模型效果的影响</h4>
+<ul>
+<li><strong>序列长度</strong>：同样文本 token 数少则同样上下文窗口能容纳更多内容。</li>
+<li><strong>稀有词</strong>：拆成子词比 UNK 更好。</li>
+<li><strong>噪声</strong>：错误分词会导致语义碎片化，影响生成与理解。</li>
+<li><strong>与预训练一致性</strong>：微调与推理必须用<strong>同一套</strong> tokenizer 与规则。</li>
+</ul>
+<h3 id="33-面试问题q与标准答案a">3.3 面试问题（Q）与标准答案（A）</h3>
+<p><strong>Q：BPE 和 WordPiece 主要区别？</strong><br>
+<strong>A：</strong> 都是子词合并思路；BPE 常用高频合并，WordPiece 更强调<strong>似然提升</strong>；具体实现因库而异，面试答「合并准则不同」即可。</p>
+<p><strong>Q：为什么 LLM 常用子词而不是纯词？</strong><br>
+<strong>A：</strong> 控制词表规模、处理 OOV、开放集词汇；纯词级词表巨大且稀疏。</p>
+<h3 id="34-追问应对">3.4 追问应对</h3>
+<ul>
+<li><strong>追问：字节级 BPE 优缺点？</strong><br>
+<strong>应对：</strong> 词表小、任意字符可表示；缺点是同样文本 <strong>token 变长</strong>，算力与上下文窗口压力增大。</li>
+</ul>
+<hr>
+<h2 id="4-大模型推理">4. 大模型推理</h2>
+<h3 id="41-概念解释">4.1 概念解释</h3>
+<p><strong>推理</strong>指模型前向计算生成输出。自回归 LM 逐 token 生成，分为 <strong>Prefill</strong>（处理提示词）与 <strong>Decode</strong>（逐个生成新 token）。</p>
+<h3 id="42-原理详解">4.2 原理详解</h3>
+<h4 id="421-prefill-vs-decode">4.2.1 Prefill vs Decode</h4>
+<ul>
+<li><strong>Prefill</strong>：一次性并行计算 prompt 各 token 的表示，得到第一个生成位置的 logits；计算形态类似「整段并行注意力」。</li>
+<li><strong>Decode</strong>：每步只新增一个 token，但需用<strong>历史 KV Cache</strong> 避免重复计算过去 token 的 K、V；<strong>算力小、内存带宽敏感</strong>。</li>
+</ul>
+<h4 id="422-kv-cache-原理与实现">4.2.2 KV Cache 原理与实现</h4>
+<p>对每一层、每个注意力头，对已生成（及 prompt）位置缓存 <strong>Key 和 Value</strong>。<br>
+新一步只计算<strong>当前 token</strong> 的 Q，与缓存的 K、V 做注意力，无需再算历史位置的 K、V。</p>
+<p><strong>代价</strong>：序列越长、层数越多、模型越大，<strong>KV Cache 显存</strong>线性增长，是长上下文推理的主要瓶颈之一。</p>
+<h4 id="423-采样策略">4.2.3 采样策略</h4>
+<ul>
+<li><strong>Temperature (T)</strong>：logits 除以 (T) 再 softmax。(T&gt;1) 分布更平（更随机），(T&lt;1) 更尖（更确定）。</li>
+<li><strong>Top-k</strong>：只保留概率最高的 k 个 token，其余置零再归一化，减少长尾胡编。</li>
+<li><strong>Top-p（Nucleus）</strong>：按概率从大到小累加，取最小集合使累积概率 (\ge p)，<strong>动态</strong>截断候选集。</li>
+</ul>
+<h4 id="424-beam-search-vs-greedy">4.2.4 Beam Search vs Greedy</h4>
+<ul>
+<li><strong>Greedy</strong>：每步取 argmax，快但易局部最优。</li>
+<li><strong>Beam Search</strong>：维护 top-(b) 条部分假设，适合<strong>机器翻译、摘要</strong>等可度量任务；对开放域对话常显得<strong>重复、不自然</strong>，对话场景更常用采样。</li>
+</ul>
+<h4 id="425-推理延迟优化概览">4.2.5 推理延迟优化（概览）</h4>
+<p>量化、算子融合、批处理、KV Cache 压缩/分页、投机解码、模型并行、更好的注意力实现（FlashAttention）等（见第 8 节）。</p>
+<h3 id="43-面试问题q与标准答案a">4.3 面试问题（Q）与标准答案（A）</h3>
+<p><strong>Q：Prefill 和 Decode 哪个更吃算力？哪个更吃带宽？</strong><br>
+<strong>A：</strong> Prefill 并行度高，<strong>计算密集</strong>；Decode 每步批量小，常<strong>内存带宽受限</strong>（读大权重与 KV Cache）。实际与 batch、实现有关。</p>
+<p><strong>Q：KV Cache 为什么能加速？</strong><br>
+<strong>A：</strong> 避免对历史 token 重复计算各层 K、V，以空间换时间。</p>
+<h3 id="44-追问应对">4.4 追问应对</h3>
+<ul>
+<li><strong>追问：KV Cache 显存如何估算？</strong><br>
+<strong>应对：</strong> 与层数、头数、每头维度、batch、序列长度、精度（FP16/BF16/INT8）成正比；可答「每层每 token 存 K、V 两份向量，总显存随长度线性增」。</li>
+</ul>
+<h3 id="45-代码示例简单-greedy-温度概念">4.5 代码示例：简单 Greedy + 温度（概念）</h3>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>import torch
+import torch.nn.functional as F
+
+def sample_next_token(logits, temperature=1.0, top_k=50):
+    logits = logits / temperature
+    if top_k &gt; 0:
+        v, _ = torch.topk(logits, min(top_k, logits.size(-1)))
+        logits[logits &lt; v[:, [-1]]] = float(&quot;-inf&quot;)
+    probs = F.softmax(logits, dim=-1)
+    return torch.multinomial(probs, num_samples=1)
+</code></pre></div><hr>
+<h2 id="5-模型微调">5. 模型微调</h2>
+<h3 id="51-概念解释">5.1 概念解释</h3>
+<p><strong>微调</strong>在预训练模型上用下游数据继续训练，使模型适配任务或领域。<strong>全量微调</strong>更新全部参数；**参数高效微调（PEFT）**只训练少量附加参数或低秩增量，降低显存与存储。</p>
+<h3 id="52-原理详解">5.2 原理详解</h3>
+<h4 id="521-全量微调full-fine-tuning">5.2.1 全量微调（Full Fine-tuning）</h4>
+<p>更新 (\theta) 的全部分量。效果最好潜力大，但需要大显存、易过拟合小数据，部署时每任务一份完整权重。</p>
+<h4 id="522-loralow-rank-adaptation">5.2.2 LoRA（Low-Rank Adaptation）</h4>
+<p>对某线性层 (W \in \mathbb{R}^{d \times k})，冻结 (W)，训练低秩分解：</p>
+<p>[
+W' = W + BA,\quad B \in \mathbb{R}^{d \times r},\ A \in \mathbb{R}^{r \times k},\ r \ll \min(d,k)
+]</p>
+<p><strong>直觉</strong>：大矩阵更新往往<strong>低秩</strong>即可近似任务有效子空间。训练只存 (A,B)，推理可合并 (W' = W + BA) 或保持分开。</p>
+<h4 id="523-qlora">5.2.3 QLoRA</h4>
+<p>在 <strong>4-bit 量化</strong>的基座权重（如 NF4）上叠加 LoRA，用 <strong>paged optimizer</strong> 等技巧减少显存峰值。使单卡微调大模型成为可能。</p>
+<h4 id="524-adapter-tuning">5.2.4 Adapter Tuning</h4>
+<p>在 Transformer 层中插入<strong>小瓶颈层</strong>（如 down-project → 激活 → up-project），只训练 adapter 参数。</p>
+<h4 id="525-prefix-tuning">5.2.5 Prefix Tuning</h4>
+<p>在输入前<strong>可学习的前缀向量</strong>（虚拟 token），不改变原词表 embedding，通过前缀影响注意力。</p>
+<h4 id="526-p-tuning-v2">5.2.6 P-Tuning v2</h4>
+<p>将 <strong>prompt tokens</strong> 扩展到<strong>每一层</strong>的可学习前缀，而不仅是输入层，提升小模型与难任务表现。</p>
+<h4 id="527-sftsupervised-fine-tuning流程典型">5.2.7 SFT（Supervised Fine-Tuning）流程（典型）</h4>
+<ol>
+<li><strong>数据</strong>：高质量指令–回答对（可含思维链、拒答、工具格式）。</li>
+<li><strong>格式</strong>：Chat 模板（system/user/assistant）与 tokenizer 对齐。</li>
+<li><strong>训练</strong>：交叉熵损失，通常只监督 <strong>assistant</strong> 段 token。</li>
+<li><strong>评估</strong>：验证集 loss、人工/模型裁判、任务基准。</li>
+<li><strong>对齐</strong>：常与 DPO/RLHF 等衔接。</li>
+</ol>
+<h3 id="53-面试问题q与标准答案a">5.3 面试问题（Q）与标准答案（A）</h3>
+<p><strong>Q：LoRA 秩 r 怎么选？</strong><br>
+<strong>A：</strong> 经验值 8–64 常见；越大容量越大但易过拟合、显存略增；需验证集折中。</p>
+<p><strong>Q：QLoRA 和 LoRA 主要差在哪？</strong><br>
+<strong>A：</strong> 基座权重 <strong>4-bit 量化</strong> + LoRA；大幅降低显存，略有精度损失风险，需配合 NF4 与调参。</p>
+<h3 id="54-追问应对">5.4 追问应对</h3>
+<ul>
+<li><strong>追问：LoRA 一般接在哪些层？</strong><br>
+<strong>应对：</strong> 常对 <strong>Attention 的 q,v（及有时 k,o）和/或 FFN</strong> 注入；实践有默认配置（如 r、alpha、target_modules）。</li>
+</ul>
+<h3 id="55-代码示例lora-形式数学">5.5 代码示例：LoRA 形式（数学）</h3>
+<div class="code-block"><div class="code-header"><span>text</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code># 前向：h = W x + (B A) x = (W + B A) x
+# 训练参数：B (d×r), A (r×k)，远小于 W (d×k) 当 r 小时
+</code></pre></div><hr>
+<h2 id="6-对齐技术">6. 对齐技术</h2>
+<h3 id="61-概念解释">6.1 概念解释</h3>
+<p><strong>对齐</strong>指使模型行为符合人类意图与安全规范。<strong>RLHF</strong> 用人类偏好训练奖励模型再用强化学习；<strong>DPO</strong> 等直接用偏好数据优化策略，无需显式奖励模型与 RL 循环。</p>
+<h3 id="62-原理详解">6.2 原理详解</h3>
+<h4 id="621-rlhf-完整流程经典三阶段">6.2.1 RLHF 完整流程（经典三阶段）</h4>
+<ol>
+<li><strong>SFT</strong>：监督微调，学会基本指令跟随与格式。</li>
+<li><strong>奖励模型（RM）</strong>：对人类标注的「好坏排序」数据，训练 (r(x,y)) 给回答打分。</li>
+<li><strong>强化学习</strong>：以 RM 为奖励信号，用 <strong>PPO</strong> 等算法更新策略 (\pi_\theta)，并常加 <strong>KL 惩罚</strong> 约束与参考模型 (\pi_{\text{ref}})（常为 SFT 模型）不要偏离太远。</li>
+</ol>
+<h4 id="622-ppo-在-rlhf-中的应用">6.2.2 PPO 在 RLHF 中的应用</h4>
+<p><strong>PPO（Proximal Policy Optimization）</strong> 通过 <strong>clipped surrogate objective</strong> 限制策略更新幅度，训练稳定。RLHF 中：</p>
+<ul>
+<li><strong>策略</strong>：当前 LM。</li>
+<li><strong>奖励</strong>：RM 分数 + KL 项。</li>
+<li><strong>价值函数</strong>：常需 critic 估计优势函数。</li>
+</ul>
+<p>挑战：训练链路长、调参难、奖励黑客（reward hacking）。</p>
+<h4 id="623-dpodirect-preference-optimization">6.2.3 DPO（Direct Preference Optimization）</h4>
+<p>从偏好对 ((y_w, y_l)) 出发，<strong>推导</strong>出仅用策略与参考模型、无需显式 RM 的分类式损失，直接优化策略满足偏好。简化工程、去掉 RL 采样环，但数据质量要求高。</p>
+<h4 id="624-grpogroup-relative-policy-optimization">6.2.4 GRPO（Group Relative Policy Optimization）</h4>
+<p>DeepSeek 等工作中强调：对同一 prompt <strong>一组输出</strong>内做<strong>相对</strong>奖励归一化，减 critic、适应组内比较，适合特定训练基础设施与算法设计。</p>
+<h4 id="625-ktokahneman-tversky-optimization">6.2.5 KTO（Kahneman-Tversky Optimization）</h4>
+<p>从<strong>二元反馈</strong>（好/坏）出发，用前景理论风格损失做对齐，不必成对偏好，数据收集更灵活。</p>
+<h4 id="626-rlhf-vs-dpo-对比">6.2.6 RLHF vs DPO 对比</h4>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>维度</th>
+<th>RLHF</th>
+<th>DPO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>奖励模型</td>
+<td>需要</td>
+<td>不需要显式 RM</td>
+</tr>
+<tr>
+<td>训练复杂度</td>
+<td>高（RL + 参考模型）</td>
+<td>相对较低</td>
+</tr>
+<tr>
+<td>稳定性</td>
+<td>依赖 PPO 调参</td>
+<td>通常更简洁</td>
+</tr>
+<tr>
+<td>数据</td>
+<td>排序/打分</td>
+<td>偏好对</td>
+</tr>
+</tbody>
+</table></div><h3 id="63-面试问题q与标准答案a">6.3 面试问题（Q）与标准答案（A）</h3>
+<p><strong>Q：RLHF 为什么要 KL 惩罚？</strong><br>
+<strong>A：</strong> 防止策略为刷高 RM 分数而产生<strong>分布外</strong>投机行为（reward hacking），保持语言质量与多样性。</p>
+<p><strong>Q：DPO 相对 RLHF 的主要工程优势？</strong><br>
+<strong>A：</strong> 无需单独训练 RM 与 RL 采样循环，<strong>静态数据</strong>上直接优化，pipeline 更简单。</p>
+<h3 id="64-追问应对">6.4 追问应对</h3>
+<ul>
+<li><strong>追问：偏好数据噪声大怎么办？</strong><br>
+<strong>应对：</strong> 数据清洗、多裁判一致性、对比学习过滤、鲁棒损失与正则；工业界常强调<strong>标注指南</strong>与质检。</li>
+</ul>
+<hr>
+<h2 id="7-模型量化">7. 模型量化</h2>
+<h3 id="71-概念解释">7.1 概念解释</h3>
+<p><strong>量化</strong>把浮点权重/激活用低比特整数近似，减少<strong>显存</strong>与<strong>带宽</strong>，加速推理。训练后量化（PTQ）常见；QAT（量化感知训练）精度更好但成本高。</p>
+<h3 id="72-原理详解">7.2 原理详解</h3>
+<h4 id="721-int8-int4">7.2.1 INT8 / INT4</h4>
+<ul>
+<li><strong>INT8</strong>：每权重 8 bit，常配合 per-tensor 或 per-channel <strong>scale/zero-point</strong>。</li>
+<li><strong>INT4</strong>：4 bit，容量减半，精度风险更高，常与 <strong>group-wise</strong> 缩放配合。</li>
+</ul>
+<h4 id="722-gptq">7.2.2 GPTQ</h4>
+<p><strong>逐列（或块）量化</strong>权重，用 Hessian 相关信息最小化量化误差，适合 <strong>GPU 上 PTQ</strong>，广泛用于开源 LLM 的 4-bit 权重。</p>
+<h4 id="723-awqactivation-aware-weight-quantization">7.2.3 AWQ（Activation-aware Weight Quantization）</h4>
+<p>强调保留对 <strong>激活幅度大</strong> 的「显著」权重通道，按激活统计决定保护权重，<strong>小模型推理</strong>上常与硬件内核结合。</p>
+<h4 id="724-gguf-ggml">7.2.4 GGUF / GGML</h4>
+<p><strong>文件格式与生态</strong>（llama.cpp 等），便于 CPU/多端部署与多种量化类型（Q4_K、Q5_K 等），不是单一算法名，而是<strong>推理栈与格式</strong>代表。</p>
+<h4 id="725-量化对性能的影响">7.2.5 量化对性能的影响</h4>
+<ul>
+<li><strong>正面</strong>：显存降、吞吐升、边缘部署可行。</li>
+<li><strong>负面</strong>：perplexity 上升、复杂推理/代码任务可能掉点；<strong>KV Cache</strong> 量化可进一步省显存但需小心误差累积。</li>
+</ul>
+<h3 id="73-面试问题q与标准答案a">7.3 面试问题（Q）与标准答案（A）</h3>
+<p><strong>Q：INT4 比 INT8 主要风险是什么？</strong><br>
+<strong>A：</strong> 表示粒度更粗，误差更大；需 <strong>group-wise</strong> 缩放、混合精度或与更高比特关键层结合。</p>
+<p><strong>Q：GPTQ 大致在优化什么？</strong><br>
+<strong>A：</strong> 给定量化约束，<strong>最小化权重重构误差</strong>（常利用二阶近似信息），逐块贪心求解。</p>
+<hr>
+<h2 id="8-推理优化">8. 推理优化</h2>
+<h3 id="81-概念解释">8.1 概念解释</h3>
+<p>大模型推理瓶颈来自 <strong>算力、显存带宽、KV Cache、批调度</strong> 等，工程上从<strong>模型分片、内核、缓存管理、批处理、投机解码</strong>等多方面优化。</p>
+<h3 id="82-原理详解">8.2 原理详解</h3>
+<h4 id="821-模型并行">8.2.1 模型并行</h4>
+<ul>
+<li><strong>张量并行（TP）</strong>：单层内矩阵分块到多 GPU（如列切分 (A)、行切分 (B)），需 <strong>all-reduce</strong> 通信。</li>
+<li><strong>流水线并行（PP）</strong>：不同层放在不同 GPU，micro-batch 流水，减少气泡。</li>
+</ul>
+<p>大集群还可 <strong>数据并行 + TP + PP</strong> 组合。</p>
+<h4 id="822-kv-cache-优化pagedattention-vllm">8.2.2 KV Cache 优化：PagedAttention / vLLM</h4>
+<p><strong>PagedAttention</strong> 将 KV Cache 存成<strong>非连续块</strong>（类似 OS 分页），按请求动态分配，减少 <strong>padding 浪费</strong>，提高 batch 利用率，是 <strong>vLLM</strong> 的核心思想之一。</p>
+<h4 id="823-continuous-batching动态批处理">8.2.3 Continuous Batching（动态批处理）</h4>
+<p>请求长度不一，传统静态 batch 浪费严重；<strong>连续批处理</strong>在迭代中动态增删请求，提高 GPU 利用率。</p>
+<h4 id="824-speculative-decoding投机采样">8.2.4 Speculative Decoding（投机采样）</h4>
+<p>用小模型（draft）<strong>多步预测</strong>，大模型（target）<strong>并行验证</strong>；接受则一次前进多 token，降低<strong>每 token 延迟</strong>（理想情况），需 draft 与 target 兼容。</p>
+<h4 id="825-moemixture-of-experts">8.2.5 MoE（Mixture of Experts）</h4>
+<p>每层含多个 <strong>FFN 专家</strong>，<strong>门控</strong>只对少数专家计算（如 top-2），<strong>总参数大但每 token 激活参数少</strong>，提高容量与效率比；挑战是 <strong>负载均衡</strong>与通信（如 DeepSeek-MoE、Mixtral）。</p>
+<h3 id="83-面试问题q与标准答案a">8.3 面试问题（Q）与标准答案（A）</h3>
+<p><strong>Q：vLLM 的 PagedAttention 解决什么问题？</strong><br>
+<strong>A：</strong> KV Cache <strong>显存碎片化与浪费</strong>（变长序列），通过分页块管理与复用提高吞吐。</p>
+<p><strong>Q：MoE 为什么「参数多算力少」？</strong><br>
+<strong>A：</strong> 每 token 只激活部分专家，<strong>计算量</strong>随激活专家数增长，而<strong>总参数量</strong>包含所有专家。</p>
+<hr>
+<h2 id="9-前沿模型与选型">9. 前沿模型与选型</h2>
+<h3 id="91-概念解释">9.1 概念解释</h3>
+<p><strong>闭源</strong>（API）与<strong>开源</strong>（可自托管）在能力、成本、合规、迭代速度上权衡；各系列有<strong>长上下文、多模态、代码、价格</strong>等差异。</p>
+<h3 id="92-原理详解">9.2 原理详解</h3>
+<h4 id="921-deepseek-系列特点概括">9.2.1 DeepSeek 系列特点（概括）</h4>
+<ul>
+<li>强调<strong>工程与训练效率</strong>（如公开技术报告中的架构与训练细节）、<strong>长思维链与推理</strong>场景、<strong>开源权重</strong>降低使用门槛；具体能力随版本迭代需以官方 benchmark 为准。</li>
+<li>部分版本采用 <strong>MoE</strong> 等提高参数效率。</li>
+</ul>
+<h4 id="922-gpt-4o-claude-gemini-对比面试话术">9.2.2 GPT-4o / Claude / Gemini 对比（面试话术）</h4>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>维度</th>
+<th>可答要点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>生态</strong></td>
+<td>OpenAI / Anthropic / Google 各自 API、工具链、多模态进度不同。</td>
+</tr>
+<tr>
+<td><strong>多模态</strong></td>
+<td>GPT-4o 强调语音图像端到端；Gemini 原生多模态与谷歌生态；Claude 长文与代码体验常被提及。</td>
+</tr>
+<tr>
+<td><strong>定位</strong></td>
+<td>面试答「需看具体版本与评测任务」；商业上关注价格、速率限制、合规区域。</td>
+</tr>
+</tbody>
+</table></div><p>避免编造具体 benchmark 数字，强调<strong>任务相关评测与 A/B</strong>。</p>
+<h4 id="923-开源-vs-闭源选型">9.2.3 开源 vs 闭源选型</h4>
+<ul>
+<li><strong>开源</strong>：数据自主、可微调、离线可部署；需自备算力与运维。</li>
+<li><strong>闭源</strong>：上手快、持续升级；依赖供应商、成本与合规需评估。</li>
+<li><strong>混合</strong>：敏感数据本地开源模型，通用能力调用 API。</li>
+</ul>
+<h3 id="93-面试问题q与标准答案a">9.3 面试问题（Q）与标准答案（A）</h3>
+<p><strong>Q：选开源 70B 还是闭源 API？</strong><br>
+<strong>A：</strong> 看<strong>隐私、延迟、成本、定制需求</strong>与团队运维能力；高合规本地优先，快速验证可用 API。</p>
+<hr>
+<h2 id="10-综合面试题库20-题">10. 综合面试题库（20+ 题）</h2>
+<p>下列题目均附<strong>标准答案要点</strong>，可与前文章节交叉复习。</p>
+<hr>
+<p><strong>Q1：写出缩放点积注意力的公式，并解释 (\sqrt{d_k})。</strong><br>
+<strong>A：</strong> (\text{softmax}(QK^\top/\sqrt{d_k})V)。除 (\sqrt{d_k}) 使点积方差稳定在约 1，避免 softmax 饱和与梯度问题。</p>
+<hr>
+<p><strong>Q2：多头注意力为什么比单头好？</strong><br>
+<strong>A：</strong> 多子空间并行关注不同依赖关系，表达力更强，类似多通道特征。</p>
+<hr>
+<p><strong>Q3：Encoder 和 Decoder 的自注意力有何不同？</strong><br>
+<strong>A：</strong> Encoder 一般为双向；Decoder 用 <strong>causal mask</strong> 保证自回归；Seq2Seq 中 Decoder 还有 <strong>Cross-Attention</strong> 读 Encoder。</p>
+<hr>
+<p><strong>Q4：RoPE 与正弦绝对位置编码各有什么特点？</strong><br>
+<strong>A：</strong> RoPE 通过旋转编码相对位置，常用于 Decoder LLM；正弦为固定绝对位置，可外推性讨论较多但现代架构更常选 RoPE/ALiBi。</p>
+<hr>
+<p><strong>Q5：Pre-Norm 和 Post-Norm 区别？</strong><br>
+<strong>A：</strong> Pre-Norm：LN 在子层前；Post-Norm：LN 在子层后。深层网络 Pre-Norm 通常更稳定。</p>
+<hr>
+<p><strong>Q6：解释 MQA 与 GQA 的动机。</strong><br>
+<strong>A：</strong> 减少 KV Cache 与带宽；MQA 共享全部 KV，GQA 分组共享以平衡质量。</p>
+<hr>
+<p><strong>Q7：Flash Attention 核心优化思想？</strong><br>
+<strong>A：</strong> 分块、减少 HBM 访问、融合算子；降低注意力显存峰值并提速。</p>
+<hr>
+<p><strong>Q8：BPE 如何构建词表？</strong><br>
+<strong>A：</strong> 从基础符号迭代合并最高频相邻对（或类似准则），直到目标规模。</p>
+<hr>
+<p><strong>Q9：SentencePiece 适合中文的原因？</strong><br>
+<strong>A：</strong> 不依赖空格分词，可学习子词；适合无空格语言与多语言统一。</p>
+<hr>
+<p><strong>Q10：Tokenizer 不一致会导致什么问题？</strong><br>
+<strong>A：</strong> id 错位、性能异常；微调与推理必须与基座一致。</p>
+<hr>
+<p><strong>Q11：Prefill 和 Decode 阶段特点？</strong><br>
+<strong>A：</strong> Prefill 并行处理 prompt；Decode 逐步生成，常受带宽与 KV Cache 影响。</p>
+<hr>
+<p><strong>Q12：KV Cache 是什么？为什么能加速？</strong><br>
+<strong>A：</strong> 缓存历史 K、V；避免重复计算过去 token 的注意力键值。</p>
+<hr>
+<p><strong>Q13：Temperature、Top-k、Top-p 各影响什么？</strong><br>
+<strong>A：</strong> 随机性/确定性；截断长尾候选；动态 nucleus 截断。</p>
+<hr>
+<p><strong>Q14：对话生成为什么少用 Beam Search？</strong><br>
+<strong>A：</strong> 易重复、不自然；开放域更常用采样类方法。</p>
+<hr>
+<p><strong>Q15：LoRA 的低秩假设直觉？</strong><br>
+<strong>A：</strong> 任务适配更新近似落在低秩子空间，用 (BA) 参数高效逼近。</p>
+<hr>
+<p><strong>Q16：QLoRA 为什么省显存？</strong><br>
+<strong>A：</strong> 基座 4-bit 存权重 + LoRA 训练少量参数；降低显存占用。</p>
+<hr>
+<p><strong>Q17：SFT 损失通常怎么算？</strong><br>
+<strong>A：</strong> 常对 assistant token 做交叉熵，忽略 user 与 mask。</p>
+<hr>
+<p><strong>Q18：RLHF 三阶段是什么？</strong><br>
+<strong>A：</strong> SFT → 奖励模型 → PPO（带 KL）强化学习。</p>
+<hr>
+<p><strong>Q19：DPO 相对 RLHF 最大简化是什么？</strong><br>
+<strong>A：</strong> 不显式训练奖励模型与 RL 循环，用偏好直接优化策略。</p>
+<hr>
+<p><strong>Q20：PPO 中 KL 惩罚目的？</strong><br>
+<strong>A：</strong> 限制偏离参考策略，减轻 reward hacking 与模式崩塌。</p>
+<hr>
+<p><strong>Q21：INT4 量化主要风险？</strong><br>
+<strong>A：</strong> 精度损失；需分组缩放、混合精度或算法（GPTQ/AWQ）缓解。</p>
+<hr>
+<p><strong>Q22：GPTQ 大致做什么？</strong><br>
+<strong>A：</strong> 训练后量化权重，按层/块最小化误差，常用 Hessian 近似。</p>
+<hr>
+<p><strong>Q23：张量并行与流水线并行区别？</strong><br>
+<strong>A：</strong> TP 切分单层张量；PP 切分不同层到不同设备。</p>
+<hr>
+<p><strong>Q24：PagedAttention 解决什么？</strong><br>
+<strong>A：</strong> KV Cache 变长导致的浪费与碎片化，提高批处理效率。</p>
+<hr>
+<p><strong>Q25：投机解码如何加速？</strong><br>
+<strong>A：</strong> 小模型提议多 token，大模型并行验证，减少串行步数。</p>
+<hr>
+<p><strong>Q26：MoE 训练难点？</strong><br>
+<strong>A：</strong> 负载均衡、通信、路由稳定性；避免专家坍塌。</p>
+<hr>
+<p><strong>Q27：开源模型相对闭源 API 的核心优势场景？</strong><br>
+<strong>A：</strong> 数据不出域、可深度定制、长期成本可控（有算力前提）。</p>
+<hr>
+<p><strong>Q28：GRPO / KTO 你了解到什么程度？</strong><br>
+<strong>A：</strong> <strong>诚实答</strong>：GRPO 强调组内相对优化、可与特定 RL 基础设施配合；KTO 用二元反馈与前景式损失；细节以论文与最新报告为准，面试可说明「用于改进 RLHF 复杂管线或数据形态」。</p>
+<hr>
+<h2 id="附录速查公式与术语">附录：速查公式与术语</h2>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>符号/术语</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(d_{model})</td>
+<td>模型隐藏维度</td>
+</tr>
+<tr>
+<td>(d_k)</td>
+<td>每头 Key/Query 维度</td>
+</tr>
+<tr>
+<td>KV Cache</td>
+<td>缓存每步 K、V 以加速自回归</td>
+</tr>
+<tr>
+<td>PEFT</td>
+<td>参数高效微调总称（LoRA、Adapter 等）</td>
+</tr>
+<tr>
+<td>PTQ</td>
+<td>训练后量化</td>
+</tr>
+<tr>
+<td>TP / PP</td>
+<td>张量并行 / 流水线并行</td>
+</tr>
+</tbody>
+</table></div><hr>
+<p><em>文档版本：与「面试八股文」系列一致，可按岗位深度补充论文与源码阅读笔记。</em></p>
+<div class="article-signoff"><a class="text-link" href="/agent-interview/"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6"/></svg>返回全部专题</a><button type="button" class="text-link" data-share><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>复制文章链接</button></div><nav class="study-adjacent" aria-label="继续阅读"></nav></article><aside class="article-toc study-toc"><nav aria-label="本页目录"><div class="eyebrow">ON THIS PAGE / 本页目录</div><a href="#%E7%9B%AE%E5%BD%95">目录</a><a href="#1-transformer-%E6%9E%B6%E6%9E%84">1. Transformer 架构</a><a href="#2-%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E8%AF%A6%E8%A7%A3">2. 注意力机制详解</a><a href="#3-tokenization">3. Tokenization</a><a href="#4-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86">4. 大模型推理</a><a href="#5-%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83">5. 模型微调</a><a href="#6-%E5%AF%B9%E9%BD%90%E6%8A%80%E6%9C%AF">6. 对齐技术</a><a href="#7-%E6%A8%A1%E5%9E%8B%E9%87%8F%E5%8C%96">7. 模型量化</a><a href="#8-%E6%8E%A8%E7%90%86%E4%BC%98%E5%8C%96">8. 推理优化</a><a href="#9-%E5%89%8D%E6%B2%BF%E6%A8%A1%E5%9E%8B%E4%B8%8E%E9%80%89%E5%9E%8B">9. 前沿模型与选型</a><a href="#10-%E7%BB%BC%E5%90%88%E9%9D%A2%E8%AF%95%E9%A2%98%E5%BA%9320-%E9%A2%98">10. 综合面试题库（20+ 题）</a><a href="#%E9%99%84%E5%BD%95%E9%80%9F%E6%9F%A5%E5%85%AC%E5%BC%8F%E4%B8%8E%E6%9C%AF%E8%AF%AD">附录：速查公式与术语</a></nav></aside></div>
+  </main><footer class="shell site-footer"><div class="flex items-center gap-3"><span class="footer-brand">bazaar.</span><span>A little corner of the internet.</span></div><div class="flex items-center gap-5"><span>© 2026 ks</span><a href="https://github.com/y00273676" target="_blank" rel="noopener noreferrer" aria-label="ks on GitHub"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-4.5 1.4-4.5-2.5-6-3m12 6v-3.8a3.3 3.3 0 0 0-.9-2.6c3-.4 6.1-1.5 6.1-6.8a5.3 5.3 0 0 0-1.4-3.6 4.9 4.9 0 0 0-.1-3.6s-1.1-.4-3.7 1.4a12.8 12.8 0 0 0-6.7 0C5.7 1.2 4.6 1.6 4.6 1.6a4.9 4.9 0 0 0-.1 3.6A5.3 5.3 0 0 0 3.1 9c0 5.3 3.1 6.4 6.1 6.8a3.3 3.3 0 0 0-.9 2.5V22"/></svg></a><a href="/index.xml" aria-label="RSS feed"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></a><a href="#top" class="back-top" aria-label="Back to top">↑</a></div></footer><dialog id="search-dialog" class="dialog search-dialog" aria-labelledby="search-title">
+    <div class="dialog-heading"><h2 id="search-title">Find something good.</h2><button type="button" class="icon-button" data-close-dialog aria-label="Close search"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button></div>
+    <p class="muted">Search the collection by title, topic, or keyword.</p>
+    <div class="search-input-wrap"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><input id="search-input" class="input" type="search" placeholder="Try “Go”, “Agent” or “幂等”" aria-label="Search articles" autocomplete="off" autofocus></div>
+    <div id="search-results" class="search-results" aria-live="polite"></div><div class="dialog-footnote"><span><kbd>↑</kbd> <kbd>↓</kbd> to navigate · <kbd>↵</kbd> to open</span><span><kbd>esc</kbd> to close</span></div>
+  </dialog>
+  <dialog id="rss-dialog" class="dialog rss-dialog" aria-labelledby="rss-title"><div class="dialog-heading"><span class="mini-icon"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></span><button type="button" class="icon-button" data-close-dialog aria-label="Close subscription dialog"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button></div><h2 id="rss-title">A quieter way to keep up.</h2><p class="muted">Add this feed to your favorite RSS reader. New writing comes to you, on your terms.</p><label class="input-label" for="feed-url">Feed URL</label><div class="flex gap-2"><input class="input" id="feed-url" value="https://y00273676.github.io/index.xml" readonly><button type="button" class="button button-primary" data-copy-feed aria-label="Copy RSS feed URL"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg> Copy</button></div><a class="text-link" href="/index.xml">Open RSS feed <svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg><span></span></div></body></html>

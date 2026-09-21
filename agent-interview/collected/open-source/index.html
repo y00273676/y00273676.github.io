@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="zh-CN" id="top"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f7f8f5"><title>开源项目学习笔记 — bazaar</title><meta name="description" content="项目实战与问答 · Agent 面试与笔试笔记。"><meta name="author" content="ks"><link rel="canonical" href="https://y00273676.github.io/agent-interview/collected/open-source/"><meta property="og:title" content="开源项目学习笔记 — bazaar"><meta property="og:description" content="项目实战与问答 · Agent 面试与笔试笔记。"><meta property="og:type" content="website"><meta property="og:url" content="https://y00273676.github.io/agent-interview/collected/open-source/"><link rel="icon" type="image/svg+xml" href="/assets/favicon.svg"><link rel="alternate" type="application/rss+xml" title="bazaar" href="/index.xml"><script>try{document.documentElement.dataset.theme=localStorage.getItem('bazaar-theme')||'light'}catch{document.documentElement.dataset.theme='light'}</script><link rel="stylesheet" href="/assets/site.css"><script type="module" src="/assets/main.js"></script></head><body><a class="skip-link" href="#main">Skip to content</a><header class="site-header"><div class="shell header-inner">
+    <a href="/" class="brand" aria-label="bazaar home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>bazaar<span class="brand-dot">.</span></a>
+    <nav id="main-nav" class="main-nav" aria-label="Main navigation"><a href="/" >Home</a><a href="/post/" >Writing</a><a href="/agent-interview/" aria-current="page">Agent 面试</a><a href="/tags/" >Topics</a></nav>
+    <div class="header-actions"><button type="button" class="search-trigger" data-open-search aria-label="Search articles"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><span>Search</span><kbd>⌘ K</kbd></button><span class="header-divider"></span><button type="button" class="icon-button" data-theme-toggle aria-label="Switch to dark theme"><svg class="icon theme-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.4 1.4m11.2 11.2L19 19M5 19l1.4-1.4M17.6 6.4 19 5"/></svg><svg class="icon theme-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 13.2A8.5 8.5 0 0 1 10.8 3.5 8.5 8.5 0 1 0 20.5 13.2Z"/></svg></button><button type="button" class="icon-button menu-trigger" aria-label="Open navigation" aria-expanded="false" aria-controls="main-nav"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div>
+  </div></header><main id="main" class="shell" tabindex="-1">
+    <div class="reading-progress" aria-hidden="true"></div><nav class="article-back study-breadcrumb" aria-label="面包屑"><a href="/agent-interview/" class="text-link"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6"/></svg>Agent 面试笔记</a><span>/</span><a href="/agent-interview/#practice">项目实战与问答</a></nav>
+    <header class="article-header study-article-header"><div class="eyebrow">AGENT INTERVIEW / 项目实战与问答</div><h1>开源项目学习笔记</h1><div class="article-meta"><span class="author-avatar">↗</span><span>网络资料 · bcefghj</span><span class="meta-separator"></span><time datetime="2026-09-21">收录于 2026-09-21</time><span class="meta-separator"></span><span>约 29 分钟</span></div></header><aside class="study-attribution" aria-label="资料来源"><div><span class="note-source note-source-collected">网络收录</span><a href="https://github.com/bcefghj/ai-agent-interview-guide">bcefghj / ai-agent-interview-guide</a><a href="https://github.com/bcefghj/ai-agent-interview-guide/blob/9a987322f2d82ddabe4c1aabc7b4795749fa90a2/docs/03-%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/README.md">查看原文 <svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a><a href="/agent-interview/downloads/collected/ai-agent-interview-guide/LICENSE">MIT 许可</a></div><p>原仓库版本：2026-04-01。保留原文内容与引用，方便对照学习。</p></aside>
+    <details class="study-mobile-toc"><summary>本页目录 · 6 节</summary><nav aria-label="本页目录（移动端）"><a href="#%E7%9B%AE%E5%BD%95">目录</a><a href="#%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%86%85%E5%9B%9B%E4%B8%AA%E9%A1%B9%E7%9B%AE%E5%88%86%E6%9E%90">第一部分：工作区内四个项目分析</a><a href="#%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86%E7%BD%91%E4%B8%8A%E4%BC%98%E7%A7%80%E9%A1%B9%E7%9B%AE%E5%88%86%E6%9E%90">第二部分：网上优秀项目分析</a><a href="#%E7%AC%AC%E4%B8%89%E9%83%A8%E5%88%86%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F%E6%80%BB%E7%BB%93">第三部分：架构模式总结</a><a href="#%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%E5%AF%B9%E6%88%91%E4%BB%AC%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%90%AF%E5%8F%91">第四部分：对我们项目的启发</a><a href="#%E9%99%84%E5%BD%95%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%BF%AB%E9%80%9F%E8%B7%AF%E5%BE%84%E7%B4%A2%E5%BC%95">附录：本工作区快速路径索引</a></nav></details>
+    <div class="article-layout study-article-layout"><article class="article-body study-prose" id="note-content"><blockquote>
+<p>本文档汇总本工作区内与 Claude Code 生态相关的源码与逆向资料，并补充网上代表性企业级 Agent 项目的分析视角，用于系统化理解「工业级 Agent」的架构、模式与落地要点。<br>
+工作区根目录下文记为 <strong><code>{ROOT}</code></strong>，即：<code>/Users/daishanghao/Desktop/20260401_学习_Claudecode_agent面试/</code>（或你本地克隆路径）。</p>
+</blockquote>
+<hr>
+<h2 id="目录">目录</h2>
+<ul>
+<li><a href="/agent-interview/collected/open-source/#%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%86%85%E5%9B%9B%E4%B8%AA%E9%A1%B9%E7%9B%AE%E5%88%86%E6%9E%90">第一部分：工作区内四个项目分析</a></li>
+<li><a href="/agent-interview/collected/open-source/#%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86%E7%BD%91%E4%B8%8A%E4%BC%98%E7%A7%80%E9%A1%B9%E7%9B%AE%E5%88%86%E6%9E%90">第二部分：网上优秀项目分析</a></li>
+<li><a href="/agent-interview/collected/open-source/#%E7%AC%AC%E4%B8%89%E9%83%A8%E5%88%86%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F%E6%80%BB%E7%BB%93">第三部分：架构模式总结</a></li>
+<li><a href="/agent-interview/collected/open-source/#%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%E5%AF%B9%E6%88%91%E4%BB%AC%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%90%AF%E5%8F%91">第四部分：对我们项目的启发</a></li>
+</ul>
+<hr>
+<h2 id="第一部分工作区内四个项目分析">第一部分：工作区内四个项目分析</h2>
+<h3 id="1-claude-code-maintypescript-源码快照">1. <code>claude-code-main</code>（TypeScript 源码快照）</h3>
+<h4 id="11-项目概述">1.1 项目概述</h4>
+<p><code>{ROOT}/claude-code-main/</code> 目录保存的是 <strong>Claude Code CLI 的 TypeScript 源码快照</strong>，通常用于安全研究、架构学习与对照实现。它反映的是「真实产品级」CLI 的模块划分与运行时行为，而不是教学 Demo。</p>
+<h4 id="12-技术栈">1.2 技术栈</h4>
+<ul>
+<li><strong>运行时 / 构建</strong>：以 <strong>Bun</strong> 为打包与运行环境（源码中广泛使用 <code>bun:bundle</code> 等内置能力）。</li>
+<li><strong>语言</strong>：<strong>TypeScript</strong>。</li>
+<li><strong>终端 UI</strong>：<strong>React + Ink</strong>（Ink 为终端中的 React 渲染层；与本仓库中 <code>claude-code-rust/spec/08_ink_terminal.md</code> 等规范文档可对照阅读）。</li>
+</ul>
+<h4 id="13-核心架构分析含具体路径">1.3 核心架构分析（含具体路径）</h4>
+<h5 id="1工具系统-srctools">（1）工具系统 <code>src/tools/</code></h5>
+<ul>
+<li><strong>职责</strong>：每个业务工具（Bash、文件读写、Grep、MCP、子 Agent 等）以目录或模块形式组织，内含 <strong>Tool 实现、Prompt 片段、权限相关 UI、常量</strong> 等。</li>
+<li><strong>典型路径示例</strong>：
+<ul>
+<li>基类与工具发现：<code>{ROOT}/claude-code-main/src/Tool.ts</code>（含 <code>findToolByName</code>、工具上下文类型、与权限/进度类型的耦合边界）。</li>
+<li>Bash：<code>{ROOT}/claude-code-main/src/tools/BashTool/</code>（含 <code>bashPermissions.ts</code>、<code>readOnlyValidation.ts</code> 等纵深安全逻辑）。</li>
+<li>子 Agent：<code>{ROOT}/claude-code-main/src/tools/AgentTool/</code>（<code>runAgent.ts</code>、<code>forkSubagent.ts</code>、<code>loadAgentsDir.ts</code> 等）。</li>
+<li>MCP：<code>{ROOT}/claude-code-main/src/tools/MCPTool/MCPTool.ts</code> 及 <code>src/services/mcp/</code> 下客户端、传输层。</li>
+</ul>
+</li>
+<li><strong>注册 / 发现 / 执行（理解要点）</strong>：
+<ul>
+<li><strong>注册</strong>：工具在单一类型体系中实现统一接口（见 <code>Tool.ts</code> 及其导出），由上层 Query 循环按名称调度。</li>
+<li><strong>发现</strong>：<code>findToolByName</code> 一类入口在 <code>query.ts</code> 与 <code>Tool.ts</code> 间协作，将模型输出的 <code>tool_use</code> 映射到具体实现。</li>
+<li><strong>执行</strong>：执行路径与 <strong>权限回调</strong>（<code>CanUseToolFn</code>、<code>hooks/useCanUseTool</code>）强绑定，形成「先策略、再执行」的工业级顺序。</li>
+</ul>
+</li>
+</ul>
+<h5 id="2命令系统-srccommands-与-srccommandsts">（2）命令系统 <code>src/commands/</code> 与 <code>src/commands.ts</code></h5>
+<ul>
+<li><strong>职责</strong>：<strong>斜杠命令</strong>（<code>/compact</code>、<code>/mcp</code>、<code>/plan</code> 等）的解析、注册与分发。</li>
+<li><strong>聚合入口</strong>：<code>{ROOT}/claude-code-main/src/commands.ts</code> 集中 <code>import</code> 各子命令，并按 <strong>Feature Flag</strong> 条件挂载可选命令（例如 <code>bridge</code>、<code>voice</code>、<code>workflows</code> 等）。</li>
+<li><strong>理解要点</strong>：命令层与 Query/工具层解耦——命令多面向「会话控制、配置、运维型操作」，而多轮对话与工具循环在 <code>query.ts</code> / QueryEngine 一侧。</li>
+</ul>
+<h5 id="3服务层-srcservices">（3）服务层 <code>src/services/</code></h5>
+<ul>
+<li><strong>职责</strong>：可复用的 <strong>业务与横切能力</strong>：API 客户端、会话记忆、压缩（compact）、遥测（analytics）、自动摘要（如 <code>toolUseSummary</code>）、语音、插件、远程托管设置等。</li>
+<li><strong>典型路径</strong>：
+<ul>
+<li>API：<code>{ROOT}/claude-code-main/src/services/api/</code>（<code>client.ts</code>、<code>claude.ts</code>、<code>withRetry</code> 等，与重试/降级相关）。</li>
+<li>会话记忆：<code>{ROOT}/claude-code-main/src/services/SessionMemory/</code>。</li>
+<li>压缩：<code>{ROOT}/claude-code-main/src/services/compact/</code>。</li>
+</ul>
+</li>
+<li><strong>学习价值</strong>：这里体现了「<strong>Agent 主循环瘦、服务胖</strong>」——主循环负责编排，复杂策略下沉到 service 模块并单测友好。</li>
+</ul>
+<h5 id="4bridge-模式agent-与外部系统的桥接">（4）Bridge 模式：Agent 与外部系统的桥接</h5>
+<ul>
+<li><strong>位置</strong>：<code>{ROOT}/claude-code-main/src/bridge/</code>（协议、会话、JWT、<code>replBridge</code> 等）以及 <code>src/commands/bridge/</code>。</li>
+<li><strong>语义</strong>：在 <strong>本地 CLI / REPL</strong> 与 <strong>远程控制端（移动端、Web、CCR 等）</strong> 之间建立受控通道；包含鉴权、消息 inbound、附件、能力唤醒等。</li>
+<li><strong>与 Feature Flag 的关系</strong>：在 <code>commands.ts</code> 中，<code>BRIDGE_MODE</code> 为真时才 <code>require('./commands/bridge/index.js')</code>，避免无关构建体积与攻击面。</li>
+<li><strong>相关类型</strong>：<code>src/types/textInputTypes.ts</code> 中对 <code>bridgeOrigin</code> 等字段的注释，说明了跨端消息与粘贴/执行策略的差异。</li>
+</ul>
+<h5 id="5queryengine-与查询主路径">（5）QueryEngine 与查询主路径</h5>
+<ul>
+<li><strong>核心文件</strong>：<code>{ROOT}/claude-code-main/src/query.ts</code>（体量很大，涵盖多轮对话、流式事件、compact、工具结果摘要等）。</li>
+<li><strong>设计要点</strong>：
+<ul>
+<li>与 <code>Tool.js</code> / <code>findToolByName</code> 联动完成 <strong>tool_use → 执行 → tool_result</strong> 闭环。</li>
+<li>通过 <code>feature('REACTIVE_COMPACT')</code>、<code>feature('CONTEXT_COLLAPSE')</code> 等 <strong>按构建裁剪</strong> 不同压缩/折叠策略（见文件头部 <code>require</code> 分支）。</li>
+<li>Token 与预算：<code>src/query/tokenBudget.ts</code>、<code>src/services/compact/</code> 等与上下文长度控制强相关。</li>
+</ul>
+</li>
+<li><strong>并列入口</strong>：仓库中还存在 <code>src/query/</code> 子目录（如 <code>deps.ts</code>、<code>config.ts</code>、<code>stopHooks.ts</code>），承担查询依赖注入、配置与停止钩子，体现 <strong>「query 横切配置」与「query 主循环」分离</strong>。</li>
+</ul>
+<h5 id="6权限与-feature-flag-系统">（6）权限与 Feature Flag 系统</h5>
+<ul>
+<li><strong>权限类型集中定义</strong>：<code>{ROOT}/claude-code-main/src/types/permissions.ts</code>（体量较大，涵盖工作目录、跨机 bridge、审批后端等语义）。</li>
+<li><strong>Feature Flag</strong>：编译期/构建期开关大量使用 <code>import { feature } from 'bun:bundle'</code>（例如 <code>commands.ts</code>、<code>query.ts</code>、<code>services/analytics/metadata.ts</code>），实现 <strong>同一套源码树下的多产品形态</strong>（内部版、桥接版、语音版等）。</li>
+<li><strong>学习价值</strong>：工业级 CLI 不是「一个 if 打天下」，而是 <strong>权限模型 + 功能开关 + 最小暴露面</strong> 三者一致。</li>
+</ul>
+<h4 id="14-学习价值小结">1.4 学习价值小结</h4>
+<p>通过 <code>claude-code-main</code>，可以对照理解：<strong>工具抽象、查询主循环、服务化横切、Bridge 远程面、权限与 Feature Flag</strong> 如何组成一个可维护的 Agent 产品；适合作为 <strong>「架构地图」</strong> 阅读，而非逐行抄写。</p>
+<hr>
+<h3 id="2-claude-code-rust规范-rust-实现">2. <code>claude-code-rust</code>（规范 + Rust 实现）</h3>
+<h4 id="21-项目概述">2.1 项目概述</h4>
+<p><code>{ROOT}/claude-code-rust/</code> 采用 <strong>洁净室（clean-room）思路</strong>：<strong>先写可读、可检索的规范（spec），再实现 Rust 代码</strong>。适合回答「若从零设计 Claude Code 同类系统，模块应如何切分」这类面试与架构问题。</p>
+<h4 id="22-规范文档-spec">2.2 规范文档 <code>spec/</code></h4>
+<ul>
+<li><strong>索引入口</strong>：<code>{ROOT}/claude-code-rust/spec/INDEX.md</code><br>
+其中表格列出了从 <code>00_overview.md</code> 到 <code>13_rust_codebase.md</code> 共 <strong>15 个文件</strong>、各自篇幅与主题（总覆盖约 990KB 量级说明文字）。</li>
+<li><strong>阅读顺序建议</strong>：
+<ol>
+<li><code>00_overview.md</code>：总览、仓库结构、数据流、权限与设置分层。</li>
+<li><code>01_core_entry_query.md</code>：入口、<code>query</code>、QueryEngine、历史、费用、token 预算。</li>
+<li><code>02_commands.md</code>：斜杠命令全集。</li>
+<li><code>03_tools.md</code>：工具框架与各工具契约。</li>
+<li><code>04_components_core_messages.md</code> / <code>05_components_agents_permissions_design.md</code>：UI 与权限交互。</li>
+<li><code>06_services_context_state.md</code>：服务、上下文、状态。</li>
+<li><code>07_hooks.md</code>：React hooks 行为（与 TS 前端同源概念）。</li>
+<li><code>08_ink_terminal.md</code>：终端渲染与布局。</li>
+<li><code>09_bridge_cli_remote.md</code>：Bridge、JWT、SSE/WebSocket、远程会话。</li>
+<li><code>10_utils.md</code> ~ <code>12_constants_types.md</code>：工具函数与常量类型。</li>
+<li><code>13_rust_codebase.md</code>：<strong>Rust 重写侧</strong> 的 crate、工具列表、query 循环、TUI、Bridge 等映射。</li>
+</ol>
+</li>
+</ul>
+<h4 id="23-rust-工作区架构-src-rust">2.3 Rust 工作区架构 <code>src-rust/</code></h4>
+<ul>
+<li><strong>工作区清单</strong>：<code>{ROOT}/claude-code-rust/src-rust/Cargo.toml</code>（members 定义多 crate 结构）。</li>
+<li><strong>与规范对应的 crate 目录</strong>（路径均在 <code>src-rust/crates/</code> 下）：
+<ul>
+<li><strong><code>cli</code></strong>：<code>cli/src/main.rs</code>、<code>oauth_flow.rs</code> —— 进程入口与 OAuth 等。</li>
+<li><strong><code>core</code></strong>：<code>core/src/lib.rs</code> 及 <code>system_prompt.rs</code>、<code>team_memory_sync.rs</code>、<code>oauth_config.rs</code> 等 —— 核心领域逻辑与配置。</li>
+<li><strong><code>api</code></strong>：对外 API 抽象层。</li>
+<li><strong><code>tools</code></strong>：<code>tools/src/lib.rs</code> 及 <code>bash.rs</code>、<code>file_read.rs</code>、<code>grep_tool.rs</code>、<code>mcp_resources.rs</code>、<code>agent_tool.rs</code> 等 —— 与各工具一一对应。</li>
+<li><strong><code>query</code></strong>：<code>query/src/coordinator.rs</code>、<code>compact.rs</code>、<code>cron_scheduler.rs</code>、<code>auto_dream.rs</code> 等 —— 查询循环与协调。</li>
+<li><strong><code>tui</code></strong>：终端界面。</li>
+<li><strong><code>commands</code></strong>：<code>commands/src/named_commands.rs</code> 等 —— 命名命令注册。</li>
+<li><strong><code>mcp</code></strong>：MCP 协议与资源。</li>
+<li><strong><code>bridge</code></strong>：桥接层。</li>
+<li><strong><code>buddy</code></strong>：与「伙伴/养成」类扩展相关（规范 <code>11_special_systems.md</code> 中有 buddy 条目，可与源码对照）。</li>
+</ul>
+</li>
+</ul>
+<h4 id="24-关键设计模式规范驱动开发sdd">2.4 关键设计模式：规范驱动开发（SDD）</h4>
+<ul>
+<li><strong>Spec 先行</strong>：每个域（入口、命令、工具、Bridge、Ink）在 Markdown 中 <strong>定边界、定数据契约、定与用户交互语义</strong>，再落到 Rust mod。</li>
+<li><strong>TS ↔ Rust 对照</strong>：<code>13_rust_codebase.md</code> 明确「Rust 侧有哪些 crate、多少工具」，便于做 <strong>parity（对等性）</strong> 检查。</li>
+<li><strong>学习价值</strong>：团队若采用类似流程，可减少「写代码时发现模块切错」的返工；面试中可表述为 <strong>「契约优先 + 分 crate 隔离依赖方向」</strong>。</li>
+</ul>
+<hr>
+<h3 id="3-claude-codeclaw-code-python-为主移植">3. <code>claude-code</code>（Claw Code — Python 为主移植）</h3>
+<h4 id="31-项目概述">3.1 项目概述</h4>
+<p><code>{ROOT}/claude-code/</code> 是以 <strong>Python 为主</strong> 的移植/实验工程（社区常称 <strong>Claw Code</strong> 一类命名），目标是在 <strong>不依赖完整 TS 栈</strong> 的情况下复现「入口 → QueryEngine → 工具/命令」的骨架，并保留与上游 TS 文件的 <strong>parity 对照</strong> 能力。</p>
+<h4 id="32-核心-python-组件路径">3.2 核心 Python 组件（路径）</h4>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>角色</th>
+<th>路径</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CLI 入口</td>
+<td><code>{ROOT}/claude-code/src/main.py</code></td>
+<td>命令行参数解析、调用 <code>QueryEnginePort</code> 等</td>
+</tr>
+<tr>
+<td>Query 引擎</td>
+<td><code>{ROOT}/claude-code/src/query_engine.py</code></td>
+<td><code>QueryEngineConfig</code>、<code>QueryEnginePort</code>、<code>from_workspace()</code> / <code>from_saved_session()</code></td>
+</tr>
+<tr>
+<td>兼容别名</td>
+<td><code>{ROOT}/claude-code/src/QueryEngine.py</code></td>
+<td><code>QueryEngineRuntime</code> 对 <code>QueryEnginePort</code> 的薄封装</td>
+</tr>
+<tr>
+<td>工具元数据</td>
+<td><code>{ROOT}/claude-code/src/Tool.py</code></td>
+<td>当前主要为 <strong>移植清单式</strong> <code>ToolDefinition</code>（见 <code>DEFAULT_TOOLS</code>），与 TS 侧「全功能 Tool 基类」不同</td>
+</tr>
+<tr>
+<td>工具集合逻辑</td>
+<td><code>{ROOT}/claude-code/src/tools.py</code>、<code>tool_pool.py</code></td>
+<td>工具注册与池化相关扩展点</td>
+</tr>
+<tr>
+<td>命令</td>
+<td><code>{ROOT}/claude-code/src/commands.py</code>、<code>command_graph.py</code></td>
+<td>命令图与命令分发</td>
+</tr>
+<tr>
+<td>运行时</td>
+<td><code>{ROOT}/claude-code/src/runtime.py</code></td>
+<td>组装 <code>QueryEnginePort</code>、配置 <code>QueryEngineConfig</code></td>
+</tr>
+<tr>
+<td>对照审计</td>
+<td><code>{ROOT}/claude-code/src/parity_audit.py</code>、<code>port_manifest.py</code></td>
+<td>记录 TS↔Py 文件名映射（如 <code>QueryEngine.ts</code>↔<code>QueryEngine.py</code>）</td>
+</tr>
+</tbody>
+</table></div><h4 id="33-rust-子树">3.3 Rust 子树</h4>
+<ul>
+<li><strong><code>rusty-claude-cli</code></strong>：<code>{ROOT}/claude-code/rust/crates/rusty-claude-cli/</code><br>
+<code>main.rs</code>、<code>app.rs</code>、<code>args.rs</code>、<code>input.rs</code>、<code>render.rs</code> —— 偏 <strong>CLI/TUI 实验或性能路径</strong>，与 Python 并存。</li>
+<li><strong><code>compat-harness</code></strong>：<code>{ROOT}/claude-code/rust/crates/compat-harness/</code><br>
+用于 <strong>兼容性/行为对齐测试</strong> 的 harness（具体断言见 <code>lib.rs</code>）。</li>
+</ul>
+<h4 id="34-学习价值">3.4 学习价值</h4>
+<ul>
+<li>理解 <strong>「如何用少量 Python 模块 + manifest 表达移植范围」</strong>，而不是一次性复制全部 TS 功能。</li>
+<li><code>parity_audit.py</code> 体现 <strong>可追溯的对照表</strong>，适合企业内 <strong>多语言栈（Java + Python sidecar）</strong> 的迁移场景。</li>
+</ul>
+<hr>
+<h3 id="4-hitcc逆向文档库">4. <code>HitCC</code>（逆向文档库）</h3>
+<h4 id="41-项目概述">4.1 项目概述</h4>
+<p><code>{ROOT}/HitCC/</code> 是针对 <strong>Claude Code v2.1.84</strong> 的 <strong>逆向分析文档库</strong>（非官方文档）。价值在于：从 <strong>运行时行为、模块边界、生态扩展</strong> 角度补足「只看自己手头的源码树」时的盲区。</p>
+<h4 id="42-文档结构hitccdocs">4.2 文档结构（<code>HitCC/docs/</code>）</h4>
+<p>下列为代表性路径（完整树可在资源管理器中展开）：</p>
+<ul>
+<li><strong><code>01-runtime/</code></strong>：设置、配置、缓存、迁移、CLI 注入 schema 等（如 <code>12-settings-and-configuration-system/</code> 下多份子文档）。</li>
+<li><strong><code>02-execution/</code></strong>：工具、Hook、权限、<strong>Prompt 组装与上下文分层</strong>、附件、非主线程 Prompt 路径等；是理解 <strong>「一次请求里上下文如何叠层」</strong> 的核心。</li>
+<li><strong><code>03-ecosystem/</code></strong>：Resume/Fork/子 Agent、远程持久化与 Bridge、Plan 系统、MCP、Plugin、Skill、TUI 子系统等。</li>
+<li><strong><code>04-rewrite/</code></strong>：若重写实现时的架构取舍与开放问题。</li>
+<li><strong><code>05-appendix/</code></strong>：证据图、术语表等。</li>
+</ul>
+<p>单篇示例（可精读）：</p>
+<ul>
+<li><code>HitCC/docs/02-execution/03-prompt-assembly-and-context-layering.md</code>：系统链、附件顺序、API payload 与缓存边界。</li>
+<li><code>HitCC/docs/03-ecosystem/07-tui-system/</code>：REPL 根、消息渲染、工具权限派发、对话框与审批。</li>
+</ul>
+<h4 id="43-recoverytools-下的-python-脚本">4.3 <code>recovery_tools/</code> 下的 Python 脚本</h4>
+<p>路径：<code>{ROOT}/HitCC/recovery_tools/</code></p>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>文件</th>
+<th>用途（从文件名与常见逆向工作流推断）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>extract_js_symbols.py</code></td>
+<td>从产物中提取 JS 符号，服务逆向索引</td>
+</tr>
+<tr>
+<td><code>js_identifier_tools.py</code></td>
+<td>标识符级分析与处理</td>
+</tr>
+<tr>
+<td><code>js_readability.py</code></td>
+<td>可读性/美化相关处理</td>
+</tr>
+<tr>
+<td><code>format_bundle.py</code></td>
+<td>bundle 格式化，便于 diff 与检索</td>
+</tr>
+</tbody>
+</table></div><p>这些脚本体现：<strong>文档 + 工具链</strong> 一体化，而不是纯手写结论。</p>
+<h4 id="44-学习价值">4.4 学习价值</h4>
+<ul>
+<li>与 <code>claude-code-main</code> <strong>交叉验证</strong>：HitCC 描述「运行时与边界」，源码提供「真实实现」；两者对照可发现 <strong>版本漂移</strong> 与 <strong>文档滞后</strong>。</li>
+<li>适合准备 <strong>「请说明 Claude Code 的 Prompt 分层与权限边界」</strong> 类深度面试题。</li>
+</ul>
+<hr>
+<h2 id="第二部分网上优秀项目分析">第二部分：网上优秀项目分析</h2>
+<blockquote>
+<p>下列项目<strong>不在本工作区仓库内</strong>，分析基于公开资料与常见架构模式；若需源码级引用，请克隆官方仓库后把路径补进本笔记。</p>
+</blockquote>
+<h3 id="5-nageofferragent企业级-agentic-rag">5. <code>nageoffer/ragent</code>（企业级 Agentic RAG）</h3>
+<h4 id="51-项目概述">5.1 项目概述</h4>
+<p><code>ragent</code> 是社区中较典型的 <strong>企业级 Agentic RAG</strong> 开源实现，强调 <strong>检索增强 + 多步工具/流程编排 + 可运维</strong>，适合与「本工作区里偏 CLI Agent 的 Claude Code 系」做 <strong>互补阅读</strong>。</p>
+<h4 id="52-技术栈公开描述归纳">5.2 技术栈（公开描述归纳）</h4>
+<ul>
+<li><strong>后端</strong>：Java 17 + <strong>Spring Boot 3.5</strong>（REST、任务、配置、与向量库客户端等）。</li>
+<li><strong>前端</strong>：<strong>React 18</strong> 管理端与交互界面。</li>
+<li><strong>向量库</strong>：<strong>Milvus 2.6</strong>（大规模向量检索与分区等能力）。</li>
+<li><strong>规模量级（量级描述，用于建立心理预期）</strong>：后端约 <strong>4 万行</strong>、前端约 <strong>1.8 万行</strong>、<strong>约 20 张业务表</strong> —— 说明其已超越 Demo，进入 <strong>领域建模 + 持久化 + 运营</strong> 阶段。</li>
+</ul>
+<h4 id="53-核心能力分析概念架构">5.3 核心能力分析（概念架构）</h4>
+<ol>
+<li>
+<p><strong>多路检索引擎</strong></p>
+<ul>
+<li><strong>意图定向通道</strong>：按识别出的意图缩小检索范围，减少噪声。</li>
+<li><strong>全局向量通道</strong>：广域召回，防止漏检。</li>
+<li>二者融合时常用 <strong>重排序（rerank）</strong> 或 <strong>加权融合</strong>，需在工程上定义 <strong>可追溯的检索决策日志</strong>。</li>
+</ul>
+</li>
+<li>
+<p><strong>意图识别体系</strong></p>
+<ul>
+<li><strong>树形分类</strong>：由粗到细，便于与业务流程、权限域对齐。</li>
+<li><strong>置信度 + 澄清引导</strong>：低置信度时不强行回答，而是 <strong>追问槽位</strong> 或 <strong>列出候选意图</strong>，与企业客服/工单系统一致。</li>
+</ul>
+</li>
+<li>
+<p><strong>问题重写与拆分</strong></p>
+<ul>
+<li><strong>重写</strong>：将口语化问题改为检索友好查询。</li>
+<li><strong>拆分</strong>：多跳任务拆成子问题，分别检索与综合，降低单次上下文压力。</li>
+</ul>
+</li>
+<li>
+<p><strong>会话记忆</strong></p>
+<ul>
+<li><strong>滑动窗口</strong>：近期消息全保留。</li>
+<li><strong>摘要压缩</strong>：窗口前的历史压成摘要，控制 token 与成本；需处理 <strong>摘要与事实一致性</strong>（与本工作区 <code>SessionMemory</code>、<code>compact</code> 主题同源）。</li>
+</ul>
+</li>
+<li>
+<p><strong>模型路由与容错</strong></p>
+<ul>
+<li><strong>三态熔断器</strong>：关闭 / 半开 / 打开，避免拖垮整条链路。</li>
+<li><strong>自动降级</strong>：主模型失败时切换备用模型或缩小任务（例如仅做检索不做生成）。</li>
+</ul>
+</li>
+<li>
+<p><strong>MCP 工具调用</strong></p>
+<ul>
+<li>与 Claude Code 系中的 MCP 工具（本仓库 <code>tools/MCPTool</code>、<code>services/mcp</code>）<strong>概念对齐</strong>：统一工具协议有利于 <strong>多端复用</strong>（IDE、RAG 平台、CLI）。</li>
+</ul>
+</li>
+<li>
+<p><strong>文档入库 ETL</strong></p>
+<ul>
+<li>清洗、分块、元数据、版本、增量更新；企业知识库是否「越用越准」很大程度取决于 ETL 与 <strong>溯源（provenance）</strong>。</li>
+</ul>
+</li>
+<li>
+<p><strong>全链路追踪</strong></p>
+<ul>
+<li>TraceId 贯穿网关 → 检索 → LLM → 工具；对排障与 <strong>SLA 归因</strong> 必备。</li>
+</ul>
+</li>
+</ol>
+<h4 id="54-与本工作区-demo源码项目的区别">5.4 与本工作区 Demo/源码项目的区别</h4>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>维度</th>
+<th>Claude Code 系（本工作区）</th>
+<th>ragent 类企业 RAG</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>主场景</td>
+<td>开发者 CLI、代码库、工具执行</td>
+<td>企业知识问答、流程型 Agent</td>
+</tr>
+<tr>
+<td>记忆侧重</td>
+<td>会话、compact、团队记忆同步</td>
+<td>业务表、审计、长期知识库</td>
+</tr>
+<tr>
+<td>检索</td>
+<td>以代码搜索、Grep、LSP 等为工具能力</td>
+<td>以向量库 + 业务过滤为主</td>
+</tr>
+<tr>
+<td>权限</td>
+<td>工具级审批、沙箱、Hook</td>
+<td>多租户、数据域、合规</td>
+</tr>
+</tbody>
+</table></div><h4 id="55-架构图文字描述">5.5 架构图（文字描述）</h4>
+<div class="code-block"><div class="code-header"><span>text</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>                    ┌─────────────────────────────────────┐
+                    │           接入层（网关/API）          │
+                    │   鉴权 · 限流 · TraceId · 租户隔离    │
+                    └─────────────────┬───────────────────┘
+                                      │
+          ┌───────────────────────────┼───────────────────────────┐
+          ▼                           ▼                           ▼
+   ┌─────────────┐           ┌─────────────────┐         ┌───────────────┐
+   │  意图与对话   │           │   检索编排层      │         │  工具/MCP 层   │
+   │ 分类·重写·拆  │◄────────►│ 意图通道+向量通道  │◄───────►│ 外部 API/业务  │
+   │ 分·澄清      │           │ 融合·重排·溯源    │         │ 系统调用       │
+   └──────┬──────┘           └────────┬────────┘         └───────┬───────┘
+          │                           │                           │
+          └───────────────────────────┼───────────────────────────┘
+                                      ▼
+                    ┌─────────────────────────────────────┐
+                    │  LLM 编排 · 记忆窗口 · 摘要 · 路由    │
+                    │ 熔断 · 降级 · 成本与配额              │
+                    └─────────────────┬───────────────────┘
+                                      ▼
+                    ┌─────────────────────────────────────┐
+                    │ 持久化：会话 · 文档块 · 向量索引 · 审计 │
+                    └─────────────────────────────────────┘
+</code></pre></div><hr>
+<h3 id="6-阿里商旅-agent业务向参考">6. 阿里商旅 Agent（业务向参考）</h3>
+<blockquote>
+<p>以下为 <strong>行业公开分享与典型商旅场景</strong> 的归纳，便于与技术指标对照；非某单一开源仓库导读。</p>
+</blockquote>
+<h4 id="61-业务背景">6.1 业务背景</h4>
+<ul>
+<li><strong>商旅出行</strong>：机票、酒店、火车、用车、审批、差标、发票与报销衔接。</li>
+<li><strong>特点</strong>：强 <strong>规则</strong>（差标、职级）、强 <strong>时效</strong>（余票、价格）、强 <strong>协同</strong>（审批流、企业支付）。</li>
+</ul>
+<h4 id="62-agent-设计思路抽象">6.2 Agent 设计思路（抽象）</h4>
+<ol>
+<li><strong>任务型对话 + 工具/API 编排</strong>：自然语言落到 <strong>结构化意图</strong>（订酒店、改签、补审批），再调用 <strong>供应链/中台 API</strong>。</li>
+<li><strong>状态机与槽位填充</strong>：目的地、日期、人数、差标结果等以 <strong>槽位</strong> 管理，避免模型幻觉覆盖业务规则。</li>
+<li><strong>人在回路</strong>：超标、无票、政策冲突等必须 <strong>显式确认</strong> 或 <strong>转人工</strong>，与 Claude Code 的 <strong>权限对话框</strong> 同理，只是业务域不同。</li>
+</ol>
+<h4 id="63-企业级落地的关键挑战与解决方案通用归纳">6.3 企业级落地的关键挑战与解决方案（通用归纳）</h4>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>挑战</th>
+<th>常见解决方向</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>规则与模型冲突</td>
+<td>规则引擎优先；模型输出仅作「候选」，必经校验</td>
+</tr>
+<tr>
+<td>多系统异构</td>
+<td>统一 BFF/API 网关；工具层抽象（类似 MCP）</td>
+</tr>
+<tr>
+<td>合规与审计</td>
+<td>全链路日志；敏感字段脱敏；操作可归因</td>
+</tr>
+<tr>
+<td>峰值与稳定性</td>
+<td>异步任务、队列、降级为「仅查询不下单」</td>
+</tr>
+<tr>
+<td>体验一致性</td>
+<td>同一套意图 taxonomy 驱动前端引导与后端路由</td>
+</tr>
+</tbody>
+</table></div><hr>
+<h2 id="第三部分架构模式总结">第三部分：架构模式总结</h2>
+<h3 id="7-从这些项目中提炼的通用-agent-架构模式">7. 从这些项目中提炼的通用 Agent 架构模式</h3>
+<ol>
+<li>
+<p><strong>分层</strong>：<strong>接入（CLI/API）→ 编排（Query/Coordinator）→ 工具与外部系统 → 持久化与观测</strong>。</p>
+<ul>
+<li>本工作区映射：<code>main</code>/<code>cli</code> → <code>query.ts</code> / <code>query/</code> crate → <code>tools/</code> → <code>services/</code> + DB/文件。</li>
+</ul>
+</li>
+<li>
+<p><strong>契约优先</strong>：工具入参 schema、权限结果、消息类型在类型系统中集中定义（TS：<code>types/</code>；Rust：<code>spec/12_constants_types.md</code>）。</p>
+</li>
+<li>
+<p><strong>扩展点显式化</strong>：Feature Flag、Hook、Plugin/MCP，避免无限 if-else。</p>
+</li>
+</ol>
+<h3 id="8-工具系统设计模式">8. 工具系统设计模式</h3>
+<ul>
+<li><strong>统一基类 + 按工具分包</strong>：<code>Tool.ts</code> + <code>tools/&lt;Name&gt;Tool/</code>。</li>
+<li><strong>权限外置</strong>：<code>CanUseToolFn</code>、审批 UI 与工具执行解耦。</li>
+<li><strong>横向能力复用</strong>：Bash 的路径/只读/沙箱校验拆成多个模块文件，而不是堆在单一 <code>execute()</code>。</li>
+</ul>
+<h3 id="9-记忆管理模式">9. 记忆管理模式</h3>
+<ul>
+<li><strong>工作记忆</strong>：当前会话消息列表 + token 预算（<code>tokenBudget.ts</code>、<code>compact</code>）。</li>
+<li><strong>长期记忆</strong>：SessionMemory、团队记忆同步（<code>services/SessionMemory</code>、<code>services/teamMemorySync</code>）。</li>
+<li><strong>压缩策略</strong>：自动 compact、微压缩边界消息（见 <code>query.ts</code> 中消息构造与 <code>services/compact</code>）。</li>
+</ul>
+<h3 id="10-错误处理模式">10. 错误处理模式</h3>
+<ul>
+<li><strong>API 层</strong>：<code>FallbackTriggeredError</code>、<code>withRetry</code>（见 <code>query.ts</code> import 与 <code>services/api/</code>）。</li>
+<li><strong>用户可见 vs 调试日志</strong>：<code>logError</code>、<code>logForDebugging</code> 分流。</li>
+<li><strong>可恢复</strong>：重试、降级模型、跳过非关键工具（需在业务上定义 SLA）。</li>
+</ul>
+<h3 id="11-可扩展性设计">11. 可扩展性设计</h3>
+<ul>
+<li><strong>Bridge</strong>：新客户端只需实现协议，不 fork 核心循环。</li>
+<li><strong>MCP</strong>：新工具提供方独立进程，降低核心崩溃面。</li>
+<li><strong>命令插件化</strong>：<code>commands.ts</code> 聚合注册，Feature Flag 控制可选命令集。</li>
+</ul>
+<hr>
+<h2 id="第四部分对我们项目的启发">第四部分：对我们项目的启发</h2>
+<h3 id="12-企业级项目应借鉴的设计">12. 企业级项目应借鉴的设计</h3>
+<ol>
+<li>
+<p><strong>先写「架构地图」再写模块</strong>：参考 <code>claude-code-rust/spec/INDEX.md</code>，为团队提供 <strong>唯一索引</strong>，避免新人从任意文件切入导致误解。</p>
+</li>
+<li>
+<p><strong>Query 与 Tool 的边界写死</strong>：工具只做 <strong>单职责动作</strong>，编排（多步、重试、合并上下文）放在 <strong>Query/Coordinator</strong>；与本仓库 <code>query.ts</code> + <code>Tool.ts</code> 分工一致。</p>
+</li>
+<li>
+<p><strong>权限与审计一等公民</strong>：不仅「能不能调 API」，还要 <strong>谁在何时批准了什么</strong>（对照 <code>types/permissions.ts</code> 与 HitCC 的 TUI 审批文档）。</p>
+</li>
+<li>
+<p><strong>可观测性</strong>：Analytics、内部日志、TraceId；企业交付常因缺观测而被拒收。</p>
+</li>
+<li>
+<p><strong>多语言/多运行时并存时</strong>：维护 <strong><code>parity_audit</code> 式对照表</strong>（见 <code>claude-code/src/parity_audit.py</code>），避免语义漂移。</p>
+</li>
+</ol>
+<h3 id="13-具体架构决策建议">13. 具体架构决策建议</h3>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>决策点</th>
+<th>建议</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>工具协议</td>
+<td>优先 <strong>MCP 或类 MCP</strong> 抽象</td>
+<td>与本仓库 MCP 工具链一致，利于接第三方</td>
+</tr>
+<tr>
+<td>上下文策略</td>
+<td><strong>分层 Prompt + 显式 compact 边界</strong></td>
+<td>对齐 <code>02-execution</code> 文档与 <code>query.ts</code> 实践</td>
+</tr>
+<tr>
+<td>远程/移动控制</td>
+<td>独立 <strong>Bridge 模块 + JWT + 能力矩阵</strong></td>
+<td>对齐 <code>bridge/</code> 与 <code>09_bridge_cli_remote.md</code></td>
+</tr>
+<tr>
+<td>配置</td>
+<td><strong>分层设置 + schema 迁移</strong></td>
+<td>见 HitCC <code>01-runtime/12-settings-and-configuration-system/</code></td>
+</tr>
+<tr>
+<td>风险功能</td>
+<td><strong>Feature Flag / 编译裁剪</strong></td>
+<td>对齐 <code>bun:bundle</code> 的 <code>feature()</code> 思路，在 Java 可用配置中心 + 模块化 jar</td>
+</tr>
+</tbody>
+</table></div><h3 id="14-后续学习动作可选">14. 后续学习动作（可选）</h3>
+<ul>
+<li>精读 <code>{ROOT}/claude-code-rust/spec/01_core_entry_query.md</code> 与 <code>{ROOT}/claude-code-main/src/query.ts</code> 的 <strong>同一概念</strong>（入口、历史、预算）。</li>
+<li>精读 <code>{ROOT}/HitCC/docs/02-execution/03-prompt-assembly-and-context-layering.md</code>，对照 <code>{ROOT}/claude-code-main/src/query.ts</code> 中的消息规范化逻辑。</li>
+<li>将本笔记中 <strong>ragent</strong> 与 <strong>商旅 Agent</strong> 的差异点，映射到你们产品的 <strong>领域表结构</strong> 与 <strong>审批流</strong>，形成内部一页纸架构说明。</li>
+</ul>
+<hr>
+<h2 id="附录本工作区快速路径索引">附录：本工作区快速路径索引</h2>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>项目</th>
+<th>根路径</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TS 源码快照</td>
+<td><code>{ROOT}/claude-code-main/</code></td>
+</tr>
+<tr>
+<td>Rust 规范与实现</td>
+<td><code>{ROOT}/claude-code-rust/spec/</code>、<code>{ROOT}/claude-code-rust/src-rust/</code></td>
+</tr>
+<tr>
+<td>Python 移植</td>
+<td><code>{ROOT}/claude-code/src/</code>、<code>{ROOT}/claude-code/rust/crates/</code></td>
+</tr>
+<tr>
+<td>逆向文档</td>
+<td><code>{ROOT}/HitCC/docs/</code>、<code>{ROOT}/HitCC/recovery_tools/</code></td>
+</tr>
+</tbody>
+</table></div><hr>
+<p><em>文档版本：与 <code>{ROOT}/ai-agent-interview-guide/docs/03-开源项目学习笔记/README.md</code> 同路径维护。</em></p>
+<div class="article-signoff"><a class="text-link" href="/agent-interview/"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6"/></svg>返回全部专题</a><button type="button" class="text-link" data-share><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>复制文章链接</button></div><nav class="study-adjacent" aria-label="继续阅读"><a class="card" href="/agent-interview/collected/project-qa/"><small>下一篇 · 项目实战与问答</small><span>92 道项目面试问答 <svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></span></a></nav></article><aside class="article-toc study-toc"><nav aria-label="本页目录"><div class="eyebrow">ON THIS PAGE / 本页目录</div><a href="#%E7%9B%AE%E5%BD%95">目录</a><a href="#%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%86%85%E5%9B%9B%E4%B8%AA%E9%A1%B9%E7%9B%AE%E5%88%86%E6%9E%90">第一部分：工作区内四个项目分析</a><a href="#%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86%E7%BD%91%E4%B8%8A%E4%BC%98%E7%A7%80%E9%A1%B9%E7%9B%AE%E5%88%86%E6%9E%90">第二部分：网上优秀项目分析</a><a href="#%E7%AC%AC%E4%B8%89%E9%83%A8%E5%88%86%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F%E6%80%BB%E7%BB%93">第三部分：架构模式总结</a><a href="#%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%E5%AF%B9%E6%88%91%E4%BB%AC%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%90%AF%E5%8F%91">第四部分：对我们项目的启发</a><a href="#%E9%99%84%E5%BD%95%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%BF%AB%E9%80%9F%E8%B7%AF%E5%BE%84%E7%B4%A2%E5%BC%95">附录：本工作区快速路径索引</a></nav></aside></div>
+  </main><footer class="shell site-footer"><div class="flex items-center gap-3"><span class="footer-brand">bazaar.</span><span>A little corner of the internet.</span></div><div class="flex items-center gap-5"><span>© 2026 ks</span><a href="https://github.com/y00273676" target="_blank" rel="noopener noreferrer" aria-label="ks on GitHub"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-4.5 1.4-4.5-2.5-6-3m12 6v-3.8a3.3 3.3 0 0 0-.9-2.6c3-.4 6.1-1.5 6.1-6.8a5.3 5.3 0 0 0-1.4-3.6 4.9 4.9 0 0 0-.1-3.6s-1.1-.4-3.7 1.4a12.8 12.8 0 0 0-6.7 0C5.7 1.2 4.6 1.6 4.6 1.6a4.9 4.9 0 0 0-.1 3.6A5.3 5.3 0 0 0 3.1 9c0 5.3 3.1 6.4 6.1 6.8a3.3 3.3 0 0 0-.9 2.5V22"/></svg></a><a href="/index.xml" aria-label="RSS feed"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></a><a href="#top" class="back-top" aria-label="Back to top">↑</a></div></footer><dialog id="search-dialog" class="dialog search-dialog" aria-labelledby="search-title">
+    <div class="dialog-heading"><h2 id="search-title">Find something good.</h2><button type="button" class="icon-button" data-close-dialog aria-label="Close search"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button></div>
+    <p class="muted">Search the collection by title, topic, or keyword.</p>
+    <div class="search-input-wrap"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><input id="search-input" class="input" type="search" placeholder="Try “Go”, “Agent” or “幂等”" aria-label="Search articles" autocomplete="off" autofocus></div>
+    <div id="search-results" class="search-results" aria-live="polite"></div><div class="dialog-footnote"><span><kbd>↑</kbd> <kbd>↓</kbd> to navigate · <kbd>↵</kbd> to open</span><span><kbd>esc</kbd> to close</span></div>
+  </dialog>
+  <dialog id="rss-dialog" class="dialog rss-dialog" aria-labelledby="rss-title"><div class="dialog-heading"><span class="mini-icon"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></span><button type="button" class="icon-button" data-close-dialog aria-label="Close subscription dialog"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button></div><h2 id="rss-title">A quieter way to keep up.</h2><p class="muted">Add this feed to your favorite RSS reader. New writing comes to you, on your terms.</p><label class="input-label" for="feed-url">Feed URL</label><div class="flex gap-2"><input class="input" id="feed-url" value="https://y00273676.github.io/index.xml" readonly><button type="button" class="button button-primary" data-copy-feed aria-label="Copy RSS feed URL"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg> Copy</button></div><a class="text-link" href="/index.xml">Open RSS feed <svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg><span></span></div></body></html>

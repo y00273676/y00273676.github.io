@@ -1,0 +1,923 @@
+<!doctype html>
+<html lang="zh-CN" id="top"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f7f8f5"><title>核心框架（AI Agent 面试八股文 · 模块二） — bazaar</title><meta name="description" content="框架对比 · Agent 面试与笔试笔记。"><meta name="author" content="ks"><link rel="canonical" href="https://y00273676.github.io/agent-interview/collected/core-frameworks/"><meta property="og:title" content="核心框架（AI Agent 面试八股文 · 模块二） — bazaar"><meta property="og:description" content="框架对比 · Agent 面试与笔试笔记。"><meta property="og:type" content="website"><meta property="og:url" content="https://y00273676.github.io/agent-interview/collected/core-frameworks/"><link rel="icon" type="image/svg+xml" href="/assets/favicon.svg"><link rel="alternate" type="application/rss+xml" title="bazaar" href="/index.xml"><script>try{document.documentElement.dataset.theme=localStorage.getItem('bazaar-theme')||'light'}catch{document.documentElement.dataset.theme='light'}</script><link rel="stylesheet" href="/assets/site.css"><script type="module" src="/assets/main.js"></script></head><body><a class="skip-link" href="#main">Skip to content</a><header class="site-header"><div class="shell header-inner">
+    <a href="/" class="brand" aria-label="bazaar home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>bazaar<span class="brand-dot">.</span></a>
+    <nav id="main-nav" class="main-nav" aria-label="Main navigation"><a href="/" >Home</a><a href="/post/" >Writing</a><a href="/agent-interview/" aria-current="page">Agent 面试</a><a href="/tags/" >Topics</a></nav>
+    <div class="header-actions"><button type="button" class="search-trigger" data-open-search aria-label="Search articles"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><span>Search</span><kbd>⌘ K</kbd></button><span class="header-divider"></span><button type="button" class="icon-button" data-theme-toggle aria-label="Switch to dark theme"><svg class="icon theme-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.4 1.4m11.2 11.2L19 19M5 19l1.4-1.4M17.6 6.4 19 5"/></svg><svg class="icon theme-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 13.2A8.5 8.5 0 0 1 10.8 3.5 8.5 8.5 0 1 0 20.5 13.2Z"/></svg></button><button type="button" class="icon-button menu-trigger" aria-label="Open navigation" aria-expanded="false" aria-controls="main-nav"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div>
+  </div></header><main id="main" class="shell" tabindex="-1">
+    <div class="reading-progress" aria-hidden="true"></div><nav class="article-back study-breadcrumb" aria-label="面包屑"><a href="/agent-interview/" class="text-link"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6"/></svg>Agent 面试笔记</a><span>/</span><a href="/agent-interview/#frameworks">框架对比</a></nav>
+    <header class="article-header study-article-header"><div class="eyebrow">AGENT INTERVIEW / 框架对比</div><h1>核心框架（AI Agent 面试八股文 · 模块二）</h1><div class="article-meta"><span class="author-avatar">↗</span><span>网络资料 · bcefghj</span><span class="meta-separator"></span><time datetime="2026-09-21">收录于 2026-09-21</time><span class="meta-separator"></span><span>约 43 分钟</span></div></header><aside class="study-attribution" aria-label="资料来源"><div><span class="note-source note-source-collected">网络收录</span><a href="https://github.com/bcefghj/ai-agent-interview-guide">bcefghj / ai-agent-interview-guide</a><a href="https://github.com/bcefghj/ai-agent-interview-guide/blob/9a987322f2d82ddabe4c1aabc7b4795749fa90a2/docs/01-%E9%9D%A2%E8%AF%95%E5%85%AB%E8%82%A1%E6%96%87/02-%E6%A0%B8%E5%BF%83%E6%A1%86%E6%9E%B6.md">查看原文 <svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a><a href="/agent-interview/downloads/collected/ai-agent-interview-guide/LICENSE">MIT 许可</a></div><p>原仓库版本：2026-04-01。保留原文内容与引用，方便对照学习。</p></aside>
+    <details class="study-mobile-toc"><summary>本页目录 · 10 节</summary><nav aria-label="本页目录（移动端）"><a href="#%E7%9B%AE%E5%BD%95">目录</a><a href="#1-react-%E6%A1%86%E6%9E%B6%E9%87%8D%E7%82%B9%E4%B8%AD%E7%9A%84%E9%87%8D%E7%82%B9">1. ReAct 框架（重点中的重点）</a><a href="#2-plan-and-execute-%E6%A1%86%E6%9E%B6">2. Plan-and-Execute 框架</a><a href="#3-reflexion-%E6%A1%86%E6%9E%B6">3. Reflexion 框架</a><a href="#4-latslanguage-agent-tree-search">4. LATS（Language Agent Tree Search）</a><a href="#5-langchain-agent-%E5%AE%9E%E7%8E%B0">5. LangChain Agent 实现</a><a href="#6-langgraph-%E7%8A%B6%E6%80%81%E6%9C%BA">6. LangGraph 状态机</a><a href="#7-autogen-crewai-%E7%AD%89%E5%A4%9A-agent-%E6%A1%86%E6%9E%B6">7. AutoGen / CrewAI 等多 Agent 框架</a><a href="#8-%E6%A8%A1%E5%9D%97%E7%BB%BC%E5%90%8815-%E9%81%93%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98%E9%80%9F%E6%9F%A5">8. 模块综合：15+ 道高频面试题速查</a><a href="#%E9%99%84%E5%BD%95%E5%AF%B9%E6%AF%94%E9%80%9F%E8%AE%B0%E8%A1%A8">附录：对比速记表</a></nav></details>
+    <div class="article-layout study-article-layout"><article class="article-body study-prose" id="note-content"><p><img src="/agent-interview/media/collected/ai-agent-interview-guide/comics/02-ReAct%E5%BE%AA%E7%8E%AF.png" alt="ReAct循环" width="1376" height="768" loading="lazy" decoding="async"></p>
+<blockquote>
+<p>面向零基础读者：本模块系统梳理主流 Agent「推理—行动—编排」框架。建议先理解 <strong>ReAct</strong> 的「一步想、一步做」，再对比 <strong>Plan-and-Execute</strong> 的「先想全局、再分步做」，最后把 <strong>LangChain / LangGraph / 多 Agent</strong> 当作「工程落地方式」来记忆。</p>
+</blockquote>
+<hr>
+<h2 id="目录">目录</h2>
+<ol>
+<li><a href="/agent-interview/collected/core-frameworks/#1-react-%E6%A1%86%E6%9E%B6%E9%87%8D%E7%82%B9%E4%B8%AD%E7%9A%84%E9%87%8D%E7%82%B9">ReAct 框架</a></li>
+<li><a href="/agent-interview/collected/core-frameworks/#2-plan-and-execute-%E6%A1%86%E6%9E%B6">Plan-and-Execute 框架</a></li>
+<li><a href="/agent-interview/collected/core-frameworks/#3-reflexion-%E6%A1%86%E6%9E%B6">Reflexion 框架</a></li>
+<li><a href="/agent-interview/collected/core-frameworks/#4-latslanguage-agent-tree-search">LATS（Language Agent Tree Search）</a></li>
+<li><a href="/agent-interview/collected/core-frameworks/#5-langchain-agent-%E5%AE%9E%E7%8E%B0">LangChain Agent 实现</a></li>
+<li><a href="/agent-interview/collected/core-frameworks/#6-langgraph-%E7%8A%B6%E6%80%81%E6%9C%BA">LangGraph 状态机</a></li>
+<li><a href="/agent-interview/collected/core-frameworks/#7-autogen-crewai-%E7%AD%89%E5%A4%9A-agent-%E6%A1%86%E6%9E%B6">AutoGen / CrewAI 等多 Agent 框架</a></li>
+<li><a href="/agent-interview/collected/core-frameworks/#8-%E6%A8%A1%E5%9D%97%E7%BB%BC%E5%90%8815-%E9%81%93%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98%E9%80%9F%E6%9F%A5">模块综合：15+ 道高频面试题速查</a></li>
+</ol>
+<hr>
+<h2 id="1-react-框架重点中的重点">1. ReAct 框架（重点中的重点）</h2>
+<h3 id="11-概念解释通俗易懂">1.1 概念解释（通俗易懂）</h3>
+<p><strong>ReAct</strong> 的全称是 <strong>Reasoning + Acting</strong>（推理 + 行动）。可以把它想象成：一个会做题的学生，不是一口气写完答案，而是 <strong>边想边做</strong>——先在心里说一句「我接下来要干什么」（推理），然后真的去查资料、用计算器、调 API（行动），看到结果后再继续想下一步。</p>
+<p>和传统「只输出最终答案」的提示不同，ReAct 要求模型在文本里 <strong>显式交替</strong> 写出：</p>
+<ul>
+<li><strong>推理（Thought）</strong>：为什么要这么做、下一步选什么工具、预期看到什么。</li>
+<li><strong>行动（Action）</strong>：调用某个工具（如搜索、代码执行），并给出参数。</li>
+<li><strong>观察（Observation）</strong>：环境/工具返回的结果。</li>
+</ul>
+<p>循环多次，直到模型给出 <strong>Final Answer</strong>。</p>
+<p>一句话：<strong>ReAct = 把「思考过程」和「工具使用」写进同一条轨迹里，让推理可监督、可纠错、可复现。</strong></p>
+<hr>
+<h3 id="12-原理详解技术细节">1.2 原理详解（技术细节）</h3>
+<h4 id="121-核心思想交替推理与行动">1.2.1 核心思想：交替推理与行动</h4>
+<p>单轮问答时，模型容易「幻觉」事实；ReAct 通过 <strong>行动</strong> 把模型锚定在外部证据上。其关键不是「更会想」，而是 <strong>想与做的闭环</strong>：</p>
+<div class="code-block"><div class="code-header"><span>text</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>用户问题
+  → Thought：拆解子目标
+  → Action：选择工具并执行
+  → Observation：获得外部反馈
+  → Thought：根据观察修正计划
+  → …
+  → Final Answer
+</code></pre></div><h4 id="122-标准工作流程伪代码">1.2.2 标准工作流程（伪代码）</h4>
+<div class="code-block"><div class="code-header"><span>text</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>输入: question, tools, llm, max_steps
+初始化: trajectory = []
+
+for step in 1..max_steps:
+    prompt = build_react_prompt(question, tools, trajectory)
+    text = llm.generate(prompt)
+
+    if &quot;Final Answer:&quot; in text:
+        return extract_final_answer(text)
+
+    thought = parse_thought(text)      # 从 Thought: ... 解析
+    action = parse_action(text)        # 从 Action: tool[arg] 解析
+    obs = tools.execute(action)        # 真实环境反馈
+    trajectory.append((thought, action, obs))
+
+return &quot;达到最大步数仍未结束&quot; 或 强制总结
+</code></pre></div><p><strong>解析要点（面试常问）</strong>：</p>
+<ul>
+<li><strong>Thought / Action / Observation</strong> 通常用 <strong>固定前缀</strong> 或 <strong>结构化格式</strong>（如 JSON）便于程序解析。</li>
+<li><strong>Observation 只能来自工具</strong>，不能由模型自己编造（工程上要校验）。</li>
+<li><strong>停止条件</strong>：出现 Final Answer，或步数上限，或检测到重复无效循环。</li>
+</ul>
+<h4 id="123-prompt-模板设计完整示例">1.2.3 Prompt 模板设计（完整示例）</h4>
+<p>下面是一个 <strong>可直接用于教学</strong> 的英文模板（业界常用英文工具名；面试时说明「中文任务可把指令改为中文」即可）。</p>
+<div class="code-block"><div class="code-header"><span>text</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>You are a helpful assistant that can use tools to answer questions.
+
+You must follow this format strictly:
+
+Question: the input question you must answer
+Thought: think step by step about what you should do next
+Action: the action to take, must be one of [{tool_names}]
+Action Input: the input to the action
+Observation: the result of the action
+... (this Thought/Action/Action Input/Observation can repeat)
+Thought: I now know the final answer
+Final Answer: the final answer to the original question
+
+Begin!
+
+Question: {question}
+Thought: {optional_seed_thought}
+</code></pre></div><p>若采用 <strong>单段 Action 行</strong>（不少论文与开源实现风格）：</p>
+<div class="code-block"><div class="code-header"><span>text</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>Use the following format:
+
+Question: ...
+Thought: ...
+Action: Search[query]
+Observation: ...
+
+Thought: ...
+Action: Calculator[expression]
+Observation: ...
+
+Thought: ...
+Final Answer: ...
+</code></pre></div><p><strong>设计要点</strong>：</p>
+<ul>
+<li><strong>工具清单与参数格式</strong>要写清，减少模型胡写工具名。</li>
+<li><strong>强调「Observation 由系统填充」</strong>，避免模型在提示里自己续写假 Observation。</li>
+<li><strong>Few-shot</strong>：给 1～3 个完整轨迹示例，能显著提高格式遵从率。</li>
+</ul>
+<hr>
+<h3 id="13-面试问题q-标准答案a">1.3 面试问题（Q）+ 标准答案（A）</h3>
+<p><strong>Q1：ReAct 和「普通 CoT 提示」有什么本质区别？</strong></p>
+<p><strong>A：</strong> 普通 CoT 只在模型内部展开推理链，<strong>不强制与外部环境交互</strong>；ReAct 把推理与 <strong>可执行行动</strong> 绑定，每一步行动后都有 <strong>真实 Observation</strong> 反馈，从而用工具结果约束生成，降低闭卷幻觉。</p>
+<hr>
+<p><strong>Q2：ReAct 为什么要显式写出 Thought？</strong></p>
+<p><strong>A：</strong> 显式 Thought 有三类价值：<strong>可解释性</strong>（便于人类审计）、<strong>可调试性</strong>（定位哪一步选错工具）、<strong>学习信号</strong>（可做监督微调或评估中间步骤质量）。在工程上，Thought 也帮助模型在下一步更稳定地选择 Action。</p>
+<hr>
+<h3 id="14-追问及应对">1.4 追问及应对</h3>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>追问</th>
+<th>应对要点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Observation 造假怎么办？</td>
+<td>由 <strong>执行器</strong> 生成 Observation，模型只负责 Thought/Action；可加校验与重试。</td>
+</tr>
+<tr>
+<td>成本高吗？</td>
+<td>每步一次 LLM 调用 + 工具调用，延迟与费用随步数上升；可用 <strong>步数上限</strong>、<strong>小模型路由</strong>、<strong>工具结果缓存</strong> 控制。</td>
+</tr>
+<tr>
+<td>适合哪些任务？</td>
+<td>需要 <strong>外部知识</strong> 或 <strong>可执行验证</strong> 的任务（搜索、数学、代码、数据库）。</td>
+</tr>
+</tbody>
+</table></div><hr>
+<h3 id="15-代码示例python简化版-react-循环">1.5 代码示例（Python，简化版 ReAct 循环）</h3>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>from dataclasses import dataclass
+from typing import Callable, Dict, List, Tuple
+
+@dataclass
+class Tool:
+    name: str
+    run: Callable[[str], str]
+
+def build_prompt(question: str, history: List[Tuple[str, str, str]], tool_names: str) -&gt; str:
+    lines = [
+        &quot;You solve tasks with tools. Use EXACTLY this format each turn:&quot;,
+        &quot;Thought: ...&quot;,
+        f&quot;Action: one of {tool_names}&quot;,
+        &quot;Action Input: ...&quot;,
+        &quot;Stop when you can answer:&quot;,
+        &quot;Final Answer: ...&quot;,
+        &quot;&quot;,
+        f&quot;Tools available: {tool_names}&quot;,
+        &quot;&quot;,
+        f&quot;Question: {question}&quot;,
+        &quot;&quot;,
+    ]
+    for thought, action, obs in history:
+        lines += [f&quot;Thought: {thought}&quot;, f&quot;Action: {action}&quot;, f&quot;Observation: {obs}&quot;, &quot;&quot;]
+    return &quot;\n&quot;.join(lines)
+
+def parse_action(text: str) -&gt; Tuple[str | None, str | None]:
+    # 极简解析：生产环境请用更稳健的正则/JSON
+    action = None
+    action_input = None
+    for line in text.splitlines():
+        if line.startswith(&quot;Action:&quot;):
+            action = line.split(&quot;Action:&quot;, 1)[1].strip()
+        if line.startswith(&quot;Action Input:&quot;):
+            action_input = line.split(&quot;Action Input:&quot;, 1)[1].strip()
+    return action, action_input
+
+def react_loop(
+    question: str,
+    tools: Dict[str, Tool],
+    llm: Callable[[str], str],
+    max_steps: int = 6,
+) -&gt; str:
+    tool_names = &quot;[&quot; + &quot;, &quot;.join(tools.keys()) + &quot;]&quot;
+    history: List[Tuple[str, str, str]] = []
+
+    for _ in range(max_steps):
+        prompt = build_prompt(question, history, tool_names)
+        out = llm(prompt)
+
+        if &quot;Final Answer:&quot; in out:
+            return out.split(&quot;Final Answer:&quot;, 1)[1].strip()
+
+        thought = &quot;&quot;
+        for line in out.splitlines():
+            if line.startswith(&quot;Thought:&quot;):
+                thought = line.split(&quot;Thought:&quot;, 1)[1].strip()
+
+        action, action_input = parse_action(out)
+        if not action or action not in tools:
+            obs = f&quot;ERROR: invalid Action. Must be one of {list(tools.keys())}.&quot;
+        else:
+            obs = tools[action].run(action_input or &quot;&quot;)
+
+        history.append((thought, f&quot;{action}[{action_input}]&quot;, obs))
+
+    return &quot;Failed: max steps exceeded.&quot;
+
+# 用法示例（llm 替换为真实 API 调用）
+if __name__ == &quot;__main__&quot;:
+    def fake_llm(prompt: str) -&gt; str:
+        # 仅演示：真实场景接 OpenAI/Claude/本地模型
+        return (
+            &quot;Thought: I need to add numbers.\n&quot;
+            &quot;Action: calculator\n&quot;
+            &quot;Action Input: 21+21\n&quot;
+        )
+
+    tools = {
+        &quot;calculator&quot;: Tool(&quot;calculator&quot;, lambda s: str(eval(s)) if s else &quot;NaN&quot;),
+    }
+    print(react_loop(&quot;What is 21+21?&quot;, tools, fake_llm))
+</code></pre></div><hr>
+<h3 id="16-优缺点分析">1.6 优缺点分析</h3>
+<p><strong>优点</strong></p>
+<ul>
+<li><strong>可解释</strong>：轨迹可读，便于调试与评测中间步骤。</li>
+<li><strong>接地</strong>：通过工具把答案锚定在可验证数据上。</li>
+<li><strong>通用</strong>：与具体工具解耦，易于替换搜索/代码/SQL 等。</li>
+</ul>
+<p><strong>缺点</strong></p>
+<ul>
+<li><strong>多轮调用</strong>：成本高、延迟大。</li>
+<li><strong>格式脆弱</strong>：模型若偏离模板，需要解析器与重试策略。</li>
+<li><strong>规划能力有限</strong>：逐步贪心，复杂任务上可能缺「全局最优计划」（对比 Plan-and-Execute）。</li>
+</ul>
+<hr>
+<h3 id="17-与-chain-of-thoughtcot的区别">1.7 与 Chain-of-Thought（CoT）的区别</h3>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>维度</th>
+<th>CoT</th>
+<th>ReAct</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>是否有外部环境</td>
+<td>通常无</td>
+<td>有（工具/Observation）</td>
+</tr>
+<tr>
+<td>输出内容</td>
+<td>推理文字为主</td>
+<td>Thought + Action + Observation 交替</td>
+</tr>
+<tr>
+<td>纠错方式</td>
+<td>主要靠模型自省</td>
+<td>主要靠 <strong>外部反馈</strong></td>
+</tr>
+<tr>
+<td>典型目标</td>
+<td>提升推理深度</td>
+<td><strong>推理 + 行动闭环</strong></td>
+</tr>
+</tbody>
+</table></div><p><strong>一句话总结：</strong> CoT 让模型「更会想」；ReAct 让模型「在想的同时能动手，并用真实结果纠正自己」。</p>
+<hr>
+<h2 id="2-plan-and-execute-框架">2. Plan-and-Execute 框架</h2>
+<h3 id="21-概念解释通俗易懂">2.1 概念解释（通俗易懂）</h3>
+<p><strong>Plan-and-Execute</strong> 是 <strong>两阶段</strong>：先 <strong>制定计划</strong>（Planner），再 <strong>逐步执行</strong>（Executor）。像旅行前先列行程单，再按天去玩；执行中若发现「景点关门」，再 <strong>改行程</strong>（Re-planning）。</p>
+<p>它与 ReAct 的差别可以记成：ReAct 常常是「走一步看一步」；Plan-and-Execute 先有一张「总蓝图」，再落地，适合步骤多、依赖关系清晰的任务。</p>
+<hr>
+<h3 id="22-原理详解技术细节">2.2 原理详解（技术细节）</h3>
+<h4 id="221-两阶段模式">2.2.1 两阶段模式</h4>
+<div class="code-block"><div class="code-header"><span>text</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>输入任务
+  → Planner：输出计划 P = [step1, step2, ...]
+  → Executor：for each step:
+        执行（可调用工具/子 Agent）
+        更新状态 state
+        若失败或信息不足 → 触发 Re-planning
+  → 输出最终结果
+</code></pre></div><h4 id="222-planner-组件设计要点">2.2.2 Planner 组件设计（要点）</h4>
+<ul>
+<li><strong>输入</strong>：用户目标、约束（时间/预算/格式）、当前已知上下文。</li>
+<li><strong>输出</strong>：结构化计划（步骤列表、每步子目标、依赖、所需工具类型）。</li>
+<li><strong>技巧</strong>：计划 <strong>粒度适中</strong>；过细易 brittle，过粗难执行。</li>
+</ul>
+<p><strong>伪代码：</strong></p>
+<div class="code-block"><div class="code-header"><span>text</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>plan = LLM_planner(task, constraints)
+validate_plan(plan)  # 可选：检查是否包含非法步骤/循环依赖
+</code></pre></div><h4 id="223-executor-组件设计要点">2.2.3 Executor 组件设计（要点）</h4>
+<ul>
+<li><strong>输入</strong>：当前步骤、state（已完成结果、中间变量）。</li>
+<li><strong>输出</strong>：步骤产物 + 新 state。</li>
+<li><strong>工具路由</strong>：每一步可选用不同工具（搜索、代码、数据库）。</li>
+</ul>
+<p><strong>伪代码：</strong></p>
+<div class="code-block"><div class="code-header"><span>text</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>state = {}
+for step in plan:
+    out = execute_step(step, state, tools)
+    state[step.id] = out
+    if needs_replan(state):
+        plan = replanner(task, plan, state)
+</code></pre></div><h4 id="224-重规划re-planning机制">2.2.4 重规划（Re-planning）机制</h4>
+<p>触发条件常见有：</p>
+<ul>
+<li>工具失败、返回空、超时；</li>
+<li>Observation 与假设冲突；</li>
+<li>新信息使原计划步骤多余或顺序错误。</li>
+</ul>
+<p><strong>Re-planning 做法：</strong></p>
+<ul>
+<li><strong>局部修复</strong>：只替换失败步骤之后的子计划；</li>
+<li><strong>全局重规划</strong>：回到目标重新生成计划（成本高但更稳）。</li>
+</ul>
+<div class="code-block"><div class="code-header"><span>text</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>if error or inconsistency:
+    new_plan = LLM_replanner(original_task, old_plan, state, error_trace)
+    continue with new_plan
+</code></pre></div><hr>
+<h3 id="23-面试问题q-标准答案a">2.3 面试问题（Q）+ 标准答案（A）</h3>
+<p><strong>Q3：Plan-and-Execute 相比 ReAct 什么时候更占优？</strong></p>
+<p><strong>A：</strong> 当任务 <strong>步骤多、结构清晰、需要全局分解</strong>（如多文件代码改动、数据分析流水线、复杂调研提纲）时，Planner 先给出路线图能减少「短视」；ReAct 更擅长 <strong>动态工具交互</strong>、逐步探索。</p>
+<hr>
+<p><strong>Q4：Re-planning 会不会导致「计划抖动」？怎么缓解？</strong></p>
+<p><strong>A：</strong> 会。频繁重规划可能让执行轨迹不稳定。缓解方式包括：<strong>限制重规划次数</strong>、<strong>局部重规划优先</strong>、在 state 中保留已验证事实、对计划变更加 <strong>一致性检查</strong>（新旧计划差异说明）。</p>
+<hr>
+<h3 id="24-追问及应对">2.4 追问及应对</h3>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>追问</th>
+<th>应对要点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Planner 输出不可靠？</td>
+<td>加 <strong>结构化输出</strong>（JSON schema）、自检清单、必要时用更强模型只做规划。</td>
+</tr>
+<tr>
+<td>和「分层 Agent」关系？</td>
+<td>Plan-and-Execute 常作为上层模式；Executor 内部可再接 ReAct 或子 Agent。</td>
+</tr>
+</tbody>
+</table></div><hr>
+<h3 id="25-代码示例python极简-planner-executor">2.5 代码示例（Python，极简 Planner + Executor）</h3>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>from typing import Any, Dict, List
+
+def plan(task: str, llm) -&gt; List[str]:
+    prompt = f&quot;&quot;&quot;
+    Break the task into 3-7 concrete steps. Return ONE step per line.
+    Task: {task}
+    &quot;&quot;&quot;
+    text = llm(prompt)
+    steps = [s.strip(&quot;- &quot;).strip() for s in text.splitlines() if s.strip()]
+    return steps
+
+def execute_step(step: str, state: Dict[str, Any], tools, llm) -&gt; str:
+    # 这里可把 ReAct 当作单步执行器
+    prompt = f&quot;Step: {step}\nContext: {state}\nAnswer succinctly.&quot;
+    return llm(prompt)
+
+def plan_and_execute(task: str, llm, tools, max_replans: int = 2) -&gt; str:
+    steps = plan(task, llm)
+    state: Dict[str, Any] = {}
+
+    for _ in range(max_replans + 1):
+        for i, st in enumerate(steps):
+            try:
+                out = execute_step(st, state, tools, llm)
+                state[f&quot;step_{i}&quot;] = out
+            except Exception as e:
+                # 触发重规划（演示）
+                replan_prompt = f&quot;Task: {task}\nFailed step: {st}\nError: {e}\nGive a new plan.&quot;
+                text = llm(replan_prompt)
+                steps = [s.strip(&quot;- &quot;).strip() for s in text.splitlines() if s.strip()]
+                break
+        else:
+            return llm(f&quot;Summarize final result based on: {state}&quot;)
+
+    return &quot;Failed after replanning.&quot;
+</code></pre></div><hr>
+<h3 id="26-与-react-的对比与适用场景">2.6 与 ReAct 的对比与适用场景</h3>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>维度</th>
+<th>ReAct</th>
+<th>Plan-and-Execute</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>规划</td>
+<td>隐式、逐步</td>
+<td>显式、先全局后局部</td>
+</tr>
+<tr>
+<td>灵活性</td>
+<td>高（随时改工具）</td>
+<td>中（依赖重规划机制）</td>
+</tr>
+<tr>
+<td>成本</td>
+<td>步数多时可很高</td>
+<td>规划一次可能省执行盲目性</td>
+</tr>
+<tr>
+<td>风险</td>
+<td>短视</td>
+<td>计划错误会波及全局</td>
+</tr>
+</tbody>
+</table></div><p><strong>适用场景小结：</strong></p>
+<ul>
+<li><strong>ReAct</strong>：工具交互密集、环境反馈关键、路径不确定。</li>
+<li><strong>Plan-and-Execute</strong>：任务可分解、流程强、需要可审计的计划书。</li>
+</ul>
+<hr>
+<h2 id="3-reflexion-框架">3. Reflexion 框架</h2>
+<h3 id="31-概念解释通俗易懂">3.1 概念解释（通俗易懂）</h3>
+<p><strong>Reflexion</strong> 的核心是：<strong>做完不等于结束</strong>——还要 <strong>评估做得好不好</strong>，把 <strong>教训</strong> 记下来，下次 <strong>带着教训重试</strong>。像考试做错后写错题本，而不是盲目刷同一道题。</p>
+<p>它强调 <strong>语言化反思</strong>（自然语言反思条目），而不是只改参数；反思作为 <strong>记忆</strong>，影响后续尝试的策略。</p>
+<hr>
+<h3 id="32-原理详解技术细节">3.2 原理详解（技术细节）</h3>
+<h4 id="321-自我反思机制">3.2.1 自我反思机制</h4>
+<p>典型角色分工（概念上）：</p>
+<ul>
+<li><strong>Actor</strong>：生成行动/答案（可接工具）。</li>
+<li><strong>Evaluator</strong>：给反馈（对/错、评分、缺失项）。</li>
+<li><strong>Reflector</strong>：根据反馈写 <strong>反思文本</strong>（指出错误原因与改进策略）。</li>
+</ul>
+<p>反思不是泛泛的「我要更仔细」，而是 <strong>可执行</strong> 的指导，例如：「应先确认单位换算」「应先检索最新数据而非凭记忆」。</p>
+<h4 id="322-反思记忆的存储与使用">3.2.2 反思记忆的存储与使用</h4>
+<p>常见存储形式：</p>
+<ul>
+<li><strong>短期</strong>：同一任务多轮尝试中维护 <code>reflections: List[str]</code>。</li>
+<li><strong>长期</strong>：写入向量库/键值库，按任务类型检索相似反思（进阶）。</li>
+</ul>
+<p>使用方式：</p>
+<div class="code-block"><div class="code-header"><span>text</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>attempt_k:
+  prompt = task + &quot;\nPast reflections:\n&quot; + &quot;\n&quot;.join(reflections)
+  output = Actor(prompt)
+  score, feedback = Evaluator(output)
+  reflections.append(Reflector(feedback))
+</code></pre></div><h4 id="323-工作流程action-evaluation-reflection-retry">3.2.3 工作流程：Action → Evaluation → Reflection → Retry</h4>
+<div class="code-block"><div class="code-header"><span>text</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>初始化 reflections = []
+
+repeat until success or max_trials:
+    Action: 基于任务 + reflections 生成输出（可含工具）
+    Evaluation: 规则/模型评估（可给二元成功或细粒度批评）
+    Reflection: 生成改进建议文本
+    将 reflection 追加到 memory
+</code></pre></div><hr>
+<h3 id="33-面试问题q-标准答案a">3.3 面试问题（Q）+ 标准答案（A）</h3>
+<p><strong>Q5：Reflexion 和「让模型自己检查一遍」有什么不同？</strong></p>
+<p><strong>A：</strong> 自检往往是一次性的；Reflexion 把评估与反思 <strong>显式化、结构化</strong>，并 <strong>跨尝试复用</strong> 反思文本，形成可累积的「策略记忆」。工程上更易控制与评测。</p>
+<hr>
+<h3 id="34-追问及应对">3.4 追问及应对</h3>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>追问</th>
+<th>应对要点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Evaluator 从哪来？</td>
+<td>规则、更强模型、单元测试、外部工具验证（因任务而异）。</td>
+</tr>
+<tr>
+<td>反思会不会冗长？</td>
+<td>限制条数与长度；合并相似反思；只保留高信息密度条目。</td>
+</tr>
+</tbody>
+</table></div><hr>
+<h3 id="35-代码示例python">3.5 代码示例（Python）</h3>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>def reflexion_loop(task: str, actor, evaluator, reflector, max_trials: int = 3) -&gt; str:
+    reflections: list[str] = []
+
+    for t in range(max_trials):
+        mem = &quot;\n&quot;.join(f&quot;- {r}&quot; for r in reflections) or &quot;(none)&quot;
+        out = actor(f&quot;Task: {task}\nReflections:\n{mem}\n&quot;)
+        score, feedback = evaluator(out)  # 例如 (0.0~1.0, str)
+
+        if score &gt;= 0.9:
+            return out
+
+        r = reflector(f&quot;Output:\n{out}\nFeedback:\n{feedback}\nWrite concise lessons.&quot;)
+        reflections.append(r)
+
+    return out
+</code></pre></div><hr>
+<h3 id="36-适用场景">3.6 适用场景</h3>
+<ul>
+<li><strong>可验证任务</strong>：代码、数学、有测试用例的生成。</li>
+<li><strong>易犯系统性错误</strong> 的任务：格式、约束、工具选择。</li>
+<li><strong>预算允许多轮尝试</strong> 的场景（反思会增加调用次数）。</li>
+</ul>
+<hr>
+<h2 id="4-latslanguage-agent-tree-search">4. LATS（Language Agent Tree Search）</h2>
+<h3 id="41-概念解释通俗易懂">4.1 概念解释（通俗易懂）</h3>
+<p><strong>LATS</strong> 把 Agent 的决策看成在 <strong>树</strong> 上搜索：每个节点是一种「状态/中间思路」，分支是不同行动。任务复杂、存在多条可能路径时，与其一次走到底，不如 <strong>探索多条路</strong>，用评估函数判断哪条路更有希望。</p>
+<p>它常与 <strong>蒙特卡洛树搜索（MCTS）</strong> 思想结合：通过 <strong>选择—扩展—模拟—回传</strong> 在探索与利用之间折中，把「语言推理」嵌进搜索节点。</p>
+<hr>
+<h3 id="42-原理详解技术细节">4.2 原理详解（技术细节）</h3>
+<h4 id="421-树搜索-agent">4.2.1 树搜索 + Agent</h4>
+<ul>
+<li><strong>节点</strong>：包含当前上下文、已执行动作历史、可选下一步。</li>
+<li><strong>边</strong>：一次 Thought/Action 或一个子目标步骤。</li>
+<li><strong>叶节点评估</strong>：是否完成任务、奖励分数、是否需继续扩展。</li>
+</ul>
+<h4 id="422-mcts-思想与-agent-结合的直觉">4.2.2 MCTS 思想（与 Agent 结合的直觉）</h4>
+<p>经典 MCTS 四步（可简化为面试版描述）：</p>
+<div class="code-block"><div class="code-header"><span>text</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>while budget remains:
+    Select: 从根沿策略选到叶（UCB 等平衡探索/利用）
+    Expand: 生成若干可能的下一步（语言分支）
+    Simulate/Rollout: 用启发式或模型快速评估结果潜力
+    Backpropagate: 把评估回报回传到路径上的节点统计量
+</code></pre></div><p>在 LATS 中，「扩展」常由 LLM 生成多个候选行动；「模拟」可用更便宜模型或短 rollouts。</p>
+<hr>
+<h3 id="43-面试问题q-标准答案a">4.3 面试问题（Q）+ 标准答案（A）</h3>
+<p><strong>Q6：LATS 相比单次 ReAct 多在哪里成本？换来什么收益？</strong></p>
+<p><strong>A：</strong> 成本主要来自 <strong>多分支扩展</strong> 与 <strong>多次评估/模拟</strong>。收益是 <strong>更系统的探索</strong>，降低「一条路径走到黑」的局部最优风险，适合决策点多的任务。</p>
+<hr>
+<h3 id="44-追问及应对">4.4 追问及应对</h3>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>追问</th>
+<th>应对要点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>和束搜索（Beam Search）区别？</td>
+<td>Beam 偏序列生成；LATS/MCTS 更强调 <strong>节点价值估计</strong> 与 <strong>探索策略</strong>（UCB）。</td>
+</tr>
+<tr>
+<td>工程难点？</td>
+<td>分支爆炸、评估器设计、延迟控制；需要强剪枝与缓存。</td>
+</tr>
+</tbody>
+</table></div><hr>
+<h3 id="45-代码示例python极度简化的多候选一步扩展">4.5 代码示例（Python，极度简化的「多候选一步扩展」）</h3>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>import random
+from typing import List
+
+def expand_candidates(state: str, llm, k: int = 3) -&gt; List[str]:
+    prompt = f&quot;State:\n{state}\nPropose {k} distinct next actions (one line each).&quot;
+    text = llm(prompt)
+    return [line.strip(&quot;- &quot;) for line in text.splitlines() if line.strip()][:k]
+
+def score_action(state: str, action: str, scorer) -&gt; float:
+    return scorer(state, action)  # 可用启发式或小型模型
+
+def lats_one_step(state: str, llm, scorer) -&gt; str:
+    cands = expand_candidates(state, llm, k=3)
+    best = max(cands, key=lambda a: score_action(state, a, scorer))
+    return best
+</code></pre></div><hr>
+<h3 id="46-适用于需要探索多条路径的复杂任务">4.6 适用于需要探索多条路径的复杂任务</h3>
+<ul>
+<li>策略游戏、规划 puzzle、代码修复（多方案补丁）。</li>
+<li>研究型问题：需要先提出多种假设再验证。</li>
+</ul>
+<hr>
+<h2 id="5-langchain-agent-实现">5. LangChain Agent 实现</h2>
+<h3 id="51-概念解释通俗易懂">5.1 概念解释（通俗易懂）</h3>
+<p><strong>LangChain</strong> 把 LLM、提示模板、工具、记忆、解析器等拼成可运行程序。<strong>Agent</strong> 在这里通常指：由 <strong>LLM 决定下一步调用哪个工具</strong> 的循环执行体；<strong>AgentExecutor</strong> 负责「跑这个循环直到结束」。</p>
+<hr>
+<h3 id="52-原理详解技术细节">5.2 原理详解（技术细节）</h3>
+<h4 id="521-langchain-中与-agent-相关的核心抽象面试口径">5.2.1 LangChain 中与 Agent 相关的核心抽象（面试口径）</h4>
+<p>不同版本命名略有变化，但面试常考概念层：</p>
+<ul>
+<li><strong>Tools</strong>：对外部能力的封装（name、description、args schema、执行函数）。</li>
+<li><strong>LLM / ChatModel</strong>：生成下一步决策与内容。</li>
+<li><strong>Agent（推理策略）</strong>：如何把工具、提示、中间步骤组合起来（ReAct、OpenAI tools 等）。</li>
+<li><strong>AgentExecutor</strong>：驱动循环：调用 Agent → 若有 tool_calls 则执行工具 → 回填消息 → 直到停止。</li>
+</ul>
+<h4 id="522-agentexecutor-工作原理流程">5.2.2 AgentExecutor 工作原理（流程）</h4>
+<div class="code-block"><div class="code-header"><span>text</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>inputs → AgentExecutor
+  loop:
+    agent.plan(messages/tools) -&gt; next message / tool_calls
+    if final answer: return
+    else: run tools -&gt; append tool messages
+    (optional) trim memory / handle parsing errors
+</code></pre></div><p><strong>关键点</strong>：<strong>停止条件</strong>（达到最终答案）、<strong>解析错误处理</strong>、<strong>最大迭代次数</strong>。</p>
+<h4 id="523-自定义-agent-的步骤通用-checklist">5.2.3 自定义 Agent 的步骤（通用 checklist）</h4>
+<ol>
+<li>定义 <strong>Tools</strong>（清晰 description 与 schema）。</li>
+<li>选择 <strong>提示模板</strong>（ReAct JSON / OpenAI tool calling）。</li>
+<li>选择 <strong>模型</strong> 与 <strong>输出解析器</strong>（防止格式漂移）。</li>
+<li>组装 <strong>Agent + AgentExecutor</strong>（设置 <code>max_iterations</code>、<code>handle_parsing_errors</code>）。</li>
+<li>评测与加固（日志、重试、工具超时）。</li>
+</ol>
+<hr>
+<h3 id="53-面试问题q-标准答案a">5.3 面试问题（Q）+ 标准答案（A）</h3>
+<p><strong>Q7：LangChain 里 AgentExecutor 解决的核心问题是什么？</strong></p>
+<p><strong>A：</strong> 把「模型决策 → 工具执行 → 结果回填 → 再决策」的 <strong>控制流</strong> 标准化，统一处理 <strong>迭代限制</strong>、<strong>错误处理</strong>、<strong>中间消息结构</strong>，让开发者专注工具与提示。</p>
+<hr>
+<p><strong>Q8：工具描述为什么重要？</strong></p>
+<p><strong>A：</strong> Agent 依赖描述进行 <strong>工具选择</strong>；描述不清会导致错选工具或参数幻觉。应包含 <strong>用途、输入输出、边界条件、示例</strong>。</p>
+<hr>
+<h3 id="54-追问及应对">5.4 追问及应对</h3>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>追问</th>
+<th>应对要点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LangChain Agent 和自写 ReAct 差别？</td>
+<td>LangChain 提供 <strong>工程封装</strong> 与生态整合；底层仍是提示+解析+循环。</td>
+</tr>
+<tr>
+<td>版本迁移问题？</td>
+<td>面试中强调理解 <strong>Executor 循环</strong> 与 <strong>tool calling</strong> 模式即可，不必背每个 API 名。</td>
+</tr>
+</tbody>
+</table></div><hr>
+<h3 id="55-代码示例python示意以工具调用风格组织循环">5.5 代码示例（Python，示意：以「工具调用风格」组织循环）</h3>
+<blockquote>
+<p>说明：LangChain 具体 import 路径随版本变化较大，下列示例用「结构与流程」表达面试要点；落地时请对照你项目锁定的 LangChain 版本文档。</p>
+</blockquote>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code># 示意代码：突出 AgentExecutor 的“循环本质”
+
+def simple_agent_executor(llm, tools, user_input: str, max_iterations: int = 5):
+    messages = [{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: user_input}]
+
+    for _ in range(max_iterations):
+        resp = llm.chat(messages, tools=tools)  # 伪 API
+
+        if resp.final_text and not resp.tool_calls:
+            return resp.final_text
+
+        for call in resp.tool_calls:
+            name = call.name
+            args = call.args
+            tool_fn = next(t for t in tools if t.name == name)
+            observation = tool_fn.invoke(args)
+            messages.append({&quot;role&quot;: &quot;assistant&quot;, &quot;tool_calls&quot;: [call]})
+            messages.append({&quot;role&quot;: &quot;tool&quot;, &quot;name&quot;: name, &quot;content&quot;: observation})
+
+    return &quot;Stopped: max iterations.&quot;
+</code></pre></div><hr>
+<h2 id="6-langgraph-状态机">6. LangGraph 状态机</h2>
+<h3 id="61-概念解释通俗易懂">6.1 概念解释（通俗易懂）</h3>
+<p>如果把 LangChain Agent 看成「一套默认的循环」，<strong>LangGraph</strong> 则是把 Agent 工作流画成 <strong>图</strong>：<strong>节点</strong>是处理步骤（调用模型、调工具、审核），<strong>边</strong>是流转关系。复杂业务往往需要分支、循环、人工确认——用图更直观。</p>
+<hr>
+<h3 id="62-原理详解技术细节">6.2 原理详解（技术细节）</h3>
+<h4 id="621-基于图的-agent-编排">6.2.1 基于图的 Agent 编排</h4>
+<ul>
+<li><strong>Graph / StateGraph</strong>：节点函数读取共享 state，返回 state 更新。</li>
+<li><strong>编排优势</strong>：显式控制 <strong>并行</strong>、<strong>条件分支</strong>、<strong>回退</strong>、<strong>人机协同</strong>。</li>
+</ul>
+<h4 id="622-节点node和边edge">6.2.2 节点（Node）和边（Edge）</h4>
+<ul>
+<li><strong>Node</strong>：<code>state -&gt; partial_state_update</code>。</li>
+<li><strong>Edge</strong>：<code>A -&gt; B</code> 表示执行完 A 后执行 B。</li>
+</ul>
+<h4 id="623-条件边conditional-edge">6.2.3 条件边（Conditional Edge）</h4>
+<p>根据 state 决定下一步去哪个节点，例如：</p>
+<div class="code-block"><div class="code-header"><span>text</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>if needs_human_review(state): goto human
+elif tool_error(state): goto repair
+else: goto continue
+</code></pre></div><h4 id="624-状态管理">6.2.4 状态管理</h4>
+<ul>
+<li>通常定义 <code>TypedDict</code> 或 dataclass 描述 state schema。</li>
+<li>多个节点可 <strong>增量合并</strong> 更新（reducer），避免全局覆盖冲突（具体机制依实现）。</li>
+</ul>
+<h4 id="625-与-langchain-agent-的区别面试高频">6.2.5 与 LangChain Agent 的区别（面试高频）</h4>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>维度</th>
+<th>LangChain Agent</th>
+<th>LangGraph</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>控制流</td>
+<td>偏固定循环</td>
+<td><strong>显式图</strong>、分支/循环更自然</td>
+</tr>
+<tr>
+<td>可观测性</td>
+<td>日志为主</td>
+<td><strong>结构化的节点轨迹</strong></td>
+</tr>
+<tr>
+<td>人机协同</td>
+<td>需要额外封装</td>
+<td>容易加 <code>human</code> 节点</td>
+</tr>
+<tr>
+<td>适用</td>
+<td>标准工具 Agent</td>
+<td>复杂业务流程、审查、重试拓扑</td>
+</tr>
+</tbody>
+</table></div><hr>
+<h3 id="63-面试问题q-标准答案a">6.3 面试问题（Q）+ 标准答案（A）</h3>
+<p><strong>Q9：什么时候选 LangGraph 而不是 AgentExecutor？</strong></p>
+<p><strong>A：</strong> 当流程不是「单一工具循环」，而是需要 <strong>多阶段流水线</strong>、<strong>条件路由</strong>、<strong>回环修复</strong>、<strong>人工审核节点</strong>、<strong>并行任务</strong> 时，用图编排更清晰可维护。</p>
+<hr>
+<p><strong>Q10：LangGraph 的状态更新为什么要谨慎设计？</strong></p>
+<p><strong>A：</strong> 多节点写入同一字段可能冲突；需要 <strong>schema 约束</strong>、<strong>归约策略</strong>（append vs replace）、明确每个节点的写入职责。</p>
+<hr>
+<h3 id="64-追问及应对">6.4 追问及应对</h3>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>追问</th>
+<th>应对要点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>图会不会变复杂？</td>
+<td>用子图/模块化节点；把业务阶段分层。</td>
+</tr>
+<tr>
+<td>调试怎么做？</td>
+<td>节点级日志、导出每一步 state、可视化执行路径。</td>
+</tr>
+</tbody>
+</table></div><hr>
+<h3 id="65-代码示例python最小状态机草图">6.5 代码示例（Python，最小状态机草图）</h3>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>from typing import TypedDict, Literal
+
+class AgentState(TypedDict):
+    task: str
+    notes: str
+    route: str
+
+def planner_node(state: AgentState) -&gt; AgentState:
+    return {**state, &quot;notes&quot;: &quot;plan: step1...&quot;, &quot;route&quot;: &quot;exec&quot;}
+
+def exec_node(state: AgentState) -&gt; AgentState:
+    return {**state, &quot;notes&quot;: state[&quot;notes&quot;] + &quot; | executed&quot;, &quot;route&quot;: &quot;end&quot;}
+
+def route_fn(state: AgentState) -&gt; Literal[&quot;exec&quot;, &quot;end&quot;]:
+    return &quot;exec&quot; if state[&quot;route&quot;] == &quot;exec&quot; else &quot;end&quot;
+
+# 伪代码：LangGraph 中会把 node/route_fn 注册到 StateGraph
+# graph.add_node(&quot;planner&quot;, planner_node)
+# graph.add_node(&quot;exec&quot;, exec_node)
+# graph.add_conditional_edges(&quot;planner&quot;, route_fn, {&quot;exec&quot;: &quot;exec&quot;, &quot;end&quot;: &quot;__end__&quot;})
+</code></pre></div><hr>
+<h2 id="7-autogen-crewai-等多-agent-框架">7. AutoGen / CrewAI 等多 Agent 框架</h2>
+<h3 id="71-概念解释通俗易懂">7.1 概念解释（通俗易懂）</h3>
+<p><strong>多 Agent 框架</strong>把任务拆给多个「角色」：有人负责写代码，有人负责审查，有人负责检索。它们通过 <strong>对话</strong> 或 <strong>结构化消息</strong> 协作。AutoGen 偏 <strong>可编程的对话与工具</strong>；CrewAI 偏 <strong>角色驱动的团队流程（Crew）</strong>。</p>
+<hr>
+<h3 id="72-原理详解技术细节">7.2 原理详解（技术细节）</h3>
+<h4 id="721-核心设计理念">7.2.1 核心设计理念</h4>
+<ul>
+<li><strong>分权</strong>：降低单模型负载，让角色专注子任务。</li>
+<li><strong>对抗/互补</strong>：审查者发现生成者问题，提高质量。</li>
+<li><strong>可组合</strong>：工作流可由对话路由或 DAG/图编排。</li>
+</ul>
+<h4 id="722-角色定义与对话">7.2.2 角色定义与对话</h4>
+<ul>
+<li><strong>角色（Role）</strong>：system prompt + 工具权限 + 目标。</li>
+<li><strong>对话拓扑</strong>：一对一、群聊、星型（manager）、分层。</li>
+</ul>
+<p><strong>极简伪代码：</strong></p>
+<div class="code-block"><div class="code-header"><span>text</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>agents = [Researcher, Writer, Reviewer]
+for round in 1..N:
+    msg = Researcher.step(thread)
+    msg = Writer.step(thread)
+    msg = Reviewer.step(thread)
+    if Reviewer.approved: break
+</code></pre></div><h4 id="723-适用场景">7.2.3 适用场景</h4>
+<ul>
+<li>内容生产流水线（调研→写作→校对）。</li>
+<li>软件工程（需求→设计→实现→Code review）。</li>
+<li>需要 <strong>强分工</strong> 与 <strong>过程质量控制</strong> 的组织化任务。</li>
+</ul>
+<hr>
+<h3 id="73-面试问题q-标准答案a">7.3 面试问题（Q）+ 标准答案（A）</h3>
+<p><strong>Q11：多 Agent 一定比单 Agent 更强吗？</strong></p>
+<p><strong>A：</strong> 不一定。更多 Agent 可能带来 <strong>协调成本、错误级联、对话冗长</strong>。当任务可清晰分工且有评估机制时收益大；否则单 Agent + 强工具可能更简单高效。</p>
+<hr>
+<p><strong>Q12：如何避免多 Agent「互相附和」？</strong></p>
+<p><strong>A：</strong> 引入 <strong>独立审查角色</strong>、<strong>基于规则的检查</strong>、<strong>外部工具验证</strong>（测试、检索），并明确 <strong>停止条件</strong> 与 <strong>异议处理流程</strong>。</p>
+<hr>
+<h3 id="74-追问及应对">7.4 追问及应对</h3>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>追问</th>
+<th>应对要点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AutoGen vs CrewAI 怎么选？</td>
+<td>看团队更偏 <strong>对话编排/代码优先</strong>（AutoGen 系生态印象）还是 <strong>角色/任务流水线</strong>（Crew 风格）；最终以项目 PoC 为准。</td>
+</tr>
+<tr>
+<td>成本？</td>
+<td>多角色多轮对话显著增加 token；需要缓存、摘要、限轮。</td>
+</tr>
+</tbody>
+</table></div><hr>
+<h3 id="75-代码示例python概念演示多角色轮询">7.5 代码示例（Python，概念演示：多角色轮询）</h3>
+<div class="code-block"><div class="code-header"><span>python</span><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0"><code>def run_crew(task: str, roles: dict, llm, rounds: int = 2) -&gt; str:
+    thread = f&quot;Task: {task}\n&quot;
+    order = [&quot;researcher&quot;, &quot;writer&quot;, &quot;reviewer&quot;]
+
+    for _ in range(rounds):
+        for r in order:
+            prompt = roles[r] + &quot;\n\n&quot; + thread
+            reply = llm(prompt)
+            thread += f&quot;\n[{r}]:\n{reply}\n&quot;
+
+    return thread
+</code></pre></div><hr>
+<h2 id="8-模块综合15-道高频面试题速查">8. 模块综合：15+ 道高频面试题速查</h2>
+<blockquote>
+<p>下列题目覆盖全模块，可在复习时自问自答；每题后附 <strong>标准答法要点</strong>。</p>
+</blockquote>
+<p><strong>Q13：请用一句话解释 ReAct。</strong><br>
+<strong>A：</strong> 让模型交替输出推理与可执行行动，并用工具返回的 Observation 闭环纠错，从而把推理接地到外部环境。</p>
+<hr>
+<p><strong>Q14：ReAct 轨迹里，哪一部分必须由系统生成？为什么？</strong><br>
+<strong>A：</strong> <strong>Observation</strong> 必须由工具/环境生成，防止模型伪造证据导致「看似合理但错误」的答案。</p>
+<hr>
+<p><strong>Q15：Plan-and-Execute 的最大风险是什么？如何缓解？</strong><br>
+<strong>A：</strong> 风险是 <strong>错误计划污染全局</strong>；缓解是 <strong>可验证子步骤</strong>、<strong>重规划</strong>、<strong>强 Planner 约束输出</strong> 与 <strong>执行期监控</strong>。</p>
+<hr>
+<p><strong>Q16：Reflexion 的关键产出是什么？它如何提升下一轮？</strong><br>
+<strong>A：</strong> 关键是 <strong>高质量反思文本</strong>；它作为记忆进入下一轮提示，指导 Actor 改变策略而非重复错误。</p>
+<hr>
+<p><strong>Q17：LATS 与 ReAct 在「探索能力」上如何对比？</strong><br>
+<strong>A：</strong> ReAct 通常主路径贪心推进；LATS/MCTS 通过 <strong>多分支搜索与价值回传</strong> 更系统探索决策空间（成本更高）。</p>
+<hr>
+<p><strong>Q18：LangChain AgentExecutor 中为什么要限制 max_iterations？</strong><br>
+<strong>A：</strong> 防止工具循环、解析失败导致的 <strong>无限循环</strong>，并控制成本与延迟。</p>
+<hr>
+<p><strong>Q19：描述 LangGraph 的条件边解决的业务问题。</strong><br>
+<strong>A：</strong> 根据中间状态动态路由，例如失败重试、需要人工审核、不同客户等级走不同流程。</p>
+<hr>
+<p><strong>Q20：什么时候更建议「单 Agent + 强工具」，而不是多 Agent？</strong><br>
+<strong>A：</strong> 任务边界清晰、无需组织化分工、协调成本可能大于收益时；或延迟/成本敏感场景。</p>
+<hr>
+<p><strong>Q21：多 Agent 系统的「评估器」可以有哪些实现？</strong><br>
+<strong>A：</strong> 单元测试/静态规则、更强模型评审、人工审核节点、外部检索核对事实等。</p>
+<hr>
+<p><strong>Q22：ReAct Prompt 为什么要给 few-shot 示例？</strong><br>
+<strong>A：</strong> 提升模型对 <strong>固定格式</strong> 的遵从度，降低解析失败率，稳定工具调用。</p>
+<hr>
+<p><strong>Q23：Re-planning 与 Reflexion 都「改正错误」，区别是什么？</strong><br>
+<strong>A：</strong> Re-planning 偏 <strong>计划结构</strong> 的调整（下一步怎么走）；Reflexion 偏 <strong>策略/经验</strong> 的语言化总结并跨轮复用。</p>
+<hr>
+<p><strong>Q24：LangGraph 相比普通脚本编排的核心收益？</strong><br>
+<strong>A：</strong> 把流程 <strong>显式化</strong> 为图，分支/回环/人机节点一等公民，更易维护与观测。</p>
+<hr>
+<p><strong>Q25：如果工具返回噪声很大，ReAct 可能出什么问题？怎么改进？</strong><br>
+<strong>A：</strong> 模型可能被噪声误导；改进包括 <strong>工具侧清洗/结构化输出</strong>、<strong>二次检索</strong>、在 Thought 里强制 <strong>引用证据片段</strong>、增加 <strong>校验工具</strong>。</p>
+<hr>
+<p><strong>Q26：你如何为一个企业场景选择 ReAct vs Plan-and-Execute？</strong><br>
+<strong>A：</strong> 看任务是否 <strong>强流程</strong>、是否需要 <strong>可审计计划书</strong>、是否允许 <strong>前期规划成本</strong>；需要强工具交互与动态环境用 ReAct，强分解与多步骤交付用 Plan-and-Execute。</p>
+<hr>
+<p><strong>Q27：为什么说「工具描述」是 Agent 的接口设计？</strong><br>
+<strong>A：</strong> LLM 靠描述做路由与填参；描述就是 <strong>人机接口</strong>，直接影响成功率。</p>
+<hr>
+<h2 id="附录对比速记表">附录：对比速记表</h2>
+<div class="table-scroll" role="region" aria-label="资料表格" tabindex="0"><table><thead>
+<tr>
+<th>框架/概念</th>
+<th>关键词</th>
+<th>典型循环</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ReAct</td>
+<td>推理+行动交替</td>
+<td>Thought→Action→Observation</td>
+</tr>
+<tr>
+<td>Plan-and-Execute</td>
+<td>先计划后执行</td>
+<td>Plan→Execute→(Replan)</td>
+</tr>
+<tr>
+<td>Reflexion</td>
+<td>反思记忆</td>
+<td>Act→Eval→Reflect→Retry</td>
+</tr>
+<tr>
+<td>LATS</td>
+<td>树搜索 / MCTS</td>
+<td>Select→Expand→Evaluate→Backprop</td>
+</tr>
+<tr>
+<td>LangChain Agent</td>
+<td>Executor 循环</td>
+<td>decide→tool→observe</td>
+</tr>
+<tr>
+<td>LangGraph</td>
+<td>图编排</td>
+<td>node→conditional edge</td>
+</tr>
+<tr>
+<td>多 Agent</td>
+<td>角色协作</td>
+<td>对话/流水线</td>
+</tr>
+</tbody>
+</table></div><hr>
+<p><em>文档版本：面向入门详解；落地代码请以你所使用的库版本官方文档为准。</em></p>
+<div class="article-signoff"><a class="text-link" href="/agent-interview/"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6"/></svg>返回全部专题</a><button type="button" class="text-link" data-share><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>复制文章链接</button></div><nav class="study-adjacent" aria-label="继续阅读"></nav></article><aside class="article-toc study-toc"><nav aria-label="本页目录"><div class="eyebrow">ON THIS PAGE / 本页目录</div><a href="#%E7%9B%AE%E5%BD%95">目录</a><a href="#1-react-%E6%A1%86%E6%9E%B6%E9%87%8D%E7%82%B9%E4%B8%AD%E7%9A%84%E9%87%8D%E7%82%B9">1. ReAct 框架（重点中的重点）</a><a href="#2-plan-and-execute-%E6%A1%86%E6%9E%B6">2. Plan-and-Execute 框架</a><a href="#3-reflexion-%E6%A1%86%E6%9E%B6">3. Reflexion 框架</a><a href="#4-latslanguage-agent-tree-search">4. LATS（Language Agent Tree Search）</a><a href="#5-langchain-agent-%E5%AE%9E%E7%8E%B0">5. LangChain Agent 实现</a><a href="#6-langgraph-%E7%8A%B6%E6%80%81%E6%9C%BA">6. LangGraph 状态机</a><a href="#7-autogen-crewai-%E7%AD%89%E5%A4%9A-agent-%E6%A1%86%E6%9E%B6">7. AutoGen / CrewAI 等多 Agent 框架</a><a href="#8-%E6%A8%A1%E5%9D%97%E7%BB%BC%E5%90%8815-%E9%81%93%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98%E9%80%9F%E6%9F%A5">8. 模块综合：15+ 道高频面试题速查</a><a href="#%E9%99%84%E5%BD%95%E5%AF%B9%E6%AF%94%E9%80%9F%E8%AE%B0%E8%A1%A8">附录：对比速记表</a></nav></aside></div>
+  </main><footer class="shell site-footer"><div class="flex items-center gap-3"><span class="footer-brand">bazaar.</span><span>A little corner of the internet.</span></div><div class="flex items-center gap-5"><span>© 2026 ks</span><a href="https://github.com/y00273676" target="_blank" rel="noopener noreferrer" aria-label="ks on GitHub"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-4.5 1.4-4.5-2.5-6-3m12 6v-3.8a3.3 3.3 0 0 0-.9-2.6c3-.4 6.1-1.5 6.1-6.8a5.3 5.3 0 0 0-1.4-3.6 4.9 4.9 0 0 0-.1-3.6s-1.1-.4-3.7 1.4a12.8 12.8 0 0 0-6.7 0C5.7 1.2 4.6 1.6 4.6 1.6a4.9 4.9 0 0 0-.1 3.6A5.3 5.3 0 0 0 3.1 9c0 5.3 3.1 6.4 6.1 6.8a3.3 3.3 0 0 0-.9 2.5V22"/></svg></a><a href="/index.xml" aria-label="RSS feed"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></a><a href="#top" class="back-top" aria-label="Back to top">↑</a></div></footer><dialog id="search-dialog" class="dialog search-dialog" aria-labelledby="search-title">
+    <div class="dialog-heading"><h2 id="search-title">Find something good.</h2><button type="button" class="icon-button" data-close-dialog aria-label="Close search"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button></div>
+    <p class="muted">Search the collection by title, topic, or keyword.</p>
+    <div class="search-input-wrap"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><input id="search-input" class="input" type="search" placeholder="Try “Go”, “Agent” or “幂等”" aria-label="Search articles" autocomplete="off" autofocus></div>
+    <div id="search-results" class="search-results" aria-live="polite"></div><div class="dialog-footnote"><span><kbd>↑</kbd> <kbd>↓</kbd> to navigate · <kbd>↵</kbd> to open</span><span><kbd>esc</kbd> to close</span></div>
+  </dialog>
+  <dialog id="rss-dialog" class="dialog rss-dialog" aria-labelledby="rss-title"><div class="dialog-heading"><span class="mini-icon"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></span><button type="button" class="icon-button" data-close-dialog aria-label="Close subscription dialog"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button></div><h2 id="rss-title">A quieter way to keep up.</h2><p class="muted">Add this feed to your favorite RSS reader. New writing comes to you, on your terms.</p><label class="input-label" for="feed-url">Feed URL</label><div class="flex gap-2"><input class="input" id="feed-url" value="https://y00273676.github.io/index.xml" readonly><button type="button" class="button button-primary" data-copy-feed aria-label="Copy RSS feed URL"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg> Copy</button></div><a class="text-link" href="/index.xml">Open RSS feed <svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg><span></span></div></body></html>
