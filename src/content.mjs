@@ -4,6 +4,7 @@ export const site = {
   url: 'https://y00273676.github.io',
   github: 'https://github.com/y00273676',
   repository: 'https://github.com/y00273676/ksitigarbha',
+  publishing: { owner: 'y00273676', repo: 'y00273676.github.io', branch: 'master' },
   description: 'A personal collection of code, ideas, and things worth keeping.',
 };
 
@@ -39,8 +40,9 @@ export const posts = [
   },
 ];
 
-export const searchIndex = posts.map(({ body, sections, ...post }) => ({
+export const makeSearchIndex = entries => entries.map(({ body, sections, ...post }) => ({
   ...post,
   url: `/post/${post.slug}/`,
-  text: post.slug === 'ksitigarbha' ? features.flat().join(' ') : 'hello world this is my first html',
+  text: body.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(),
 }));
+export const searchIndex = makeSearchIndex(posts);

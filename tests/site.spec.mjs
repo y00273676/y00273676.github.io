@@ -80,7 +80,7 @@ test('theme persists and RSS clipboard reports success or failure honestly', asy
 });
 
 test('responsive pages fit the viewport and mobile navigation works', async ({ page, isMobile }) => {
-  for (const path of ['/', '/post/', '/tags/', '/categories/', '/post/ksitigarbha/', '/post/helloworld/', '/missing-page/']) {
+  for (const path of ['/', '/post/', '/tags/', '/categories/', '/post/ksitigarbha/', '/post/helloworld/', '/editor/', '/missing-page/']) {
     await page.goto(path);
     if (path === '/') await expect(page.locator('#orb-scene canvas')).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), path).toBe(true);
@@ -128,7 +128,7 @@ test('main pages and dialogs meet WCAG AA checks in both themes', async ({ page 
       await page.getByRole('button', { name: 'Switch to dark theme' }).click();
       await expect(page.locator('.site-footer')).toHaveCSS('color', 'rgb(162, 172, 161)');
     }
-    for (const path of ['/', '/post/', '/tags/', '/categories/', '/post/ksitigarbha/', '/post/helloworld/', '/404.html']) {
+    for (const path of ['/', '/post/', '/tags/', '/categories/', '/post/ksitigarbha/', '/post/helloworld/', '/editor/', '/404.html']) {
       await page.goto(path);
       await checkAccessibility(`${theme}: ${path}`);
     }

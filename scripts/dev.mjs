@@ -20,7 +20,7 @@ async function rebuild() {
   if (queued) { queued = false; await rebuild(); }
 }
 await rebuild();
-const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.xml': 'application/xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.ico': 'image/x-icon' };
+const types = { '.json': 'application/json; charset=utf-8', '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.xml': 'application/xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.ico': 'image/x-icon' };
 createServer(async (request, response) => {
   try {
     const pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
@@ -34,3 +34,5 @@ createServer(async (request, response) => {
   } catch { response.writeHead(400); response.end('Bad request'); }
 }).listen(port, '127.0.0.1', () => console.log(`bazaar → http://127.0.0.1:${port}\nWatching src/. Save, then refresh to see changes.`));
 watch(resolve(root, 'src'), { recursive: true }, () => { clearTimeout(timer); timer = setTimeout(rebuild, 150); });
+
+watch(resolve(root, 'notes.json'), () => { clearTimeout(timer); timer = setTimeout(rebuild, 150); });

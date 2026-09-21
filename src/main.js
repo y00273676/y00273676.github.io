@@ -52,13 +52,22 @@ document.querySelectorAll('dialog').forEach(dialog => {
 const searchDialog = document.querySelector('#search-dialog');
 const searchInput = document.querySelector('#search-input');
 const searchResults = document.querySelector('#search-results');
+let currentSearchIndex = searchIndex;
+fetch('/assets/search-index.json', { cache: 'no-cache' }).then(response => {
+  if (!response.ok) throw new Error('Search index unavailable');
+  return response.json();
+}).then(index => {
+  if (!Array.isArray(index) || index.some(post => !/^\/post\/[a-z0-9-]+\/$/.test(post.url))) return;
+  currentSearchIndex = index;
+  if (searchDialog.open) renderSearch();
+}).catch(() => { /* Bundled articles remain searchable offline. */ });
 let selected = -1;
 function renderSearch() {
   const words = searchInput.value.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
-  const matches = searchIndex.filter(post => words.every(word => `${post.title} ${post.description} ${post.tags.join(' ')} ${post.category} ${post.text}`.toLocaleLowerCase().includes(word)));
+  const matches = currentSearchIndex.filter(post => words.every(word => `${post.title} ${post.description} ${post.tags.join(' ')} ${post.category} ${post.text}`.toLocaleLowerCase().includes(word)));
   selected = -1;
   searchResults.innerHTML = matches.length
-    ? matches.map(post => `<a class="search-result" href="${post.url}"><span><strong>${escapeHtml(post.title)}</strong><small>${escapeHtml(post.tags.join(' · '))} · ${post.readingTime}</small></span>${icon('arrow')}</a>`).join('')
+    ? matches.map(post => `<a class="search-result" href="${post.url}"><span><strong>${escapeHtml(post.title)}</strong><small>${escapeHtml(post.tags.join(' · '))} · ${escapeHtml(post.readingTime)}</small></span>${icon('arrow')}</a>`).join('')
     : emptyState('No notes found.', 'Try a different keyword, like “Go”, “tools”, or “hello”.');
 }
 function openSearch() { renderSearch(); openDialog(searchDialog); searchInput.focus(); }
@@ -184,4 +193,12 @@ if (document.querySelector('#orb-scene') && !navigator.connection?.saveData) {
   const startOrb = () => import('./orb.js').then(({ mountOrb }) => mountOrb(document.querySelector('#orb-scene'))).catch(() => {});
   if ('requestIdleCallback' in window) requestIdleCallback(startOrb, { timeout: 2000 });
   else setTimeout(startOrb, 300);
+}
+
+if (document.querySelector('#notebook-editor')) {
+  import('./editor.js').catch(() => {
+    const message = document.querySelector('#editor-message');
+    message.textContent = '编辑器加载失败，请检查网络并刷新页面。浏览器中已保存的草稿不会删除。';
+    message.hidden = false;
+  });
 }
