@@ -32,7 +32,7 @@ export const emptyState = (title, description, action = '') => `<div class="empt
 export function header(active) {
   return `<a class="skip-link" href="#main">Skip to content</a><header class="site-header"><div class="shell header-inner">
     <a href="/" class="brand" aria-label="bazaar home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>bazaar<span class="brand-dot">.</span></a>
-    <nav id="main-nav" class="main-nav" aria-label="Main navigation">${[['Home', '/'], ['Writing', '/post/'], ['Topics', '/tags/']].map(([name, href]) => `<a href="${href}" ${active === name ? 'aria-current="page"' : ''}>${name}</a>`).join('')}</nav>
+    <nav id="main-nav" class="main-nav" aria-label="Main navigation">${[['Home', '/'], ['Writing', '/post/'], ['Agent 面试', '/agent-interview/'], ['Topics', '/tags/']].map(([name, href]) => `<a href="${href}" ${active === name ? 'aria-current="page"' : ''}>${name}</a>`).join('')}</nav>
     <div class="header-actions"><button type="button" class="search-trigger" data-open-search aria-label="Search articles">${icon('search')}<span>Search</span><kbd>⌘ K</kbd></button><span class="header-divider"></span><button type="button" class="icon-button" data-theme-toggle aria-label="Switch to dark theme">${icon('sun', 'theme-sun')}${icon('moon', 'theme-moon')}</button><button type="button" class="icon-button menu-trigger" aria-label="Open navigation" aria-expanded="false" aria-controls="main-nav">${icon('menu')}</button></div>
   </div></header>`;
 }
@@ -45,7 +45,7 @@ export function dialogs() {
   return `<dialog id="search-dialog" class="dialog search-dialog" aria-labelledby="search-title">
     <div class="dialog-heading"><h2 id="search-title">Find something good.</h2><button type="button" class="icon-button" data-close-dialog aria-label="Close search">${icon('close')}</button></div>
     <p class="muted">Search the collection by title, topic, or keyword.</p>
-    <div class="search-input-wrap">${icon('search')}<input id="search-input" class="input" type="search" placeholder="Try “Go” or “hello world”" aria-label="Search articles" autocomplete="off" autofocus></div>
+    <div class="search-input-wrap">${icon('search')}<input id="search-input" class="input" type="search" placeholder="Try “Go”, “Agent” or “幂等”" aria-label="Search articles" autocomplete="off" autofocus></div>
     <div id="search-results" class="search-results" aria-live="polite"></div><div class="dialog-footnote"><span><kbd>↑</kbd> <kbd>↓</kbd> to navigate · <kbd>↵</kbd> to open</span><span><kbd>esc</kbd> to close</span></div>
   </dialog>
   <dialog id="rss-dialog" class="dialog rss-dialog" aria-labelledby="rss-title"><div class="dialog-heading"><span class="mini-icon">${icon('rss')}</span><button type="button" class="icon-button" data-close-dialog aria-label="Close subscription dialog">${icon('close')}</button></div><h2 id="rss-title">A quieter way to keep up.</h2><p class="muted">Add this feed to your favorite RSS reader. New writing comes to you, on your terms.</p><label class="input-label" for="feed-url">Feed URL</label><div class="flex gap-2"><input class="input" id="feed-url" value="${site.url}/index.xml" readonly><button type="button" class="button button-primary" data-copy-feed aria-label="Copy RSS feed URL">${icon('copy')} Copy</button></div><a class="text-link" href="/index.xml">Open RSS feed ${icon('diagonal')}</a></dialog>

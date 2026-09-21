@@ -53,15 +53,29 @@ const searchDialog = document.querySelector('#search-dialog');
 const searchInput = document.querySelector('#search-input');
 const searchResults = document.querySelector('#search-results');
 let selected = -1;
+let allSearchIndex = searchIndex;
+let interviewSearchRequest;
+let interviewSearchError = false;
+function loadInterviewSearch() {
+  if (!interviewSearchRequest) {
+    interviewSearchError = false;
+    interviewSearchRequest = fetch('/assets/interview-search.json')
+      .then(response => { if (!response.ok) throw new Error('Search unavailable'); return response.json(); })
+      .then(notes => { allSearchIndex = [...searchIndex, ...notes]; renderSearch(); })
+      .catch(() => { interviewSearchError = true; interviewSearchRequest = undefined; renderSearch(); });
+  }
+}
 function renderSearch() {
   const words = searchInput.value.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
-  const matches = searchIndex.filter(post => words.every(word => `${post.title} ${post.description} ${post.tags.join(' ')} ${post.category} ${post.text}`.toLocaleLowerCase().includes(word)));
+  const matches = allSearchIndex.filter(post => words.every(word => `${post.title} ${post.description} ${post.tags.join(' ')} ${post.category} ${post.text}`.toLocaleLowerCase().includes(word)));
+  if (words.length) matches.sort((a, b) => words.filter(word => b.title.toLocaleLowerCase().includes(word)).length - words.filter(word => a.title.toLocaleLowerCase().includes(word)).length);
   selected = -1;
   searchResults.innerHTML = matches.length
-    ? matches.map(post => `<a class="search-result" href="${post.url}"><span><strong>${escapeHtml(post.title)}</strong><small>${escapeHtml(post.tags.join(' · '))} · ${post.readingTime}</small></span>${icon('arrow')}</a>`).join('')
+    ? matches.map(post => `<a class="search-result" href="${post.url}"><span><strong>${escapeHtml(post.title)}</strong><small>${escapeHtml(post.tags.slice(0, 3).join(' · '))} · ${post.readingTime}</small></span>${icon('arrow')}</a>`).join('')
     : emptyState('No notes found.', 'Try a different keyword, like “Go”, “tools”, or “hello”.');
+  if (interviewSearchError) searchResults.insertAdjacentHTML('afterbegin', '<p class="muted">面试笔记搜索暂时无法加载，请重新打开搜索重试，或前往 <a href="/agent-interview/">专题目录</a>。</p>');
 }
-function openSearch() { renderSearch(); openDialog(searchDialog); searchInput.focus(); }
+function openSearch() { renderSearch(); openDialog(searchDialog); searchInput.focus(); loadInterviewSearch(); }
 document.querySelectorAll('[data-open-search]').forEach(button => button.addEventListener('click', openSearch));
 searchInput.addEventListener('input', renderSearch);
 searchDialog.addEventListener('keydown', event => {
@@ -145,6 +159,49 @@ if (filterButtons.length) {
   fromUrl();
 }
 
+const studyFilter = document.querySelector('#study-filter');
+if (studyFilter) {
+  document.querySelectorAll('[data-study-controls]').forEach(element => { element.hidden = false; });
+  const groups = [...document.querySelectorAll('[data-study-group]')];
+  const buttons = [...document.querySelectorAll('[data-study-topic]')];
+  let topic = 'all';
+  function filterStudy(updateUrl = true) {
+    const query = studyFilter.value.trim().toLocaleLowerCase();
+    const words = query.split(/\s+/).filter(Boolean);
+    let count = 0;
+    groups.forEach(group => {
+      let visible = 0;
+      group.querySelectorAll('[data-note]').forEach(row => {
+        const text = `${group.querySelector('h3').textContent} ${row.dataset.noteSearch}`.toLocaleLowerCase();
+        row.hidden = (topic !== 'all' && group.dataset.studyGroup !== topic) || !words.every(word => text.includes(word));
+        if (!row.hidden) visible++;
+      });
+      group.hidden = visible === 0;
+      count += visible;
+    });
+    buttons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.studyTopic === topic)));
+    document.querySelector('#study-count').textContent = `${count} 篇专题笔记`;
+    document.querySelector('#study-empty').hidden = count > 0;
+    if (updateUrl) {
+      const url = new URL(location.href);
+      if (query) url.searchParams.set('q', studyFilter.value.trim()); else url.searchParams.delete('q');
+      if (topic !== 'all') url.searchParams.set('topic', topic); else url.searchParams.delete('topic');
+      history.replaceState({}, '', url);
+    }
+  }
+  function readStudyUrl() {
+    const params = new URLSearchParams(location.search);
+    studyFilter.value = params.get('q') || '';
+    topic = params.get('topic') || 'all';
+    filterStudy(false);
+  }
+  studyFilter.addEventListener('input', () => filterStudy());
+  buttons.forEach(button => button.addEventListener('click', () => { topic = button.dataset.studyTopic; filterStudy(); }));
+  document.querySelector('[data-study-reset]').addEventListener('click', () => { topic = 'all'; studyFilter.value = ''; filterStudy(); studyFilter.focus(); });
+  addEventListener('popstate', readStudyUrl);
+  readStudyUrl();
+}
+
 const runningAnimations = new Set();
 function track(animation) { runningAnimations.add(animation); animation.finished?.then(() => runningAnimations.delete(animation)); return animation; }
 if (!reduceMotion.matches) {
@@ -172,7 +229,7 @@ if (progress) {
   const observer = new IntersectionObserver(entries => {
     const active = entries.find(entry => entry.isIntersecting);
     if (active) toc.forEach(link => {
-      if (link.hash === `#${active.target.id}`) link.setAttribute('aria-current', 'location');
+      if (decodeURIComponent(link.hash) === `#${active.target.id}`) link.setAttribute('aria-current', 'location');
       else link.removeAttribute('aria-current');
     });
   }, { rootMargin: '-100px 0px -60% 0px' });

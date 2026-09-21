@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN" id="top"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f7f8f5"><title>Agent 面试专题：框架对比 · 框架深度解析 — bazaar</title><meta name="description" content="框架对比 · Agent 面试与笔试笔记。包含 Q66、Q67、Q68、Q69、Q70、Q71、Q72。"><meta name="author" content="ks"><link rel="canonical" href="https://y00273676.github.io/agent-interview/frameworks/%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/"><meta property="og:title" content="Agent 面试专题：框架对比 · 框架深度解析 — bazaar"><meta property="og:description" content="框架对比 · Agent 面试与笔试笔记。包含 Q66、Q67、Q68、Q69、Q70、Q71、Q72。"><meta property="og:type" content="website"><meta property="og:url" content="https://y00273676.github.io/agent-interview/frameworks/%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/"><link rel="icon" type="image/svg+xml" href="/assets/favicon.svg"><link rel="alternate" type="application/rss+xml" title="bazaar" href="/index.xml"><script>try{document.documentElement.dataset.theme=localStorage.getItem('bazaar-theme')||'light'}catch{document.documentElement.dataset.theme='light'}</script><link rel="stylesheet" href="/assets/site.css"><script type="module" src="/assets/main.js"></script></head><body><a class="skip-link" href="#main">Skip to content</a><header class="site-header"><div class="shell header-inner">
+    <a href="/" class="brand" aria-label="bazaar home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>bazaar<span class="brand-dot">.</span></a>
+    <nav id="main-nav" class="main-nav" aria-label="Main navigation"><a href="/" >Home</a><a href="/post/" >Writing</a><a href="/agent-interview/" aria-current="page">Agent 面试</a><a href="/tags/" >Topics</a></nav>
+    <div class="header-actions"><button type="button" class="search-trigger" data-open-search aria-label="Search articles"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><span>Search</span><kbd>⌘ K</kbd></button><span class="header-divider"></span><button type="button" class="icon-button" data-theme-toggle aria-label="Switch to dark theme"><svg class="icon theme-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.4 1.4m11.2 11.2L19 19M5 19l1.4-1.4M17.6 6.4 19 5"/></svg><svg class="icon theme-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 13.2A8.5 8.5 0 0 1 10.8 3.5 8.5 8.5 0 1 0 20.5 13.2Z"/></svg></button><button type="button" class="icon-button menu-trigger" aria-label="Open navigation" aria-expanded="false" aria-controls="main-nav"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div>
+  </div></header><main id="main" class="shell" tabindex="-1">
+    <div class="reading-progress" aria-hidden="true"></div><nav class="article-back study-breadcrumb" aria-label="面包屑"><a href="/agent-interview/" class="text-link"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6"/></svg>Agent 面试笔记</a><span>/</span><a href="/agent-interview/#frameworks">框架对比</a></nav>
+    <header class="article-header study-article-header"><div class="eyebrow">AGENT INTERVIEW / 框架对比</div><h1>Agent 面试专题：框架对比 · 框架深度解析</h1><div class="article-meta"><span class="author-avatar">ks</span><span>ks</span><span class="meta-separator"></span><time datetime="2026-09-21">更新于 2026-09-21</time><span class="meta-separator"></span><span>约 6 分钟</span></div></header>
+    <details class="study-mobile-toc"><summary>本页目录 · 7 节</summary><nav aria-label="本页目录（移动端）"><a href="#q66-langchain-%E4%B8%8E-langgraph-%E5%A6%82%E4%BD%95%E5%88%86%E5%B7%A5%E8%80%8C%E4%B8%8D%E6%98%AF%E4%BA%92%E7%9B%B8%E6%9B%BF%E4%BB%A3">Q66: LangChain 与 LangGraph 如何分工，而不是互相替代？</a><a href="#q67-%E6%97%A7%E7%89%88-groupchatmanager-%E9%A2%98%E5%BA%94%E5%A6%82%E4%BD%95%E8%BD%AC%E5%8C%96%E4%B8%BA%E9%80%9A%E7%94%A8%E5%8D%8F%E4%BD%9C%E8%AE%BE%E8%AE%A1%E9%A2%98">Q67: 旧版 GroupChatManager 题应如何转化为通用协作设计题？</a><a href="#q68-%E8%A7%92%E8%89%B2-prompt-%E8%83%BD%E5%90%A6%E4%BB%A3%E6%9B%BF%E4%B8%93%E4%B8%9A%E8%83%BD%E5%8A%9B%E6%9D%83%E9%99%90%E9%9A%94%E7%A6%BB%E5%92%8C%E7%8B%AC%E7%AB%8B%E8%AF%84%E5%AE%A1">Q68: 角色 Prompt 能否代替专业能力、权限隔离和独立评审？</a><a href="#q69-%E5%A4%9A%E6%A8%A1%E6%80%81-agent-vision-%E8%90%BD%E5%9C%B0%E7%9A%84%E6%A0%B8%E5%BF%83%E6%8C%91%E6%88%98%E6%98%AF%E4%BB%80%E4%B9%88">Q69: 多模态 Agent (Vision) 落地的核心挑战是什么？</a><a href="#q70-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3-agent-%E7%9A%84%E5%B9%BB%E8%A7%89-hallucination-%E9%97%AE%E9%A2%98">Q70: 如何解决 Agent 的“幻觉” (Hallucination) 问题？</a><a href="#q71-%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%E5%92%8C%E6%AD%A3%E7%A1%AE%E8%A7%A3%E9%87%8A-agent-%E8%AF%84%E6%B5%8B%E5%9F%BA%E5%87%86">Q71: 如何选择和正确解释 Agent 评测基准？</a><a href="#q72-%E5%A6%82%E4%BD%95%E5%9B%9E%E7%AD%94agent-%E6%98%AF%E5%90%A6%E9%80%9A%E5%90%91-agi%E5%B9%B6%E8%90%BD%E5%88%B0%E5%8F%AF%E9%AA%8C%E8%AF%81%E7%9A%84%E6%8A%80%E6%9C%AF%E8%B7%AF%E7%BA%BF">Q72: 如何回答“Agent 是否通向 AGI”，并落到可验证的技术路线？</a></nav></details>
+    <div class="article-layout study-article-layout"><article class="article-body study-prose" id="note-content"><blockquote>
+<p>校订：2026-09-21。面向高级工程师、架构与技术负责人。保留专题 Q 编号；与主题库 Q 编号分开使用。</p>
+</blockquote>
+<h2 id="q66-langchain-与-langgraph-如何分工而不是互相替代">Q66: LangChain 与 LangGraph 如何分工，而不是互相替代？</h2>
+<h3 id="专业版答案">专业版答案</h3>
+<p>LangChain 提供高层 Agent 及集成，LangGraph 提供更细的状态与图编排能力；现代高层 Agent 可以构建在 LangGraph 之上。不能再用“LangChain 只能线性，LangGraph 才能做 Agent”概括二者。</p>
+<p>需要控制分支、状态合并、人工暂停和恢复时，审视是否需要自定义图。使用 checkpointer 仍须确认落盘、thread 隔离和重放语义；store 与 checkpoint 负责不同数据范围。</p>
+<p>依据：<a href="https://docs.langchain.com/oss/python/migrate/langchain-v1">v1 迁移指南</a>、<a href="https://docs.langchain.com/oss/python/langgraph/persistence">Persistence</a>。</p>
+<h3 id="白话版答案">白话版答案</h3>
+<p>一个提供常用成品结构，一个让你更细地控制运行流程。</p>
+<h3 id="高级追问与评分点">高级追问与评分点</h3>
+<p>什么时候不用框架而写普通状态机更合适？从复杂度、团队掌握程度和验证成本回答。</p>
+<h2 id="q67-旧版-groupchatmanager-题应如何转化为通用协作设计题">Q67: 旧版 GroupChatManager 题应如何转化为通用协作设计题？</h2>
+<h3 id="专业版答案-2">专业版答案</h3>
+<p>把“谁当群聊主持人”转为四个问题：谁拥有目标状态、谁选择下一执行者、谁能调用有副作用工具、谁判定任务完成。</p>
+<p>轮询、规则路由、模型选择和管理者委派各有成本。需防止两个 Agent 相互转交、重复工作和无限讨论；总预算、最大交接次数、进展证据和取消由可信协调器控制。</p>
+<p>GroupChatManager 是版本相关的历史 API，通用考点是调度与状态责任。存量系统维护背景见 <a href="/agent-interview/frameworks/AutoGen%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/">AutoGen深度解析</a>。</p>
+<h3 id="白话版答案-2">白话版答案</h3>
+<p>主持人最重要的工作是管任务、分工和结束，而不是让大家一直说话。</p>
+<h3 id="高级追问与评分点-2">高级追问与评分点</h3>
+<p>两个专家结论矛盾时谁裁决？高分答案根据证据权威、验证器和升级策略处理，而不是简单多数投票。</p>
+<h2 id="q68-角色-prompt-能否代替专业能力权限隔离和独立评审">Q68: 角色 Prompt 能否代替专业能力、权限隔离和独立评审？</h2>
+<h3 id="专业版答案-3">专业版答案</h3>
+<p>角色提示影响行为偏好，不能凭空增加领域知识，也不能隔离凭据或改变授权。多个相同模型可能共享错误；“专家投票”不自动提供统计独立性。</p>
+<p>专业能力要靠任务数据、工具、训练/检索和评测证明。权限隔离由工具网关、运行环境和身份系统实现。独立评审依赖独立证据与验收标准，审查者不应只阅读生成者的自我总结。</p>
+<p>可保留角色分工作为提示与组织手段，但必须验证它相对简单方案的增益。</p>
+<h3 id="白话版答案-3">白话版答案</h3>
+<p>给三个模型分别起专业名字，不等于真的有三个独立专家。</p>
+<h3 id="高级追问与评分点-3">高级追问与评分点</h3>
+<p>如何设计真正能发现生成者错误的审查环节？要求原始证据、不可篡改测试与明确拒绝理由。</p>
+<h2 id="q69-多模态-agent-vision-落地的核心挑战是什么">Q69: 多模态 Agent (Vision) 落地的核心挑战是什么？</h2>
+<h3 id="专业版答案-4">专业版答案</h3>
+<p>多模态落地要验证输入分辨率、裁剪、坐标映射、页面状态和证据来源。OCR、图表理解、视觉定位与动作执行是不同能力，需要分别评测。</p>
+<p>Computer Use 应按“观察 → 定位 → 动作 → 再观察”闭环执行；页面切换后旧坐标不可信。优先使用适合任务的稳定 API 或语义定位，必要时才使用坐标动作。截图、网页文字和隐藏内容可能含间接注入。</p>
+<p>限制网站、文件、账号和网络出口，写入前检查目标与参数，保留操作证据及恢复路径。本题保留旧编号，详见 <a href="/agent-interview/multimodal/%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/">核心概念</a>。</p>
+<h3 id="白话版答案-4">白话版答案</h3>
+<p>看得懂屏幕不代表点得准，点完还要确认状态确实变了。</p>
+<h3 id="高级追问与评分点-4">高级追问与评分点</h3>
+<p>屏幕显示“提交成功”但业务未落库，如何判定和恢复？</p>
+<h2 id="q70-如何解决-agent-的幻觉-hallucination-问题">Q70: 如何解决 Agent 的“幻觉” (Hallucination) 问题？</h2>
+<h3 id="专业版答案-5">专业版答案</h3>
+<p>先分类：事实无证据、引用不支持结论、工具结果误读、过期数据、虚构执行成功。分别用带版本的检索证据、引用核验、结构化结果、权威系统查单和允许不确定回答处理。</p>
+<p>RAG、低温度和自我反思都不能根除幻觉。工具调用成功也不代表业务目标完成，应检查真实后置状态。对于高风险输出，设置证据门槛、专业复核及可追责记录。</p>
+<p>衡量覆盖率与正确率的关系，防止靠大量拒答把准确率做高；分别报告拒答、错误行动和成功完成。</p>
+<h3 id="白话版答案-5">白话版答案</h3>
+<p>说得有依据、做得有凭证，不确定时不能编造。</p>
+<h3 id="高级追问与评分点-5">高级追问与评分点</h3>
+<p>引用文本存在但不支持结论，如何设计可自动检查与人工复核结合的评测？</p>
+<h2 id="q71-如何选择和正确解释-agent-评测基准">Q71: 如何选择和正确解释 Agent 评测基准？</h2>
+<h3 id="专业版答案-6">专业版答案</h3>
+<p>选基准先匹配任务。SWE-bench 系列针对真实软件问题修复；τ-bench/τ²-bench 关注工具、用户交互和业务约束。不同版本、子集、环境、预算和评分器不能直接横比。</p>
+<p>同时记录模型、harness、工具权限、尝试次数、执行预算、测试环境与污染风险。榜单成功率不等于企业线上成功率，应补充私有新样本、权限测试、恢复测试与人工审查。</p>
+<p>pass@k 关注 k 次中至少一次成功；pass^k 关注 k 次都成功。前者还需要可靠候选选择机制，不能把多次试错当作免费且安全。</p>
+<p>依据：<a href="https://www.swebench.com/">SWE-bench</a>、<a href="https://github.com/sierra-research/tau2-bench">τ²-bench</a>、<a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Agent evals</a>。</p>
+<h3 id="白话版答案-6">白话版答案</h3>
+<p>看分数前先看考的什么、允许试几次，以及是谁判断成功。</p>
+<h3 id="高级追问与评分点-6">高级追问与评分点</h3>
+<p>一个模型 pass@10 很高但单次成功率低，适合自动付款吗？解释重试副作用与稳定性要求。</p>
+<h2 id="q72-如何回答agent-是否通向-agi并落到可验证的技术路线">Q72: 如何回答“Agent 是否通向 AGI”，并落到可验证的技术路线？</h2>
+<h3 id="专业版答案-7">专业版答案</h3>
+<p>Agent 描述目标导向的交互与执行系统；AGI 的定义和判定尚无统一工程验收标准。不能把“Agent 必然是 AGI 的中间阶段”当作事实。</p>
+<p>负责人应把讨论落到可交付能力：跨任务泛化、长任务一致性、工具可靠性、权限控制、验证与经济性。路线图以当前失败样本和业务收益驱动，明确阶段目标、退出条件和人工接管。</p>
+<p>历史与未来判断可作讨论题，不应替代上线能力、团队执行和风险管理的核心考核。</p>
+<h3 id="白话版答案-7">白话版答案</h3>
+<p>愿景可以讨论，计划必须能验证、能交付。</p>
+<h3 id="高级追问与评分点-7">高级追问与评分点</h3>
+<p>老板要求半年内做“通用 Agent”，如何拆成三个可验收阶段，并定义何时停止投入？</p>
+<hr>
+<p>复习入口：<a href="/agent-interview/question-bank/">00-Agent开发岗位面试与笔试全题库</a> · <a href="/agent-interview/senior/interview/">高级面试题</a> · <a href="/agent-interview/sources/">99-更新说明与资料来源</a>。</p>
+<div class="article-signoff"><a class="text-link" href="/agent-interview/"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6"/></svg>返回全部专题</a><button type="button" class="text-link" data-share><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>复制文章链接</button></div><nav class="study-adjacent" aria-label="继续阅读"><a class="card" href="/agent-interview/frameworks/%E4%B8%BB%E6%B5%81%E6%A1%86%E6%9E%B6/"><small>下一篇 · 框架对比</small><span>主流框架 <svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></span></a></nav></article><aside class="article-toc study-toc"><nav aria-label="本页目录"><div class="eyebrow">ON THIS PAGE / 本页目录</div><a href="#q66-langchain-%E4%B8%8E-langgraph-%E5%A6%82%E4%BD%95%E5%88%86%E5%B7%A5%E8%80%8C%E4%B8%8D%E6%98%AF%E4%BA%92%E7%9B%B8%E6%9B%BF%E4%BB%A3">Q66: LangChain 与 LangGraph 如何分工，而不是互相替代？</a><a href="#q67-%E6%97%A7%E7%89%88-groupchatmanager-%E9%A2%98%E5%BA%94%E5%A6%82%E4%BD%95%E8%BD%AC%E5%8C%96%E4%B8%BA%E9%80%9A%E7%94%A8%E5%8D%8F%E4%BD%9C%E8%AE%BE%E8%AE%A1%E9%A2%98">Q67: 旧版 GroupChatManager 题应如何转化为通用协作设计题？</a><a href="#q68-%E8%A7%92%E8%89%B2-prompt-%E8%83%BD%E5%90%A6%E4%BB%A3%E6%9B%BF%E4%B8%93%E4%B8%9A%E8%83%BD%E5%8A%9B%E6%9D%83%E9%99%90%E9%9A%94%E7%A6%BB%E5%92%8C%E7%8B%AC%E7%AB%8B%E8%AF%84%E5%AE%A1">Q68: 角色 Prompt 能否代替专业能力、权限隔离和独立评审？</a><a href="#q69-%E5%A4%9A%E6%A8%A1%E6%80%81-agent-vision-%E8%90%BD%E5%9C%B0%E7%9A%84%E6%A0%B8%E5%BF%83%E6%8C%91%E6%88%98%E6%98%AF%E4%BB%80%E4%B9%88">Q69: 多模态 Agent (Vision) 落地的核心挑战是什么？</a><a href="#q70-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3-agent-%E7%9A%84%E5%B9%BB%E8%A7%89-hallucination-%E9%97%AE%E9%A2%98">Q70: 如何解决 Agent 的“幻觉” (Hallucination) 问题？</a><a href="#q71-%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%E5%92%8C%E6%AD%A3%E7%A1%AE%E8%A7%A3%E9%87%8A-agent-%E8%AF%84%E6%B5%8B%E5%9F%BA%E5%87%86">Q71: 如何选择和正确解释 Agent 评测基准？</a><a href="#q72-%E5%A6%82%E4%BD%95%E5%9B%9E%E7%AD%94agent-%E6%98%AF%E5%90%A6%E9%80%9A%E5%90%91-agi%E5%B9%B6%E8%90%BD%E5%88%B0%E5%8F%AF%E9%AA%8C%E8%AF%81%E7%9A%84%E6%8A%80%E6%9C%AF%E8%B7%AF%E7%BA%BF">Q72: 如何回答“Agent 是否通向 AGI”，并落到可验证的技术路线？</a></nav></aside></div>
+  </main><footer class="shell site-footer"><div class="flex items-center gap-3"><span class="footer-brand">bazaar.</span><span>A little corner of the internet.</span></div><div class="flex items-center gap-5"><span>© 2026 ks</span><a href="https://github.com/y00273676" target="_blank" rel="noopener noreferrer" aria-label="ks on GitHub"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-4.5 1.4-4.5-2.5-6-3m12 6v-3.8a3.3 3.3 0 0 0-.9-2.6c3-.4 6.1-1.5 6.1-6.8a5.3 5.3 0 0 0-1.4-3.6 4.9 4.9 0 0 0-.1-3.6s-1.1-.4-3.7 1.4a12.8 12.8 0 0 0-6.7 0C5.7 1.2 4.6 1.6 4.6 1.6a4.9 4.9 0 0 0-.1 3.6A5.3 5.3 0 0 0 3.1 9c0 5.3 3.1 6.4 6.1 6.8a3.3 3.3 0 0 0-.9 2.5V22"/></svg></a><a href="/index.xml" aria-label="RSS feed"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></a><a href="#top" class="back-top" aria-label="Back to top">↑</a></div></footer><dialog id="search-dialog" class="dialog search-dialog" aria-labelledby="search-title">
+    <div class="dialog-heading"><h2 id="search-title">Find something good.</h2><button type="button" class="icon-button" data-close-dialog aria-label="Close search"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button></div>
+    <p class="muted">Search the collection by title, topic, or keyword.</p>
+    <div class="search-input-wrap"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><input id="search-input" class="input" type="search" placeholder="Try “Go”, “Agent” or “幂等”" aria-label="Search articles" autocomplete="off" autofocus></div>
+    <div id="search-results" class="search-results" aria-live="polite"></div><div class="dialog-footnote"><span><kbd>↑</kbd> <kbd>↓</kbd> to navigate · <kbd>↵</kbd> to open</span><span><kbd>esc</kbd> to close</span></div>
+  </dialog>
+  <dialog id="rss-dialog" class="dialog rss-dialog" aria-labelledby="rss-title"><div class="dialog-heading"><span class="mini-icon"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></span><button type="button" class="icon-button" data-close-dialog aria-label="Close subscription dialog"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button></div><h2 id="rss-title">A quieter way to keep up.</h2><p class="muted">Add this feed to your favorite RSS reader. New writing comes to you, on your terms.</p><label class="input-label" for="feed-url">Feed URL</label><div class="flex gap-2"><input class="input" id="feed-url" value="https://y00273676.github.io/index.xml" readonly><button type="button" class="button button-primary" data-copy-feed aria-label="Copy RSS feed URL"><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg> Copy</button></div><a class="text-link" href="/index.xml">Open RSS feed <svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden><svg class="icon " width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg><span></span></div></body></html>
